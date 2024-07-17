@@ -1,0 +1,59 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "pages/apps/todolist.tsx",
+    "components/Tablayout.jsx",
+    "components/front/Pageheader.jsx",
+    "pages/auction/index.tsx",
+    "pages/auction/auction-preview/index.tsx",
+    "Reducer/testSlice.jsx",
+    "components/NextBreadcrumb.tsx",
+    "pages/dashboard/vendor/vendor-list/index.tsx",
+    "components/dashboardbredcrumb.tsx",
+    "components/front/producttypecard.jsx",
+    "components/ImageZoom.jsx",
+    "components/cards/auctioncard.tsx",
+    "pages/interest/cards/index.jsx",
+    "Reducer/clickedCardsSlice.jsx",
+    "pages/dashboard/auction/auction-list.jsx",
+    "store/index.jsx",
+    "store/index.jsx",
+    "components/vendorforms/general-information.tsx",
+    "components/vendorforms/general-information.tsx",
+    "components/front/herosection.jsx",
+    "components/front/Navbar.jsx",
+    "components/front/profile-dropdown.jsx",
+    "components/front/OtpModal.tsx"
+, "components/front/logout.jsx"  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
