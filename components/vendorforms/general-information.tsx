@@ -23,7 +23,7 @@ interface User {
     alternative_contact?: string;
     alternative_email?: string;
     nationalityid?: string;
-    profile_img?: File | null;
+    profile_img: string | null;
     primary_address: string;
     billing_address: string;
     bycheckbox: boolean;
@@ -74,7 +74,9 @@ const GeneralInformation: React.FC = () => {
                 currency_id: vendorlist.currency_id || "",
                 business_activity: vendorlist.business_activity || "",
                 nationalityid: vendorlist.amy_countries_id || "",
-                amy_countries_id: vendorlist.amy_countries_id || ""
+                amy_countries_id: vendorlist.amy_countries_id || "",
+                profile_img: vendorlist.profile_img || ""
+
             });
         }
     }, [vendorInformationList]);
@@ -127,22 +129,41 @@ const GeneralInformation: React.FC = () => {
         } else if (!/^\d{10,15}$/.test(user.phone_no)) {
             newErrors.contact = t('valid-contact');
         }
-        if (!user.email_id) {
-            newErrors.email_id = t('field-required');
-        } else if (!/\S+@\S+\.\S+/.test(user.email_id)) {
-            newErrors.email_id = t('valid-email');
-        }
         if (user.alternative_contact && !/^\d{8,10}$/.test(user.alternative_contact)) {
             newErrors.alternative_contact = t('valid-contact');
         }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
+
+
+    const convertToBase64 = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = error => reject(error);
+        });
+    };
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            const base64 = await convertToBase64(file);
+            setUser({ ...user, profile_img: base64 });
+        } else {
+            setUser({ ...user, profile_img: null });
+        }
+    };
+
+
     const GeneralInformationapi = "/api/vendor/general_info"
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const isValid = validateForm();
         const token = getToken();
+
+
         try {
             const response = await fetch(`${API_BASE_URL}${GeneralInformationapi}`, {
                 method: 'POST',
@@ -301,14 +322,11 @@ const GeneralInformation: React.FC = () => {
                             <input
                                 type="email"
                                 id="email_id"
-                                className={`form-input bg-gray-100  ${errors.email_id ? 'border-red-500' : ''}`}
+                                className={`form-input bg-gray-100`}
                                 value={user.email_id}
                                 readOnly
                                 onChange={(e) => setUser({ ...user, email_id: e.target.value })}
                             />
-                            {errors.email_id && (
-                                <p className="text-red-500 text-sm">{errors.email_id}</p>
-                            )}
                         </div>
                     </div>
 
@@ -361,7 +379,7 @@ const GeneralInformation: React.FC = () => {
                                 type="file"
                                 id="upload_picture"
                                 className="form-input"
-                                onChange={(e) => setUser({ ...user, profile_img: e.target.files ? e.target.files[0] : null })}
+                                onChange={handleFileChange}
                             />
                         </div>
                     </div>
@@ -397,23 +415,6 @@ const GeneralInformation: React.FC = () => {
                             )}
                         </div>
                     </div>
-                    {/* Billing Address Checkbox */}
-                    {/* <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group">
-                            <label className="fancy-checkbox">
-                                <input
-                                    type="checkbox"
-                                    id="myCheck"
-                                    checked={user.bycheckbox}
-                                    onChange={(e) => setUser({ ...user, bycheckbox: e.target.checked })}
-                                    data-parsley-errors-container="#error-checkbox"
-                                />
-                                <span>{t('billing-address-same-as-primary-address')}</span>
-                            </label>
-                        </div>
-                    </div> */}
-
-
 
                     {/* Business Activities */}
                     <div className="col-lg-6 col-md-6 mb-2">
@@ -454,7 +455,7 @@ const GeneralInformation: React.FC = () => {
                     </div>
                 </div>
 
-                <div className='flex justify-end'>
+                <div className='flex justify-start'>
                     <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ">
                         {user.email_id ? 'Update' : 'submit'}
                     </button>

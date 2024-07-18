@@ -65,7 +65,26 @@ function AccountInformation() {
     };
 
     const [businessReferences, setBusinessReferences] = useState<BusinessReference[]>([{ year: '', gross_income: '' }]);
-    const [businessReferenceFiles, setBusinessReferenceFiles] = useState<File[]>([]);
+    const [businessReferenceFiles, setBusinessReferenceFiles] = useState<string[]>([]);
+
+    const convertToBase64 = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = error => reject(error);
+        });
+    };
+
+    const handleReferenceAttachmentChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (files) {
+            const base64Files = await Promise.all(Array.from(files).map(file => convertToBase64(file)));
+            setBusinessReferenceFiles(base64Files);
+            
+        }
+    };
+
 
     const handleAddReference = () => {
         setBusinessReferences(prev => [...prev, { year: '', gross_income: '' }]);
@@ -80,12 +99,7 @@ function AccountInformation() {
         });
     };
 
-    const handleReferenceAttachmentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
-        if (files) {
-            setBusinessReferenceFiles(prev => [...prev, ...Array.from(files)]);
-        }
-    };
+
 
     const handleDeleteReference = (index: number) => {
         setBusinessReferences(prev => prev.filter((_, idx) => idx !== index));
@@ -111,19 +125,22 @@ function AccountInformation() {
     };
 
     const submitForm = async () => {
+        console.log(businessReferenceFiles)
         const token = getToken();
         const vendor_profile_id = localStorage.getItem("vendorId")?.replace(/['"]/g, '');
-        // if (!validateBusinessReferences()) {
-        //     setBusinessReferenceError('Please fill at least 3 years of business references.');
-        //     return;
-        // }
+        if (!validateBusinessReferences()) {
+            setBusinessReferenceError('Please fill at least 3 years of business references.');
+            return;
+        }
         const payload = {
             ...user,
             bankAccounts: bankAccounts,
             business_reference: businessReferences,
             vendor_profile_id: vendor_profile_id,
+            attachement_type: "Business Reference File",
             business_reference_file: businessReferenceFiles
         };
+
         try {
             const response = await fetch(`${API_BASE_URL}${AccountInformationApiurl}`, {
                 method: 'POST',
@@ -137,7 +154,7 @@ function AccountInformation() {
             if (response.ok) {
                 const responseData = await response.json();
                 localStorage.setItem("vendorId", responseData.data);
-                setMessage('Other data submitted successfully!');
+                setMessage('Account Information submitted successfully!');
                 setShowPopup(true);
             } else {
                 const errorData = await response.json();
@@ -162,13 +179,13 @@ function AccountInformation() {
             {/* Bank Accounts Section */}
 
             <form className="space-y-3 dark:text-white">
-                <div className="row">
-                    <div className="col-lg-12 justify-end flex ">
-                        <MdAddBox className='text-3xl text-green-600 cursor-pointer' onClick={handleAddBankAccount} />
-                    </div>
-                </div>
-                <div className='border-1 p-2 rounded-md flex flex-col gap-2'>
 
+                <div className='border-1 p-2 rounded-md flex flex-col gap-2'>
+                    <div className="row">
+                        <div className="col-lg-12 justify-end flex ">
+                            <MdAddBox className='text-3xl text-green-600 cursor-pointer' onClick={handleAddBankAccount} />
+                        </div>
+                    </div>
                     {bankAccounts.map((bankAccount, index) => (
                         <div key={index} className='border-1 p-2 rounded-md'>
                             <div className="row">
@@ -281,7 +298,7 @@ function AccountInformation() {
                     <div className="col-lg-12">
                         <div className="d-flex justify-content-between py-4">
                             <h3 className="mb-2"><b>{t('business-reference')} <span>({t('please-fill-minimum-3-years')})</span> <span className="alert-dange-smg red">*</span></b></h3>
-                            <div className="row ">
+                            <div className="row">
                                 <div className="col-lg-4">
                                     <label className="mb-1" htmlFor="">{t('upload-attachment')}</label>
                                 </div>
@@ -291,7 +308,7 @@ function AccountInformation() {
                                         className="form-control"
                                         accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf"
                                         multiple
-                                        onChange={(e) => handleReferenceAttachmentChange(e, businessReferences.length - 1)}
+                                        onChange={handleReferenceAttachmentChange}
                                     />
                                 </div>
                             </div>
@@ -301,7 +318,7 @@ function AccountInformation() {
                         <hr />
                     </div>
                 </div>
-                {/* {bussinessreferenceerror && <p className='text-red-600 font-bold'>Please fill at least 3 years of business references.</p>} */}
+                {bussinessreferenceerror && <p className='text-red-600 font-bold'>Please fill at least 3 years of business references.</p>}
                 {businessReferences.map((reference, index) => (
                     <div key={index} className="row mb-3 flex  gap-2 border-1 p-2 rounded-md ">
                         <div className="col-lg-2">
@@ -341,7 +358,7 @@ function AccountInformation() {
                 ))}
 
                 <div className="row ">
-                    <div className="col-lg-12 flex justify-end">
+                    <div className="col-lg-12 flex justify-start">
                         <button type="button" onClick={submitForm} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ">Submit</button>
                     </div>
                 </div>

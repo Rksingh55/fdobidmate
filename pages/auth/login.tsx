@@ -18,17 +18,18 @@ const Login = () => {
     const [email, setemail] = useState("");
     const [showLoader, setShowLoader] = useState(false);
     const [password, setpassword] = useState("");
-    const [error, seterror] = useState("");
+    const [error, setError] = useState<{ type: 'success' | 'error'; text: string }>({ type: 'error', text: '' });
+
     const LoginapiUrl = "/api/login"
     const handleSubmit = (e: any) => {
         e.preventDefault();
         const data = { email, password };
         setShowLoader(true)
         if (email == "" || password == "") {
-            seterror("Please enter valid email and password")
+            setError({ type: 'error', text: "Please enter valid email and password" });
         }
         else {
-            seterror("Validating please wait...!!")
+            setError({ type: 'success', text: "Validating please wait...!!" });
         }
         fetch(`${API_BASE_URL}${LoginapiUrl}`, {
             method: "POST",
@@ -37,15 +38,18 @@ const Login = () => {
             },
             body: JSON.stringify(data),
         })
-            .then((response) => response.json())
+            .then((response) => {
+                console.log(response);
+                return response.json();
+            })
             .then((data) => {
-                seterror(data.message)
+                console.log(data.message);
+                setError({ type: 'error', text: data.message })
                 if (data.status == "success") {
-                    console.log("l--------", data)
+                    router.push('/dashboard/vendor-register')
                     if (data.data && data.data.length > 0) {
                         const firstObject = data.data[0];
                         setShowLoader(false)
-                        router.push('/dashboard/vendor-register')
                         localStorage.setItem('token', JSON.stringify(firstObject.token))
                         localStorage.setItem('userName', JSON.stringify(firstObject.name))
                         setemail('');
@@ -53,7 +57,7 @@ const Login = () => {
                     }
                 }
                 else {
-                    seterror("Please enter correct email & password")
+                    setError({ type: 'error', text: "Please enter correct email & password" });
                     setShowLoader(false)
                 }
             })
@@ -113,7 +117,13 @@ const Login = () => {
                                 </div>
                                 <form className="space-y-4 dark:text-white" method="post" onSubmit={handleSubmit}>
                                     <div>
-                                        {error && <p className='font-bold text-red-500 text-center pb-3'>{error}</p>}
+
+                                        {error && (
+                                            <div className={` ${error.type === 'success' ? 'text-green-500' : 'text-red-500'} text-${error.type === 'success' ? 'green' : 'red'}-500 rounded font-bold text-center pb-3`}>
+                                                {error.text}
+                                            </div>
+                                        )}
+                                        {/* {error && <p className='font-bold text-red-500 text-center pb-3'>{error}</p>} */}
 
                                         <div className="relative text-white-dark">
                                             <input type="text" className="form-input py-3 ps-10 placeholder:text-white-dark rounded-full border-[#FC8404]" placeholder="Enter Email" name="email" value={email}

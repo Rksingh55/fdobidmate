@@ -38,12 +38,12 @@ function Questionnaire() {
     useEffect(() => {
         setVendorlist(vendorInformationList);
         console.log("vendorlist question", vendorlist?.vendor_questionnaire)
-        // if (vendorInformationList) {
-        //     setUser(prevUser => ({
-        //         ...prevUser,
-        //         vendor_requestid: vendorInformationList.tax_no || "",
-        //     }));
-        // }
+        if ( vendorlist?.vendor_questionnaire) {
+            setUser(prevUser => ({
+                ...prevUser,
+                answer: vendorlist?.vendor_questionnaire.answer || "",
+            }));
+        }
     }, [vendorInformationList]);
 
     const handleAnswerChange = (questionId: string, answer: string) => {
@@ -150,7 +150,7 @@ function Questionnaire() {
                         </div>
                     </div>
                 </div>
-                <div className='flex justify-end mt-10'>
+                <div className='flex justify-start mt-10'>
                     <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ">
                         {t('submit')}
                     </button>

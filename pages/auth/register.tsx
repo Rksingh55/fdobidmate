@@ -95,10 +95,12 @@ const RegisterCover = () => {
                 },
                 body: JSON.stringify(body),
             });
+            
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             const data = await response?.json();
+            console.log(data)
             const vendorid = data?.data;
             localStorage.setItem("vendor_id", vendorid);
             if (data?.status === "success") {
@@ -132,7 +134,7 @@ const RegisterCover = () => {
         e.preventDefault();
 
         if (!FormValididate) {
-            // toast.error("Please validate required fields")
+            toast.error("Please validate required fields")
         } else {
             const vendor_id = localStorage.getItem("vendor_id");
             const payload = {
@@ -146,7 +148,10 @@ const RegisterCover = () => {
                 },
                 body: JSON.stringify(payload),
             })
-                .then((response) => response.json())
+              .then((response) => {
+            console.log(response); 
+            return response.json();
+        })
                 .then((data) => {
                     if (data.status == "success") {
                         toast.success("Registration successfull please login")
@@ -413,7 +418,6 @@ const RegisterCover = () => {
                                                         type="text"
                                                         placeholder="Address"
                                                         className={`form-input py-3 ps-10 placeholder-text-white-dark rounded-full border-[#FC8404]   sm:text-sm ${validateAddress(user.address) ? '' : 'text-red-500'}`}
-                                                        required
                                                     />
                                                     <span className="absolute start-4 top-1/2 -translate-y-1/2">
                                                         <AiTwotoneHome />

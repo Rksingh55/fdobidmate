@@ -9,6 +9,7 @@ import { RootState, AppDispatch } from '@/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { getToken } from '@/localStorageUtil';
 import { API_BASE_URL } from '@/api.config';
+import Select from 'react-select';
 
 
 
@@ -37,6 +38,8 @@ const Companydetails: React.FC = () => {
     }, [dispatch]);
 
     const vendorInformationList = useSelector((state: RootState) => state.vendordata.list);
+
+
 
     useEffect(() => {
         console.log("fetchvendordata----", vendorInformationList)
@@ -84,6 +87,25 @@ const Companydetails: React.FC = () => {
     const vendorType = useSelector((state: RootState) => state.vendortype.list);
     const category = useSelector((state: RootState) => state.Category.list);
 
+    const options5 = category.map(item => ({
+        value: item.id,
+        label: item.name
+    }));
+
+    // Function to handle category changes
+    const handleCategoryChange = (selectedOptions: any) => {
+        const selectedCategories = selectedOptions.map((option: any) => ({
+            id: option.value,
+            name: option.label,
+        }));
+
+        setUser({
+            ...user,
+            category: selectedCategories,
+        });
+    };
+
+
     const validateForm = () => {
         const newErrors: { [key: string]: string } = {};
         if (!user.cr_number) {
@@ -92,24 +114,13 @@ const Companydetails: React.FC = () => {
         if (!user.type_of_business) {
             newErrors.typeofbusiness = t('field-required');
         }
+        if (!user.category) {
+            newErrors.category = t('field-required');
+        }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const options = Array.from(e.target.options);
-        const selectedCategories = options
-            .filter(option => option.selected)
-            .map(option => ({
-                id: option.value,
-                name: option.text,
-            }));
-
-        setUser({
-            ...user,
-            category: selectedCategories,
-        });
-    };
 
 
     const CompanyApiUrl = "/api/vendor/company_detail"
@@ -153,186 +164,187 @@ const Companydetails: React.FC = () => {
 
 
     return (
-        <div>
-            <SuccessPopup
-                message={message}
-                show={showPopup}
-                onClose={handleClosePopup}
-            />
-            <form className="" onSubmit={handleSubmit}>
-                <div className="row">
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="" className="mb-0">
-                                {t('company-founding-year')}
-                            </label>
-                            <input
-                                type="hidden"
-                                id="existing_founding_year"
-                                name="existing_founding_year"
-                            />
-                            <select
-                                id="founding_year"
-                                name="founding_year"
-                                onChange={(e) =>
-                                    setUser({ ...user, founding_year: e.target.value })
-                                }
-                                className="form-control"
-                                value={user.founding_year}
-                            >
-                                {years?.map((year) => (
-                                    <option key={year} value={year}>
-                                        {year}
+        <>
+
+            <div>
+                <SuccessPopup
+                    message={message}
+                    show={showPopup}
+                    onClose={handleClosePopup}
+                />
+                <form className="" onSubmit={handleSubmit}>
+                    <div className="row">
+                        <div className="col-lg-6 col-md-6 mb-2">
+                            <div className="form-group form-float">
+                                <label htmlFor="" className="mb-0">
+                                    {t('company-founding-year')}
+                                </label>
+                                <input
+                                    type="hidden"
+                                    id="existing_founding_year"
+                                    name="existing_founding_year"
+                                />
+                                <select
+                                    id="founding_year"
+                                    name="founding_year"
+                                    onChange={(e) =>
+                                        setUser({ ...user, founding_year: e.target.value })
+                                    }
+                                    className="form-control"
+                                    value={user.founding_year}
+                                >
+                                    {years?.map((year) => (
+                                        <option key={year} value={year}>
+                                            {year}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                        <div className="col-lg-6 col-md-6 mb-2">
+                            <div className="form-group form-float">
+                                <label htmlFor="" className="mb-0">
+                                    {t('website')}
+                                </label>
+                                <input
+
+                                    className="form-control"
+                                    onChange={(e) => setUser({ ...user, website: e.target.value })}
+                                    name="website"
+                                    id="website"
+                                    value={user.website}
+                                    maxLength={100}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-lg-6 col-md-6 mb-2">
+                            <div className="form-group form-float">
+                                <label htmlFor="" className="mb-0">
+                                    {t('cr-number')}{' '}
+                                    <span className="text-red-700 relative">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    className={`form-input bg-gray-200 outline-none ${errors.cr_number ? 'border-red-500' : ''
+                                        }`}
+                                    onChange={(e) =>
+                                        setUser({ ...user, cr_number: e.target.value })
+                                    }
+                                    name="cr_number"
+                                    readOnly
+                                    id="cr_number"
+                                    value={user.cr_number}
+                                    maxLength={20}
+                                />
+                                {errors.cr_number && (
+                                    <p className="text-red-500 text-sm">{errors.cr_number}</p>
+                                )}
+                            </div>
+                        </div>
+                        <div className="col-lg-6 col-md-6 mb-2">
+                            <div className="form-group form-float">
+                                <label htmlFor="" className="mb-0">
+                                    {t('number-of-employee')}
+                                </label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    onChange={(e) =>
+                                        setUser({ ...user, number_of_employee: e.target.value })
+                                    }
+
+                                    name="number_of_employee"
+                                    id="number_of_employee"
+                                    value={user.number_of_employee}
+                                    maxLength={5}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
+                            <div className="form-group">
+                                <label className="mb-1" htmlFor="typebusiness">
+                                    {t('type-of-business')}{' '}
+                                    <span className="text-red-700 relative">*</span>
+                                </label>
+                                <select
+                                    name="typeofbusiness"
+                                    className={`form-input ${errors.type_of_business ? 'border-red-500' : ''
+                                        }`}
+                                    onChange={(e) =>
+                                        setUser({ ...user, type_of_business: e.target.value })
+                                    }
+                                    value={user.type_of_business}
+                                    id="typebusiness"
+                                >
+
+                                    <option value="corporation-company">
+                                        {t('corporation-company')}
                                     </option>
-                                ))}
-                            </select>
+                                    <option value="subsidiary">{t('subsidiary')}</option>
+                                    <option value="division">{t('division')}</option>
+                                    <option value="partnership">{t('partnership')}</option>
+                                </select>
+                                {errors.type_of_business && (
+                                    <p className="text-red-500 text-sm">{errors.type_of_business}</p>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="" className="mb-0">
-                                {t('website')}
-                            </label>
-                            <input
 
-                                className="form-control"
-                                onChange={(e) => setUser({ ...user, website: e.target.value })}
-                                name="website"
-                                id="website"
-                                value={user.website}
-                                maxLength={100}
-                            />
+                        <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
+                            <div className="form-group">
+                                <label className="mb-1" htmlFor="qualitysafetyval">
+                                    {t('quality-and-safety-organization')}
+                                    <span className="text-red-700 relative">*</span>
+                                </label>
+                                <select
+                                    name="qualitysafety"
+                                    id="qualitysafetyval"
+                                    className="form-control"
+                                    onChange={(e) =>
+                                        setUser({ ...user, quality_safety: e.target.value })
+                                    }
+                                    value={user.quality_safety}
+                                >
+                                    <option disabled selected>
+                                        {t('choose-option')}
+                                    </option>
+                                    <option value="yes">{t('yes')}</option>
+                                    <option value="no">{t('no')}</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="" className="mb-0">
-                                {t('cr-number')}{' '}
-                                <span className="text-red-700 relative">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                className={`form-input bg-gray-200 outline-none ${errors.cr_number ? 'border-red-500' : ''
-                                    }`}
-                                onChange={(e) =>
-                                    setUser({ ...user, cr_number: e.target.value })
-                                }
-                                name="cr_number"
-                                readOnly
-                                id="cr_number"
-                                value={user.cr_number}
-                                maxLength={20}
-                            />
-                            {errors.cr_number && (
-                                <p className="text-red-500 text-sm">{errors.cr_number}</p>
-                            )}
-                        </div>
-                    </div>
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="" className="mb-0">
-                                {t('number-of-employee')}
-                            </label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                onChange={(e) =>
-                                    setUser({ ...user, number_of_employee: e.target.value })
-                                }
 
-                                name="number_of_employee"
-                                id="number_of_employee"
-                                value={user.number_of_employee}
-                                maxLength={5}
-                            />
-                        </div>
-                    </div>
-                    <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
-                        <div className="form-group">
-                            <label className="mb-1" htmlFor="typebusiness">
-                                {t('type-of-business')}{' '}
-                                <span className="text-red-700 relative">*</span>
-                            </label>
-                            <select
-                                name="typeofbusiness"
-                                className={`form-input ${errors.type_of_business ? 'border-red-500' : ''
-                                    }`}
-                                onChange={(e) =>
-                                    setUser({ ...user, type_of_business: e.target.value })
-                                }
-                                value={user.type_of_business}
-                                id="typebusiness"
-                            >
-
-                                <option value="corporation-company">
-                                    {t('corporation-company')}
-                                </option>
-                                <option value="subsidiary">{t('subsidiary')}</option>
-                                <option value="division">{t('division')}</option>
-                                <option value="partnership">{t('partnership')}</option>
-                            </select>
-                            {errors.type_of_business && (
-                                <p className="text-red-500 text-sm">{errors.type_of_business}</p>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
-                        <div className="form-group">
-                            <label className="mb-1" htmlFor="qualitysafetyval">
-                                {t('quality-and-safety-organization')}
-                                <span className="text-red-700 relative">*</span>
-                            </label>
-                            <select
-                                name="qualitysafety"
-                                id="qualitysafetyval"
-                                className="form-control"
-                                onChange={(e) =>
-                                    setUser({ ...user, quality_safety: e.target.value })
-                                }
-                                value={user.quality_safety}
-                            >
-                                <option disabled selected>
-                                    {t('choose-option')}
-                                </option>
-                                <option value="yes">{t('yes')}</option>
-                                <option value="no">{t('no')}</option>
-                            </select>
-                        </div>
-                    </div>
-
-
-                    <div className="col-lg-6 col-md-6 mb-2 bg-re">
-                        <div className="form-group form-float">
+                        <div className="col-lg-6 col-md-6 mb-2 bg-re">
                             <label htmlFor="category" className="mb-0">
-                                {t('what-kind-of-product')}
+                                What kind of product
                             </label>
-                            <select
+                            <Select
                                 id="category"
                                 name="category"
-                                className="form-control form-select cursor-pointer "
-                                // value={category.map(item => item.name)}
+                                className={`form-input form-control form-select cursor-pointer ${errors.category ? 'border-red-500' : ''}`}
+                                placeholder="Select an option"
+                                options={options5}
+                                isMulti={true}
+                                isSearchable={false}
+                                // value={user.category} 
                                 onChange={handleCategoryChange}
-                                multiple
-                            >
-                                {category?.map((item) => (
-                                 <option key={item.id} value={item.id} className='bg-grey-300 flex mt-1' >
-                                          {item.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <span id="total_cat_error" className="alert-dange-smg red"></span>
+                            />
+                            {errors.category && (
+                                <p className="text-red-500 text-sm">{errors.category}</p>
+                            )}
                         </div>
-                    </div>
 
-                </div>
-                <div className='flex justify-end mt-10'>
-                    <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ">
-                        {user.cr_number ? 'Update' : 'submit'}
-                    </button>
-                </div>
-            </form>
-        </div>
+
+
+                    </div>
+                    <div className='flex justify-start mt-10'>
+                        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ">
+                            {user.cr_number ? 'Update' : 'submit'}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </>
 
     )
 };

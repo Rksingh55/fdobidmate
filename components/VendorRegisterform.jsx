@@ -114,7 +114,7 @@ function Index() {
                                         width: `${(activeTab - 1) * (90 / (tabs?.length - 1))}%`
                                     }}
                                 ></div>
-                                <ul className="mb-2 grid grid-cols-7 ">
+                                <ul className=" grid grid-cols-7 ">
                                     {tabs?.map((tab) => (
                                         <li key={tab?.id} className="mx-auto  flex flex-col justify-center items-center">
                                             <button
@@ -131,9 +131,9 @@ function Index() {
                                 </ul>
 
                             </div>
-                            <hr className="border-white-light dark:border-[#1b2e4b] my-3" />
+                           
                             {/* <div className='flex justify-center items-center py-2'><p className='text-red-500  font-bold'>{error}</p></div> */}
-                            <div className='bg-white '>
+                            <div className=' h-[430px]  overflow-y-scroll overflow-x-hidden  p-2 rounded-md  '>
                                 {tabs?.map((tab) => (
                                     <p key={tab?.id} className="mb-5">{activeTab === tab?.id && tab?.content}</p>
                                 ))}
@@ -142,25 +142,26 @@ function Index() {
                         </div>
 
                     </div>
-
+                    <div className=" flex justify-end " >
+                        <div className='flex gap-2'> 
+                            <button
+                                type="button"
+                                className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4  ${activeTab === 1 ? 'hidden' : ''}`}
+                                onClick={() => setActiveTab(activeTab > 1 ? activeTab - 1 : 1)}
+                            >
+                                Previous
+                            </button>
+                            <button
+                                type="button"
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4  ltr:ml-auto rtl:mr-auto"
+                                onClick={handleButtonClick}
+                            >
+                                {activeTab === tabs?.length ? 'Finish' : 'Next'}
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div className="flex gap-2 py-2 ">
-                    <button
-                        type="button"
-                        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4  ${activeTab === 1 ? 'hidden' : ''}`}
-                        onClick={() => setActiveTab(activeTab > 1 ? activeTab - 1 : 1)}
-                    >
-                        Back
-                    </button>
 
-                    <button
-                        type="button"
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4  ltr:ml-auto rtl:mr-auto"
-                        onClick={handleButtonClick}
-                    >
-                        {activeTab === tabs?.length ? 'Finish' : 'Next'}
-                    </button>
-                </div>
             </div>
 
         </>
