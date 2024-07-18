@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPageTitle, toggleRTL } from '../store/themeConfigSlice';
+import {  toggleRTL } from '../store/themeConfigSlice';
 import BlankLayout from '@/components/Layouts/BlankLayout';
 import { RootState } from '@/store';
 import Herosection from '@/components/front/herosection'
 
 const Index = () => {
     const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(setPageTitle('Urva Login'));
-    });
-
+  
     const themeConfig = useSelector((state: RootState) => state.themeConfig);
     const setLocale = (flag: string) => {
         setFlag(flag);

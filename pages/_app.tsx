@@ -38,10 +38,10 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
             duration: 800,
             once: false,
         })
-        const token = getToken();
-        if (!token) {
-            router.replace('/auth/login');
-        }
+        // const token = getToken();
+        // if (!token) {
+        //     router.replace('/auth/login');
+        // }
     }, [])
 
 
