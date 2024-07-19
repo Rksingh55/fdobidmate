@@ -3,7 +3,13 @@ import NextBreadcrumb from '../NextBreadcrumb';
 
 const Header = ({ heading }) => {
   return (
-    <header className="text-black mainheaderbg  md:py-[40px] py-12   z-1">
+    <header style={{
+      backgroundImage: "url('/assets/images/pageheaderbg.png')",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+
+    }} className="text-black   md:py-[40px] py-12   z-1">
       <div className="w-[90%] m-auto ">
         <h1 className=" md:text-3xl text-xl  font-bold text-white  py-2 ] mb-2">{heading}</h1>
         <NextBreadcrumb
@@ -21,3 +27,5 @@ const Header = ({ heading }) => {
 };
 
 export default Header;
+
+

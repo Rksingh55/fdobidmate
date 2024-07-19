@@ -42,7 +42,13 @@ const Login = () => {
             {showLoader && (
                 <Loader />
             )}
-            <div className='herosection  rounded-xl  shadow-2xl '>
+            <div style={{
+                backgroundImage: "url('/assets/images/herosection_bg.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                minHeight: "100vh"
+            }} className='  rounded-xl  shadow-2xl '>
                 <div className="  text-black   flex flex-col gap-5 md:flex-row  items-center  ">
                     <div className='basis-[60%] flex flex-col  items-center   gap-4 '>
                         <div className=''>
