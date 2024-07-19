@@ -134,7 +134,7 @@ const RegisterCover = () => {
         e.preventDefault();
 
         if (!FormValididate) {
-            toast.error("Please validate required fields")
+            // toast.error("Please validate required fields")
         } else {
             const vendor_id = localStorage.getItem("vendor_id");
             const payload = {

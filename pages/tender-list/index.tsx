@@ -8,74 +8,46 @@ import { BiSliderAlt, BiSolidServer } from 'react-icons/bi';
 import { IoGridSharp } from 'react-icons/io5';
 import Footer from '@/components/Layouts/Footer';
 
-interface Tender {
-  id: string;
-  title: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  region: string;
-  amount: string;
-  entity: string;
-  department: string;
-}
+import { fetchTenderList } from '../../Reducer/tenderlistSlice';
 
-const tendersData: Tender[] = [
-  {
-    id: 'TDR-000001',
-    title: 'Supply of HID Cards',
-    description: '1 Supply of HID Cards as per below specifications...',
-    startDate: '2023-01-01',
-    endDate: '2023-12-31',
-    region: 'Middle East',
-    amount: '$100',
-    entity: 'rk',
-    department: 'pencil'
-  },
+import { RootState, AppDispatch } from '@/store';
+import { useSelector, useDispatch } from 'react-redux';
 
-  {
-    id: 'TDR-000002',
-    title: 'Supply of HID Cards',
-    description: '1 Supply of HID Cards as per below specifications...',
-    startDate: '2023-02-13',
-    endDate: '2023-2-22',
-    region: 'Middle East',
-    amount: '$100',
-    entity: 'Entity',
-    department: 'pen'
-  },
-  {
-    id: 'TDR-000003',
-    title: 'Supply of HID Cards',
-    description: '1 Supply of HID Cards as per below specifications...',
-    startDate: '2023-09-2',
-    endDate: '2023-05-11',
-    region: 'Middle East',
-    amount: '$100',
-    entity: 'Entity',
-    department: 'univercity'
-  },
-  {
-    id: 'TDR-000004',
-    title: 'Supply of HID Cards',
-    description: '1 Supply of HID Cards as per below specifications...',
-    startDate: '2023-06-01',
-    endDate: '2023-12-31',
-    region: 'Middle East',
-    amount: '$100',
-    entity: 'Entity',
-    department: 'college'
-  },
-];
 
 const tendorlist = () => {
+
+    const dispatch = useDispatch<AppDispatch>();
+    useEffect(() => {
+        dispatch(fetchTenderList());
+    }, []);
+    const tenderlist = useSelector((state: RootState) => state.Tenderlist.list);
+
+    interface Tender {
+        encrypt_id: string;
+        code: string;
+        title: string;
+        description: string;
+        publish_date:string;
+        close_date:string;
+        company: string;
+        curr_code:string
+        tenderfeeamount:string;
+        department: string;
+      }
+  const tendersData: Tender[] = tenderlist;
+    console.log(tendersData);
+
   const [view, setView] = useState<'list' | 'grid'>('list');
   const [filters, setFilters] = useState<Partial<{
+    encrypt_id: any;
     tenderId: any;
     department: any;
-    startDate: any;
-    endDate: any;
-    entity: any;
+    code:any;
+    company: any;
+    curr_code:any;
+    close_date: any;
+    tenderfeeamount:string;
+    publish_date: any;
   }>>({});
   const [filteredTenders, setFilteredTenders] = useState<Tender[]>(tendersData);
   const [searchQuery, setSearchQuery] = useState('');
@@ -84,23 +56,26 @@ const tendorlist = () => {
 
   useEffect(() => {
     let tempTenders = [...tendersData];
-    if (filters?.tenderId) {
-      tempTenders = tempTenders.filter(tender => tender.id.includes(filters.tenderId));
+    if (filters?.encrypt_id) {
+        tempTenders = tempTenders.filter(tender => tender.encrypt_id.includes(filters.encrypt_id));
+      }
+    if (filters?.code) {
+      tempTenders = tempTenders.filter(tender => tender.code.includes(filters.code));
     }
     if (filters?.department) {
       tempTenders = tempTenders.filter(tender => tender.department.includes(filters.department));
     }
-    if (filters?.startDate) {
-      tempTenders = tempTenders.filter(tender => new Date(tender.startDate) >= new Date(filters.startDate));
+    if (filters?.publish_date) {
+      tempTenders = tempTenders.filter(tender => new Date(tender.publish_date) >= new Date(filters.publish_date));
     }
-    if (filters?.endDate) {
-      tempTenders = tempTenders.filter(tender => new Date(tender.endDate) <= new Date(filters.endDate));
+    if (filters?.close_date) {
+      tempTenders = tempTenders.filter(tender => new Date(tender.close_date) <= new Date(filters.close_date));
     }
-    if (filters?.entity) {
-      tempTenders = tempTenders.filter(tender => tender.entity.includes(filters.entity));
+    if (filters?.company) {
+      tempTenders = tempTenders.filter(tender => tender.company.includes(filters.company));
     }
     if (sortBy === 'mostRecent') {
-      tempTenders.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
+      tempTenders.sort((a, b) => new Date(b.publish_date).getTime() - new Date(a.publish_date).getTime());
     }
 
     setFilteredTenders(tempTenders);
@@ -112,7 +87,7 @@ const tendorlist = () => {
   };
 
   const Tenderdatasearch = filteredTenders?.filter(tender => {
-    return `${tender.id} ${tender.title} ${tender.region} ${tender.entity} ${tender.department}`
+    return `${tender.code} ${tender.encrypt_id} ${tender.title} ${tender.publish_date} ${tender.curr_code} ${tender.tenderfeeamount} ${tender.company} ${tender.department}`
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
   });
@@ -130,8 +105,8 @@ const tendorlist = () => {
             value={searchQuery}
             onChange={handleSearchChange}
           />
-          <div className="flex items-center space-x-4   ">
-            <select onChange={(e) => setSortBy(e.target.value)} value={sortBy} className="p-2 border max-sm:hidden">
+          <div className="flex items-center space-x-4  ">
+            <select onChange={(e) => setSortBy(e.target.value)} value={sortBy} className="p-2 border">
               <option value="mostRecent">Most Recent</option>
               <option value="mostRecent">Most Recent</option>
               <option value="mostRecent">Most Recent</option>
@@ -152,7 +127,7 @@ const tendorlist = () => {
             <div className={`flex ${view === 'grid' ? 'grid md:grid-cols-3 ' : 'flex-col'} gap-2`}>
               {Tenderdatasearch.length > 0 ? (
                 Tenderdatasearch.map(tender => (
-                  <TenderCard key={tender.id} tender={tender} view={view} />
+                  <TenderCard key={tender.code} tender={tender} view={view} />
                 ))
               ) : (
                 <div className="text-center col-span-1 md:col-span-2 lg:col-span-3">

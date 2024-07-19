@@ -12,7 +12,7 @@ import Image from 'next/image'
 import { useTranslation } from 'react-i18next';
 import Loader from '@/components/front/loader';
 import { TiHome } from "react-icons/ti";
-import { API_BASE_URL } from '@/api.config';
+import { API_BASE_URL, LOGIN_API_URL } from '@/api.config';
 const Login = () => {
     const router = useRouter()
     const [email, setemail] = useState("");
@@ -20,7 +20,7 @@ const Login = () => {
     const [password, setpassword] = useState("");
     const [error, setError] = useState<{ type: 'success' | 'error'; text: string }>({ type: 'error', text: '' });
 
-    const LoginapiUrl = "/api/login"
+
     const handleSubmit = (e: any) => {
         e.preventDefault();
         const data = { email, password };
@@ -31,7 +31,7 @@ const Login = () => {
         else {
             setError({ type: 'success', text: "Validating please wait...!!" });
         }
-        fetch(`${API_BASE_URL}${LoginapiUrl}`, {
+        fetch(`${API_BASE_URL}${LOGIN_API_URL}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -79,7 +79,7 @@ const Login = () => {
 
 
     return (
-        <div  className='md:p-12 max-sm:p-3  bg-gradient-to-b from-[#C1E9FF] to-[#00A9E2] min-h-[100vh]  max-sm:flex  max-sm:items-center'>
+        <div className='md:p-12 max-sm:p-3  bg-gradient-to-b from-[#C1E9FF] to-[#00A9E2] min-h-[100vh]  max-sm:flex  max-sm:items-center'>
             <ToastContainer />
             {showLoader && (
                 <Loader />
@@ -89,7 +89,7 @@ const Login = () => {
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-               
+
             }} className=' rounded-xl  shadow-2xl '>
                 <div className="  text-black  flex flex-col gap-5 md:flex-row  items-center  ">
                     <div className='md:basis-[60%] w-full flex flex-col   items-center   gap-4 max-sm:hidden '>

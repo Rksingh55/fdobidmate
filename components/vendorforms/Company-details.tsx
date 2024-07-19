@@ -8,7 +8,7 @@ import SuccessPopup from '../front/SuccessPopup';
 import { RootState, AppDispatch } from '@/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { getToken } from '@/localStorageUtil';
-import { API_BASE_URL } from '@/api.config';
+import { API_BASE_URL, COMPANYDETAIL_API_URL } from '@/api.config';
 import Select from 'react-select';
 
 
@@ -123,7 +123,7 @@ const Companydetails: React.FC = () => {
 
 
 
-    const CompanyApiUrl = "/api/vendor/company_detail"
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const token = getToken();
@@ -135,7 +135,7 @@ const Companydetails: React.FC = () => {
         const isValid = validateForm();
         if (isValid) {
             try {
-                const response = await fetch(`${API_BASE_URL}${CompanyApiUrl}`, {
+                const response = await fetch(`${API_BASE_URL}${COMPANYDETAIL_API_URL}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

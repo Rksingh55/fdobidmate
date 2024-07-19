@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/api.config';
+import { ACCOUNTDETAIL_API_URL, API_BASE_URL } from '@/api.config';
 import { getToken } from '@/localStorageUtil';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -108,7 +108,7 @@ function AccountInformation() {
 
     const [message, setMessage] = useState('');
     const [showPopup, setShowPopup] = useState(false);
-    const AccountInformationApiurl = "/api/vendor/account_detail";
+
     const [bussinessreferenceerror, setBusinessReferenceError] = useState<any>([])
 
     const validateBusinessReferences = (): boolean => {
@@ -142,7 +142,7 @@ function AccountInformation() {
         };
 
         try {
-            const response = await fetch(`${API_BASE_URL}${AccountInformationApiurl}`, {
+            const response = await fetch(`${API_BASE_URL}${ACCOUNTDETAIL_API_URL}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -297,7 +297,7 @@ function AccountInformation() {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="d-flex justify-content-between py-4">
-                            <h3 className="mb-2"><b>{t('business-reference')} <span>({t('please-fill-minimum-3-years')})</span> <span className="alert-dange-smg red">*</span></b></h3>
+                            {bussinessreferenceerror && <p className='text-red-600 font-bold'>Please fill at least 3 years of business references*.</p>}
                             <div className="row">
                                 <div className="col-lg-4">
                                     <label className="mb-1" htmlFor="">{t('upload-attachment')}</label>
@@ -318,7 +318,7 @@ function AccountInformation() {
                         <hr />
                     </div>
                 </div>
-                {bussinessreferenceerror && <p className='text-red-600 font-bold'>Please fill at least 3 years of business references.</p>}
+
                 {businessReferences.map((reference, index) => (
                     <div key={index} className="row mb-3 flex  gap-2 border-1 p-2 rounded-md ">
                         <div className="col-lg-2">

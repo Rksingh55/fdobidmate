@@ -6,7 +6,7 @@ import { RootState, AppDispatch } from '@/store';
 import { fetchvendordata } from '../../Reducer/Vendor_Registeration_Slice/getvendordata';
 import { getToken } from '@/localStorageUtil';
 import SuccessPopup from '../front/SuccessPopup';
-import { API_BASE_URL } from '@/api.config';
+import { API_BASE_URL, QUESTIONAIRE_API_URL } from '@/api.config';
 
 interface Answer {
     [key: string]: string;
@@ -60,7 +60,7 @@ function Questionnaire() {
         }));
     };
 
-    const QuestionariesApiUrl = "/api/vendor/question_naire"
+   
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         const token = getToken();
@@ -70,7 +70,7 @@ function Questionnaire() {
             vendor_profile_id: vendor_profile_id,
         };
         try {
-            const response = await fetch(`${API_BASE_URL}${QuestionariesApiUrl}`, {
+            const response = await fetch(`${API_BASE_URL}${QUESTIONAIRE_API_URL}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

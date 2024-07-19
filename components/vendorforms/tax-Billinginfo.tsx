@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getToken } from '@/localStorageUtil';
 import { fetchvendordata } from '../../Reducer/Vendor_Registeration_Slice/getvendordata';
 import SuccessPopup from '../front/SuccessPopup';
-import { API_BASE_URL } from '@/api.config';
+import { API_BASE_URL, TAXBILLING_API_URL } from '@/api.config';
 
 function TaxBillinginfo() {
     const { t, i18n } = useTranslation();
@@ -80,7 +80,7 @@ function TaxBillinginfo() {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-    const TaxbillingapiUrl = "/api/vendor/tax_billing"
+   
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const token = getToken();
@@ -92,7 +92,7 @@ function TaxBillinginfo() {
         };
         if (isValid) {
             try {
-                const response = await fetch(`${API_BASE_URL}${TaxbillingapiUrl}`, {
+                const response = await fetch(`${API_BASE_URL}${TAXBILLING_API_URL}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

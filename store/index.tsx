@@ -16,6 +16,7 @@ import question from '../Reducer/questionSlice';
 import quotation from '../Reducer/quatationSlice';
 import purchaseorder from '../Reducer/purchaseorderSlice';
 import vendoReducer from '../Reducer/Vendor_Registeration_Slice/getvendordata';
+import tenderlist from '../Reducer/tenderlistSlice';
 import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 
 const persistConfig = {
@@ -39,7 +40,8 @@ const rootReducer = combineReducers({
   modeofpayment: modeofpayment,
   termsofpayment: termsofpayment,
   termsofDelivery: termsofDelivery,
-  vendordata:vendoReducer,
+  vendordata: vendoReducer,
+  Tenderlist:tenderlist,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

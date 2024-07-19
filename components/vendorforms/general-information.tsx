@@ -9,7 +9,7 @@ import { getToken } from '@/localStorageUtil';
 import { fetchVendorTpeList } from '../../Reducer/vendorTypeSlice';
 import SuccessPopup from '../front/SuccessPopup';
 import { fetchvendordata } from '../../Reducer/Vendor_Registeration_Slice/getvendordata';
-import { API_BASE_URL } from '@/api.config';
+import { API_BASE_URL, GENERAL_INFORMATION_FORM_API_URL } from '@/api.config';
 
 
 interface User {
@@ -156,15 +156,13 @@ const GeneralInformation: React.FC = () => {
     };
 
 
-    const GeneralInformationapi = "/api/vendor/general_info"
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const isValid = validateForm();
         const token = getToken();
-
-
         try {
-            const response = await fetch(`${API_BASE_URL}${GeneralInformationapi}`, {
+            const response = await fetch(`${API_BASE_URL}${GENERAL_INFORMATION_FORM_API_URL}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -440,7 +438,7 @@ const GeneralInformation: React.FC = () => {
                                 value={user.currency_id}
                             >
 
-                                {currencyList?.map((item:any) => (
+                                {currencyList?.map((item: any) => (
                                     <option key={item.id} value={item.id}>
                                         {item.name}
                                     </option>

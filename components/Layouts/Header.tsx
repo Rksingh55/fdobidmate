@@ -216,7 +216,7 @@ const Header = () => {
                         </div>
                         <h2 className='font-bold max-sm:hidden '>Hello, Welcome {name}</h2>
                         <div className="flex items-center space-x-1.5 ltr:ml-auto rtl:mr-auto rtl:space-x-reverse dark:text-[#d0d2d6] sm:flex-1 ltr:sm:ml-0 sm:rtl:mr-0 lg:space-x-2">
-                            
+
                             <div className="sm:ltr:mr-auto sm:rtl:ml-auto">
 
                                 <button
@@ -425,12 +425,12 @@ const Header = () => {
                                     offset={[0, 8]}
                                     placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
                                     btnClassName="relative group block"
-                                    button={<img className="h-9 w-9 rounded-full object-cover saturate-50 group-hover:saturate-100" src="/assets/images/user-profile.jpeg" alt="userProfile" />}
+                                    button={<img className="h-9 w-9 rounded-full object-cover saturate-50 group-hover:saturate-100" src="https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?size=626&ext=jpg" alt="userProfile" />}
                                 >
                                     <ul className="w-[230px] !py-0 font-semibold text-dark dark:text-white-dark dark:text-white-light/90">
                                         <li>
                                             <div className="flex items-center px-4 py-4">
-                                                <img className="h-10 w-10 rounded-md object-cover" src="/assets/images/user-profile.jpeg" alt="userProfile" />
+                                                <img className="h-10 w-10 rounded-md object-cover" src="https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?size=626&ext=jpg" alt="userProfile" />
                                                 <div className="truncate ltr:pl-4 rtl:pr-4">
                                                     <h4 className="text-base">
                                                         {name}

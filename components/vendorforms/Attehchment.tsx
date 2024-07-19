@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import UploadDocumentPopup from '../../components/documentupload/UploadDocumentPopup';
 import ViewDocumentPopup from '../../components/documentupload/ViewDocumentPopup';
 import { getToken } from '@/localStorageUtil';
-import { API_BASE_URL } from '@/api.config';
+import { API_BASE_URL, VENDORATTACHMENT_API_URL } from '@/api.config';
 import { FaCloudUploadAlt } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -40,7 +40,7 @@ const HomePage: React.FC = () => {
     };
 
 
-    const VendorAttachmentApiUrl = "/api/vendor/vendor_attachements"
+    // const VendorAttachmentApiUrl = "/api/vendor/vendor_attachements"
     // const handleUploadDocuments = async (type: string, files: File[]) => {
     //     console.log("selected filesssssss------->", files)
     //     const formDataEntries: [string, FormDataEntryValue][] = [];
@@ -104,7 +104,7 @@ const HomePage: React.FC = () => {
             formData.append('vendor_profile_id', vendor_profile_id || '');
             formData.append('vendor_files', JSON.stringify(base64Files));
             const token = getToken();
-            const response = await fetch(`${API_BASE_URL}${VendorAttachmentApiUrl}`, {
+            const response = await fetch(`${API_BASE_URL}${VENDORATTACHMENT_API_URL}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
