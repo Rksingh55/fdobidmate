@@ -44,11 +44,7 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
         //     router.replace('/auth/login');
         // }
     }, [])
-
-
-
     const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>);
-
     return (
         <Provider store={store}>
             <MantineProvider>

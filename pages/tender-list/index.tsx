@@ -7,19 +7,15 @@ import Header from '@/components/front/Pageheader';
 import { BiSliderAlt, BiSolidServer } from 'react-icons/bi';
 import { IoGridSharp } from 'react-icons/io5';
 import Footer from '@/components/Layouts/Footer';
-
 import { fetchTenderList } from '../../Reducer/tenderlistSlice';
-
 import { RootState, AppDispatch } from '@/store';
 import { useSelector, useDispatch } from 'react-redux';
 
-
 const tendorlist = () => {
-
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(fetchTenderList());
-  }, []);
+  }, [dispatch]);
   const tenderlist = useSelector((state: RootState) => state.Tenderlist.list);
 
   interface Tender {
@@ -96,7 +92,7 @@ const tendorlist = () => {
     <>
       <Frontheader />
       <Header heading="Tender Preview" />
-      <div className='w-[90%] m-auto py-3'>
+      <div className='w-[90%] m-auto py-3 h-auto'>
         <div className="flex justify-between md:flex-row flex-col gap-2 items-center mb-4 bg-white p-3 rounded-md shadow-md">
           <input
             type="text"
@@ -145,7 +141,7 @@ const tendorlist = () => {
         </div>
 
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };
