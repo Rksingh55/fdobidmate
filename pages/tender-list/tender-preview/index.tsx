@@ -34,7 +34,7 @@ function TenderPreview() {
                 router.push("/auth/login")
             }, 3000);
             return;
-        }else{
+        } else {
             router.push("/dashboard")
         }
     };

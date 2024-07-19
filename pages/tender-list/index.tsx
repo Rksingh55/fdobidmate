@@ -16,37 +16,37 @@ import { useSelector, useDispatch } from 'react-redux';
 
 const tendorlist = () => {
 
-    const dispatch = useDispatch<AppDispatch>();
-    useEffect(() => {
-        dispatch(fetchTenderList());
-    }, []);
-    const tenderlist = useSelector((state: RootState) => state.Tenderlist.list);
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    dispatch(fetchTenderList());
+  }, []);
+  const tenderlist = useSelector((state: RootState) => state.Tenderlist.list);
 
-    interface Tender {
-        encrypt_id: string;
-        code: string;
-        title: string;
-        description: string;
-        publish_date:string;
-        close_date:string;
-        company: string;
-        curr_code:string
-        tenderfeeamount:string;
-        department: string;
-      }
+  interface Tender {
+    encrypt_id: string;
+    code: string;
+    title: string;
+    description: string;
+    publish_date: string;
+    close_date: string;
+    company: string;
+    curr_code: string
+    tenderfeeamount: string;
+    department: string;
+  }
   const tendersData: Tender[] = tenderlist;
-    console.log(tendersData);
+  console.log(tendersData);
 
   const [view, setView] = useState<'list' | 'grid'>('list');
   const [filters, setFilters] = useState<Partial<{
     encrypt_id: any;
     tenderId: any;
     department: any;
-    code:any;
+    code: any;
     company: any;
-    curr_code:any;
+    curr_code: any;
     close_date: any;
-    tenderfeeamount:string;
+    tenderfeeamount: string;
     publish_date: any;
   }>>({});
   const [filteredTenders, setFilteredTenders] = useState<Tender[]>(tendersData);
@@ -57,8 +57,8 @@ const tendorlist = () => {
   useEffect(() => {
     let tempTenders = [...tendersData];
     if (filters?.encrypt_id) {
-        tempTenders = tempTenders.filter(tender => tender.encrypt_id.includes(filters.encrypt_id));
-      }
+      tempTenders = tempTenders.filter(tender => tender.encrypt_id.includes(filters.encrypt_id));
+    }
     if (filters?.code) {
       tempTenders = tempTenders.filter(tender => tender.code.includes(filters.code));
     }
