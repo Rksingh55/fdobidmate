@@ -130,8 +130,8 @@ const tendorlist = () => {
             value={searchQuery}
             onChange={handleSearchChange}
           />
-          <div className="flex items-center space-x-4  ">
-            <select onChange={(e) => setSortBy(e.target.value)} value={sortBy} className="p-2 border">
+          <div className="flex items-center space-x-4   ">
+            <select onChange={(e) => setSortBy(e.target.value)} value={sortBy} className="p-2 border max-sm:hidden">
               <option value="mostRecent">Most Recent</option>
               <option value="mostRecent">Most Recent</option>
               <option value="mostRecent">Most Recent</option>
