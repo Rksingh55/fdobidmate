@@ -241,7 +241,7 @@ const RegisterCover = () => {
                         </div>
                         <div className="  md:p-4 basis-[40%]     text-center "  >
                         <Link href="/">
-                      <div className='flex justify-end   px-4 '>
+                      <div className='flex justify-end   px-4 max-sm:py-3'>
                             <div className='hover:bg-[#00A9E2] bg-[#80d2ee] rounded-full p-2'><TiHome className='text-xl text-white'/></div>
                         </div></Link>
                             <div className="relative flex w-full flex-col items-center justify-center gap-6 px-4 pb-16 pt-6 sm:px-6 lg:max-w-[667px]">

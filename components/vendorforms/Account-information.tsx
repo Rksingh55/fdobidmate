@@ -134,7 +134,7 @@ function AccountInformation() {
         }
         const payload = {
             ...user,
-            bankAccounts: bankAccounts,
+            account_info: bankAccounts,
             business_reference: businessReferences,
             vendor_profile_id: vendor_profile_id,
             attachement_type: "Business Reference File",

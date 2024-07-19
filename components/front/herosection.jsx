@@ -17,10 +17,7 @@ export default function Home() {
         const u_name = localStorage.getItem("userName");
         setName(u_name ?? "");
     }, []);
-
-
     const [name, setName] = useState(u_name ?? "");
-
 
     return (
         <>
@@ -48,8 +45,8 @@ export default function Home() {
                         </div>
                     </div>
                     <div className="  p-4 basis-[40%]     text-center herosectionbg max-sm:mt-[-50px]"  >
-                        <p className='py-2  md:text-[18px]'>{t('Welcome To FDO Bidmate Auction House')}</p>
-                        <h1 className="text-[30px] font-bold mb-4 py-2 text-[#20427F]">
+                        <p className='md:py-2  md:text-[18px] text-[12px]'>{t('Welcome To FDO Bidmate Auction House')}</p>
+                        <h1 className="md:text-[30px] text-[25px] font-bold md:mb-4 py-2 text-[#20427F]">
                             {t('Build, Sell & Collect Digital items')}
                         </h1>
                         <p className="mb-6  md:text-[18px] leading-6">
