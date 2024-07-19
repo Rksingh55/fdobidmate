@@ -16,6 +16,7 @@ import Fdomainlogo from "../../public/assets/images/fdo icon3.png";
 import { BsBuildings } from 'react-icons/bs';
 import OtpModal from "@/components/front/OtpModal"
 import { TiHome } from 'react-icons/ti';
+import { API_BASE_URL, OTPVALIDATE_API_URL, REGISTER_API_URL } from '@/api.config';
 const RegisterCover = () => {
     const router = useRouter();
     const [message, setmessege] = useState("");
@@ -72,6 +73,7 @@ const RegisterCover = () => {
         });
     };
 
+
     const handleVerifyClick = async () => {
         const { organization_name, name, email } = user;
         if (!organization_name || !name || !email) {
@@ -88,14 +90,14 @@ const RegisterCover = () => {
                 name,
                 email,
             };
-            const response = await fetch('http://10.10.10.212/FDOBidmateLaravel/public/api/otpRequest', {
+            const response = await fetch(`${API_BASE_URL}${OTPVALIDATE_API_URL}`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(body),
             });
-            
+
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -104,14 +106,14 @@ const RegisterCover = () => {
             const vendorid = data?.data;
             localStorage.setItem("vendor_id", vendorid);
             if (data?.status === "success") {
-                setIsOpenModal(true);
                 toast.success("OTP sent on email");
+                setIsOpenModal(true);
             } else {
                 toast.error("Email validation failed");
             }
         } catch (error) {
             console.error('Error validating email:', error);
-            toast.error("Email already exists! Please use another email.");
+            toast.error("something went wrong ! please try after some time");
         }
     };
 
@@ -121,7 +123,7 @@ const RegisterCover = () => {
         console.log('Submitting OTP:', otp);
         setTimeout(() => {
             setIsOpenModal(false);
-        }, 8000)
+        }, 80000000)
     };
 
 
@@ -141,17 +143,17 @@ const RegisterCover = () => {
                 ...user,
                 id: vendor_id,
             };
-            fetch(`http://10.10.10.212/FDOBidmateLaravel/public/api/register`, {
+            fetch(`${API_BASE_URL}${REGISTER_API_URL}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(payload),
             })
-              .then((response) => {
-            console.log(response); 
-            return response.json();
-        })
+                .then((response) => {
+                    console.log(response);
+                    return response.json();
+                })
                 .then((data) => {
                     if (data.status == "success") {
                         toast.success("Registration successfull please login")
@@ -165,6 +167,8 @@ const RegisterCover = () => {
                 })
                 .catch((error) => {
                     console.error("Error:", error);
+                    toast.error("something went wrong ! please try after some time");
+
                 });
         }
     };
@@ -220,12 +224,12 @@ const RegisterCover = () => {
             <div className='md:p-12  bg-gradient-to-b from-[#C1E9FF] to-[#00A9E2] min-h-[100vh]  max-sm:p-3 max-sm:flex  max-sm:items-center'>
 
                 <div style={{
-                backgroundImage: "url('/assets/images/herosection_bg.png')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                minHeight: "100vh"
-            }} className='  rounded-xl  shadow-2xl '>
+                    backgroundImage: "url('/assets/images/herosection_bg.png')",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    minHeight: "100vh"
+                }} className='  rounded-xl  shadow-2xl '>
                     <div className="  text-black  flex flex-col gap-5 md:flex-row  items-center  ">
                         <div className='basis-[60%] flex flex-col  items-center  gap-5 max-sm:hidden '>
                             <div className=''>
@@ -246,10 +250,10 @@ const RegisterCover = () => {
                             </div>
                         </div>
                         <div className="  md:p-4 basis-[40%]     text-center "  >
-                        <Link href="/">
-                      <div className='flex justify-end   px-4 max-sm:py-3'>
-                            <div className='hover:bg-[#00A9E2] bg-[#80d2ee] rounded-full p-2'><TiHome className='text-xl text-white'/></div>
-                        </div></Link>
+                            <Link href="/">
+                                <div className='flex justify-end   px-4 max-sm:py-3'>
+                                    <div className='hover:bg-[#00A9E2] bg-[#80d2ee] rounded-full p-2'><TiHome className='text-xl text-white' /></div>
+                                </div></Link>
                             <div className="relative flex w-full flex-col items-center justify-center gap-6 px-4 pb-16 pt-6 sm:px-6 lg:max-w-[667px]">
                                 <div className="w-full max-w-[440px] ">
                                     <div className="">
@@ -393,7 +397,7 @@ const RegisterCover = () => {
                                                             type="number"
                                                             placeholder="Contact Number *"
                                                             className={`form-input py-3 ps-10 placeholder-text-white-dark rounded-full border-[#FC8404]  sm:text-sm ${validatePhoneNumber(user.phone_no) ? 'text-green-500' : 'border-red-500 text-red-600'}`}
-                                                           
+
                                                         />
                                                         <span className="absolute start-4 top-1/2 -translate-y-1/2">
                                                             <MdPhone />
