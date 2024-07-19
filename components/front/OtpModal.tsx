@@ -1,3 +1,4 @@
+import { API_BASE_URL, OTPVALIDATE_API_URL, OTPVERIFY_API_URL } from '@/api.config';
 import { useState, useRef, ChangeEvent, KeyboardEvent } from 'react';
 
 interface OtpModalProps {
@@ -32,6 +33,7 @@ const OtpModal: React.FC<OtpModalProps> = ({ isOpen, onClose, onOtpSubmit }) => 
         }
     };
 
+
     const replaceAtIndex = (str: string, index: number, value: string): string => {
         return str.substring(0, index) + value + str.substring(index + 1);
     };
@@ -44,7 +46,7 @@ const OtpModal: React.FC<OtpModalProps> = ({ isOpen, onClose, onOtpSubmit }) => 
         onOtpSubmit(otp);
         try {
             const vendor_id = localStorage.getItem("vendor_id");
-            const response = await fetch('http://10.10.10.212/FDOBidmateLaravel/public/api/verifyotp', {
+            const response = await fetch(`${API_BASE_URL}${OTPVERIFY_API_URL}`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -63,14 +65,13 @@ const OtpModal: React.FC<OtpModalProps> = ({ isOpen, onClose, onOtpSubmit }) => 
                 setResponseMessage(data.message.error);
             }
         } catch (error) {
-            console.error('Error validating OTP:', error);
-            setResponseMessage("Error validating OTP");
+            setResponseMessage("something went wrong ! please try after some time");
         }
 
         setTimeout(() => {
             setResponseMessage(null);
             onClose();
-        }, 4000);
+        }, 800000000);
 
     };
 
