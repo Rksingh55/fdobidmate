@@ -38,7 +38,7 @@ const Login = () => {
     const isFormValid = email !== '';
 
     return (
-        <div className='md:p-12  bg-gradient-to-b from-[#C1E9FF] to-[#00A9E2] min-h-[100vh]'>
+        <div className='md:p-12 max-sm:p-3  bg-gradient-to-b from-[#C1E9FF] to-[#00A9E2] min-h-[100vh]  max-sm:flex  max-sm:items-center'>
             <ToastContainer />
             {showLoader && (
                 <Loader />
@@ -48,10 +48,10 @@ const Login = () => {
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-                minHeight: "100vh"
+
             }} className='  rounded-xl  shadow-2xl'>
                 <div className="  text-black   flex flex-col gap-5 md:flex-row  items-center  ">
-                    <div className='basis-[60%] flex flex-col  items-center   gap-4 '>
+                    <div className='md:basis-[60%] w-full flex flex-col   items-center   gap-4 max-sm:hidden  '>
                         <div className=''>
                             <Image
                                 src={Fdomainlogo}
@@ -69,11 +69,11 @@ const Login = () => {
                             />
                         </div>
                     </div>
-                    <div className="  p-4 basis-[40%]     text-center  max-sm:mt-[-50px]"  >
-                    <Link href="/">
-                      <div className='flex justify-end   px-4 '>
-                            <div className='hover:bg-[#00A9E2] bg-[#80d2ee] rounded-full p-2'><TiHome className='text-xl text-white'/></div>
-                        </div></Link>
+                    <div className="  p-4 basis-[40%]     text-center  "  >
+                        <Link href="/">
+                            <div className='flex justify-end    '>
+                                <div className='hover:bg-[#00A9E2] bg-[#80d2ee] rounded-full p-2'><TiHome className='text-xl text-white' /></div>
+                            </div></Link>
                         <div className="relative flex w-full flex-col items-center justify-center gap-6 px-4 pb-16 sm:px-6 lg:max-w-[667px]">
                             <div className="w-full max-w-[440px] lg:mt-16">
                                 <div className="mb-6">

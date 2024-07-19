@@ -28,7 +28,7 @@ export default function Home() {
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-                minHeight: "100vh"
+               
             }}>
                 <ToastContainer />
                 <div className="  text-black min-h-[88vh]  flex flex-col gap-5 md:flex-row  items-center  ">

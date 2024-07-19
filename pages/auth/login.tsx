@@ -89,7 +89,7 @@ const Login = () => {
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-                minHeight: "100vh"
+               
             }} className=' rounded-xl  shadow-2xl '>
                 <div className="  text-black  flex flex-col gap-5 md:flex-row  items-center  ">
                     <div className='md:basis-[60%] w-full flex flex-col   items-center   gap-4 max-sm:hidden '>
