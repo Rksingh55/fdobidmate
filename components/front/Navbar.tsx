@@ -47,7 +47,7 @@ const Navbar = () => {
                                 </Link>
                                 <MdOutlineClose onClick={() => setIsOpen(false)} className="text-2xl text-gray-500 " />
                             </div>
-                            <div className="flex justify-between flex-col  h-[85vh]">
+                            <div className="flex justify-between flex-col  h-[80vh]">
                                 <div className="basis-1/2 mt-4">
                                     <ul className=" flex flex-col gap-2 ">
                                         <Link href="/" onClick={togglePopup}><li className=" hover:bg-gray-100 rounded-xl px-2 py-2 flex gap-2"><AiFillHome className="mt-[2px] text-gray-400" /> Home</li></Link>

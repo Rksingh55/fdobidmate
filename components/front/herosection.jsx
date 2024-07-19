@@ -23,7 +23,13 @@ export default function Home() {
         <>
             <Frontheader />
             {/* ----hersection----- */}
-            <div className='herosection   '>
+            <div className='' style={{
+                backgroundImage: "url('/assets/images/herosection_bg.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                minHeight: "100vh"
+            }}>
                 <ToastContainer />
                 <div className="  text-black min-h-[88vh]  flex flex-col gap-5 md:flex-row  items-center  ">
                     <div className='basis-[60%] flex flex-col  items-center  '>
