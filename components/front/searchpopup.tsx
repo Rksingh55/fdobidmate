@@ -14,10 +14,16 @@ interface DataItem {
 }
 
 const jsonData: DataItem[] = [
-    { id: '1', name: 'John Doe' },
-    { id: '1', name: 'Jane Smith' },
-    { id: '1', name: 'Alice Johnson' },
-    // Add more data as needed
+    { id: '1', name: 'Tender1' },
+    { id: '1', name: 'Tender2' },
+    { id: '1', name: 'Tender3' },
+    { id: '2', name: 'Rfi2' },
+    { id: '2', name: 'Rfi1' },
+    { id: '2', name: 'Rfi3' },
+    { id: '3', name: 'Auction1' },
+    { id: '3', name: 'Auction2' },
+    { id: '3', name: 'Auction3' },
+
 ];
 
 const SearchPopup: React.FC<SearchPopupProps> = ({ onClose, isSearchOpen }) => {
@@ -48,13 +54,13 @@ const SearchPopup: React.FC<SearchPopupProps> = ({ onClose, isSearchOpen }) => {
                     <h2 className="text-lg font-bold text-gray-800">Search</h2>
                     <button onClick={onClose} className="text-grey-400 text-[30px]">&times;</button>
                 </div>
-                
+
                 <input
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     className="form-input ps-10 placeholder:text-white-dark rounded-full py-3 border-[#FC8404]"
-                    placeholder="Enter ID to search"
+                    placeholder="Enter (Tender , Rfi , Auction) ID to search"
                 />
                 <div className="mt-4 text-center">
                     {results.length > 0 ? (

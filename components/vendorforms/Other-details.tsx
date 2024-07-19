@@ -30,16 +30,39 @@ function OtherDetails() {
         dispatch(fetchvendordata());
     }, [dispatch]);
     const [user, setUser] = useState({
+        company_name: "",
+        contact_no: "",
+        contact_person: "",
+        client: "",
+    });
+    const [user2, setUser2] = useState({
+        contactperson: "",
+        relation: "",
+        designation: "",
+        contactno: "",
     });
     const vendorInformationList = useSelector((state: RootState) => state.vendordata.list);
-    console.log(vendorInformationList)
     useEffect(() => {
         setvendorlist(vendorInformationList)
-        console.log("vendorlist other-informationpage", vendorlist)
-        if (vendorlist) {
+        console.log("vendorlist other-informationpage", vendorlist?.vendor_reference)
+        if (vendorlist?.vendor_reference) {
+            const firstReference = vendorlist.vendor_reference[0] || {};
             setUser({
-                website: vendorlist.website || "",
+                company_name: firstReference.company_name || "",
+                contact_no: firstReference.contact_no || "",
+                contact_person: firstReference.contact_person || "",
+                client: firstReference.client || "",
 
+            });
+        }
+        if (vendorlist?.vendor_reference) {
+            const firstReference2 = vendorlist.vendor_reference[1] || {};
+            console.log("llll", firstReference2)
+            setUser2({
+                contactperson: firstReference2.contactperson || "",
+                relation: firstReference2.relation || "",
+                designation: firstReference2.designation || "",
+                contactno: firstReference2.contactno || "",
             });
         }
     }, [vendorInformationList]);
@@ -139,10 +162,10 @@ function OtherDetails() {
 
                                             <tr key={index}>
                                                 <td>{index + 1}</td>
-                                                <td className=''><input className='bg-blue-50 cursor-text py-2 w-full px-3 border' type="text" value={row.company_name} onChange={(e) => handleInputChange(e, index, setFinancialInformation, 'company_name')} /></td>
-                                                <td><input type="text" className='bg-blue-50 cursor-text py-2 w-full px-3 border' value={row.contact_person} onChange={(e) => handleInputChange(e, index, setFinancialInformation, 'contact_person')} /></td>
-                                                <td><input type="text" className='bg-blue-50 cursor-text py-2 w-full px-3 border' value={row.contact_no} onChange={(e) => handleInputChange(e, index, setFinancialInformation, 'contact_no')} /></td>
-                                                <td><input type="text" className='bg-blue-50 cursor-text py-2 w-full px-3 border' value={row.client} onChange={(e) => handleInputChange(e, index, setFinancialInformation, 'client')} /></td>
+                                                <td className=''><input className='bg-blue-50 cursor-text py-2 w-full px-3 border' type="text" value={user.company_name} onChange={(e) => handleInputChange(e, index, setFinancialInformation, 'company_name')} /></td>
+                                                <td><input type="text" className='bg-blue-50 cursor-text py-2 w-full px-3 border' value={user.contact_person} onChange={(e) => handleInputChange(e, index, setFinancialInformation, 'contact_person')} /></td>
+                                                <td><input type="text" className='bg-blue-50 cursor-text py-2 w-full px-3 border' value={user.contact_no} onChange={(e) => handleInputChange(e, index, setFinancialInformation, 'contact_no')} /></td>
+                                                <td><input type="text" className='bg-blue-50 cursor-text py-2 w-full px-3 border' value={user.client} onChange={(e) => handleInputChange(e, index, setFinancialInformation, 'client')} /></td>
                                                 {financialInformation && (
                                                     <td className='flex justify-center text-xl'><RiDeleteBin5Fill className='text-red-600 cursor-pointer' onClick={() => setFinancialInformation(prev => prev.filter((_, i) => i !== index))} /></td>)}
                                             </tr>
@@ -183,10 +206,10 @@ function OtherDetails() {
                                         {referenceInformation.map((row, index) => (
                                             <tr key={index}>
                                                 <td>{index + 1}</td>
-                                                <td><input className='bg-blue-50 cursor-text py-2 w-full px-3 border' type="text" value={row.contactperson} onChange={(e) => handleInputChange(e, index, setReferenceInformation, 'contactperson')} /></td>
-                                                <td><input className='bg-blue-50 cursor-text py-2 w-full px-3 border' type="text" value={row.relation} onChange={(e) => handleInputChange(e, index, setReferenceInformation, 'relation')} /></td>
-                                                <td><input className='bg-blue-50 cursor-text py-2 w-full px-3 border' type="text" value={row.designation} onChange={(e) => handleInputChange(e, index, setReferenceInformation, 'designation')} /></td>
-                                                <td><input className='bg-blue-50 cursor-text py-2 w-full px-3 border' type="text" value={row.contactno} onChange={(e) => handleInputChange(e, index, setReferenceInformation, 'contactno')} /></td>
+                                                <td><input className='bg-blue-50 cursor-text py-2 w-full px-3 border' type="text" value={user2.contactperson} onChange={(e) => handleInputChange(e, index, setReferenceInformation, 'contactperson')} /></td>
+                                                <td><input className='bg-blue-50 cursor-text py-2 w-full px-3 border' type="text" value={user2.relation} onChange={(e) => handleInputChange(e, index, setReferenceInformation, 'relation')} /></td>
+                                                <td><input className='bg-blue-50 cursor-text py-2 w-full px-3 border' type="text" value={user2.designation} onChange={(e) => handleInputChange(e, index, setReferenceInformation, 'designation')} /></td>
+                                                <td><input className='bg-blue-50 cursor-text py-2 w-full px-3 border' type="text" value={user2.contactno} onChange={(e) => handleInputChange(e, index, setReferenceInformation, 'contactno')} /></td>
                                                 {referenceInformation && (
                                                     <td className='flex justify-center text-xl'><RiDeleteBin5Fill className='text-red-600 cursor-pointer' onClick={() => setReferenceInformation(prev => prev.filter((_, i) => i !== index))} /></td>
                                                 )}

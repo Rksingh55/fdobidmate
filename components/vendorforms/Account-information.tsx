@@ -81,7 +81,7 @@ function AccountInformation() {
         if (files) {
             const base64Files = await Promise.all(Array.from(files).map(file => convertToBase64(file)));
             setBusinessReferenceFiles(base64Files);
-            
+
         }
     };
 

@@ -76,7 +76,6 @@ const GeneralInformation: React.FC = () => {
                 nationalityid: vendorlist.amy_countries_id || "",
                 amy_countries_id: vendorlist.amy_countries_id || "",
                 profile_img: vendorlist.profile_img || ""
-
             });
         }
     }, [vendorInformationList]);
@@ -441,7 +440,7 @@ const GeneralInformation: React.FC = () => {
                                 value={user.currency_id}
                             >
 
-                                {currencyList?.map((item) => (
+                                {currencyList?.map((item:any) => (
                                     <option key={item.id} value={item.id}>
                                         {item.name}
                                     </option>

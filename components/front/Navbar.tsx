@@ -38,37 +38,21 @@ const Navbar = () => {
                     <TbAlignRight className="text-gray-500 text-4xl md:hidden" onClick={() => setIsOpen(true)} />
 
                     {/* --------mobile view------ */}
-                    {/* <div className={`fixed z-[999] inset-0 flex items-center justify-center bg-black bg-opacity-50 ${isOpen ? 'visible' : 'hidden'}`}>
-                        <div className="bg-white p-6 rounded-md w-[90%] text-center">
-                            <div className=" flex justify-end items-end py-2">
-                                <MdOutlineClose onClick={togglePopup} className="text-2xl " />
-                            </div>
-                            <ul>
-                                <Link href="/" onClick={togglePopup}> <li className="hover:bg-blue-100 mt-1 py-2 border-1">Home</li></Link>
-
-                                <Link href="/tender-list" onClick={togglePopup}> <li className="hover:bg-blue-100 mt-1 py-2 border-1">Tenders</li></Link>
-                                <Link href="/rfi" onClick={togglePopup}> <li className="hover:bg-blue-100 mt-1 py-2 border-1">RFI</li></Link>
-                                <Link href="/auction" onClick={togglePopup}> <li className="hover:bg-blue-100 mt-1 py-2 border-1">Auction</li></Link>
-                                <Link href="/auth/register" onClick={togglePopup}> <li className="hover:bg-blue-100 mt-1 py-2 border-1">Register</li></Link>
-                                <Link href="/auth/login" onClick={togglePopup}> <li className="hover:bg-blue-100 mt-1 py-2 border-1">Login</li></Link>
-                            </ul>
-
-                        </div>
-                    </div> */}
-
-
 
                     <div className={`fixed inset-0 z-50 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out bg-gray-800 bg-opacity-75`}>
                         <div className="fixed left-0 top-0 w-[80%] h-full bg-white shadow-lg p-4">
-                            <div className=" flex justify-end items-end ">
+                            <div className=" flex justify-between  items-center   ">
+                                <Link className="navbar-brand" href="/">
+                                    <img src="/assets/images/FDO_Logo1.svg" alt="Logo" className=" w-[50px]" />
+                                </Link>
                                 <MdOutlineClose onClick={() => setIsOpen(false)} className="text-2xl text-gray-500 " />
                             </div>
                             <div className="flex justify-between flex-col  h-[85vh]">
                                 <div className="basis-1/2 mt-4">
                                     <ul className=" flex flex-col gap-2 ">
-                                        <Link href="/" onClick={togglePopup}><li className=" hover:bg-gray-100 rounded-xl px-2 py-2 flex gap-2"><AiFillHome  className="mt-[2px] text-gray-400" /> Home</li></Link>
-                                        <Link href="/tender-list" onClick={togglePopup}> <li className=" hover:bg-gray-100 rounded-xl px-2 py-2 flex gap-2"><IoDocumentSharp  className="mt-[2px] text-gray-400" />Tenders</li></Link>
-                                        <Link href="/rfi" onClick={togglePopup}> <li className=" hover:bg-gray-100 rounded-xl px-2 py-2 flex gap-2"><SiInformatica  className="mt-[2px] text-gray-400" />RFI</li></Link>
+                                        <Link href="/" onClick={togglePopup}><li className=" hover:bg-gray-100 rounded-xl px-2 py-2 flex gap-2"><AiFillHome className="mt-[2px] text-gray-400" /> Home</li></Link>
+                                        <Link href="/tender-list" onClick={togglePopup}> <li className=" hover:bg-gray-100 rounded-xl px-2 py-2 flex gap-2"><IoDocumentSharp className="mt-[2px] text-gray-400" />Tenders</li></Link>
+                                        <Link href="/rfi" onClick={togglePopup}> <li className=" hover:bg-gray-100 rounded-xl px-2 py-2 flex gap-2"><SiInformatica className="mt-[2px] text-gray-400" />RFI</li></Link>
                                         <Link href="/auction" onClick={togglePopup}> <li className=" hover:bg-gray-100 rounded-xl px-2 py-2 flex gap-2"><RiAuctionFill className="mt-[2px] text-gray-400" />Auction</li></Link>
                                     </ul>
                                 </div>

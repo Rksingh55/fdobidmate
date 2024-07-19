@@ -13,6 +13,7 @@ import 'public/build/css/all.min.css';
 import 'public/build/css/custom.css';
 import 'public/build/css/bootstrap.css';
 import '../styles/tailwind.css';
+import '../styles/herosection.css';
 import { NextPage } from 'next';
 import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.layer.css';
