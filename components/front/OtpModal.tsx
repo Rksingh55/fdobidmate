@@ -58,14 +58,24 @@ const OtpModal: React.FC<OtpModalProps> = ({ isOpen, onClose, onOtpSubmit }) => 
             if (response.ok) {
                 if (data?.status === "success") {
                     setResponseMessage("OTP validation successful");
+                    setTimeout(() => {
+                        setOtp("")
+                        onClose();
+                    }, 3000)
                 } else {
                     setResponseMessage("OTP validation failed");
+                    setTimeout(() => {
+                        setOtp("")
+                    }, 3000)
                 }
             } else {
                 setResponseMessage(data.message.error);
             }
         } catch (error) {
             setResponseMessage("something went wrong ! please try after some time");
+            setTimeout(() => {
+                setOtp("")
+            }, 3000)
         }
 
         setTimeout(() => {
@@ -84,7 +94,7 @@ const OtpModal: React.FC<OtpModalProps> = ({ isOpen, onClose, onOtpSubmit }) => 
                     Enter 6 digit OTP from email
                 </h2>
                 {responseMessage && (
-                    <div className=" text-center font-bold text-blue-400 bg-blue-100 p-1">
+                    <div className=" text-center font-bold text-blue-400 p-1">
                         {responseMessage}
                     </div>
                 )}

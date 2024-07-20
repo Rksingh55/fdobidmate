@@ -10,28 +10,13 @@ import Footer from '@/components/Layouts/Footer';
 import { fetchTenderList } from '../../Reducer/tenderlistSlice';
 import { RootState, AppDispatch } from '@/store';
 import { useSelector, useDispatch } from 'react-redux';
+import SkeletonCard from '@/components/cards/SkeletonCard';
 
-const tendorlist = () => {
+const TenderListPage = () => {
   const dispatch = useDispatch<AppDispatch>();
-  useEffect(() => {
-    dispatch(fetchTenderList());
-  }, [dispatch]);
   const tenderlist = useSelector((state: RootState) => state.Tenderlist.list);
-
-  interface Tender {
-    encrypt_id: string;
-    code: string;
-    title: string;
-    description: string;
-    publish_date: string;
-    close_date: string;
-    company: string;
-    curr_code: string
-    tenderfeeamount: string;
-    department: string;
-  }
-  const tendersData: Tender[] = tenderlist;
-  console.log(tendersData);
+  const status = useSelector((state: RootState) => state.Tenderlist.status);
+  const error = useSelector((state: RootState) => state.Tenderlist.error);
 
   const [view, setView] = useState<'list' | 'grid'>('list');
   const [filters, setFilters] = useState<Partial<{
@@ -45,13 +30,17 @@ const tendorlist = () => {
     tenderfeeamount: string;
     publish_date: any;
   }>>({});
-  const [filteredTenders, setFilteredTenders] = useState<Tender[]>(tendersData);
+  const [filteredTenders, setFilteredTenders] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'mostRecent' | string>('mostRecent');
   const [showFilter, setShowFilter] = useState<boolean>(false);
 
   useEffect(() => {
-    let tempTenders = [...tendersData];
+    dispatch(fetchTenderList());
+  }, [dispatch]);
+
+  useEffect(() => {
+    let tempTenders = [...tenderlist];
     if (filters?.encrypt_id) {
       tempTenders = tempTenders.filter(tender => tender.encrypt_id.includes(filters.encrypt_id));
     }
@@ -75,18 +64,22 @@ const tendorlist = () => {
     }
 
     setFilteredTenders(tempTenders);
-  }, [filters, sortBy]);
+  }, [filters, sortBy, tenderlist]);
 
+  useEffect(() => {
+    // Update filtered tenders when search query changes
+    let searchFilteredTenders = [...filteredTenders];
+    searchFilteredTenders = searchFilteredTenders.filter(tender => {
+      return `${tender.code} ${tender.encrypt_id} ${tender.title} ${tender.publish_date} ${tender.curr_code} ${tender.tenderfeeamount} ${tender.company} ${tender.department}`
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+    });
+    setFilteredTenders(searchFilteredTenders);
+  }, [searchQuery]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
-
-  const Tenderdatasearch = filteredTenders?.filter(tender => {
-    return `${tender.code} ${tender.encrypt_id} ${tender.title} ${tender.publish_date} ${tender.curr_code} ${tender.tenderfeeamount} ${tender.company} ${tender.department}`
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-  });
 
   return (
     <>
@@ -97,57 +90,67 @@ const tendorlist = () => {
           <input
             type="text"
             placeholder="Search by (Tender Id, Tender Title, Tender Type)"
-            className="p-2  w-2/3 outline-none"
+            className="p-2 w-2/3 outline-none"
             value={searchQuery}
             onChange={handleSearchChange}
           />
-          <div className="flex items-center space-x-4  ">
+          <div className="flex items-center space-x-4">
             <select onChange={(e) => setSortBy(e.target.value)} value={sortBy} className="p-2 border">
               <option value="mostRecent">Most Recent</option>
-              <option value="mostRecent">Most Recent</option>
-              <option value="mostRecent">Most Recent</option>
+              {/* Add more sorting options if needed */}
             </select>
             <button
               onClick={() => setShowFilter(!showFilter)}
               className={`p-2 ${showFilter ? 'bg-[#FC8404] flex gap-2 font-bold text-white' : 'border flex gap-2 font-bold'}`}
             >
-              <BiSliderAlt className='text-lg ' />Filter
+              <BiSliderAlt className='text-lg' />Filter
             </button>
-            <button onClick={() => setView('grid')} className={`p-2 ${view === 'grid' ? 'bg-blue-500 text-white' : 'border'}`}><IoGridSharp className='text-lg ' /></button>
-            <button onClick={() => setView('list')} className={`p-2 ${view === 'list' ? 'bg-blue-500 text-white' : 'border'}`}><BiSolidServer className='text-lg ' />
+            <button onClick={() => setView('grid')} className={`p-2 ${view === 'grid' ? 'bg-blue-500 text-white' : 'border'}`}>
+              <IoGridSharp className='text-lg' />
+            </button>
+            <button onClick={() => setView('list')} className={`p-2 ${view === 'list' ? 'bg-blue-500 text-white' : 'border'}`}>
+              <BiSolidServer className='text-lg' />
             </button>
           </div>
         </div>
-        <div className="flex md:flex-row flex-col">
-          <div className={showFilter ? "md:w-[70%] w-full" : "md:w-[90%] w-full"}>
-            <div className={`flex ${view === 'grid' ? 'grid md:grid-cols-3 ' : 'flex-col'} gap-2`}>
-              {Tenderdatasearch.length > 0 ? (
-                Tenderdatasearch.map(tender => (
-                  <TenderCard key={tender.code} tender={tender} view={view} />
-                ))
-              ) : (
-                <div className="text-center col-span-1 md:col-span-2 lg:col-span-3">
-                  <p className="text-red-500 text-lg py-4">No data found matching your criteria.</p>
-                </div>
-              )}
-
-            </div>
+        {status === 'loading' && (
+          <div className="flex flex-wrap gap-4">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <SkeletonCard key={index} />
+            ))}
           </div>
-          {showFilter && (
-            <div className="md:w-[28%] w-[90%]">
-              <Filter filters={filters} setFilters={setFilters} />
+        )}
+        {status === 'failed' && <div className="text-red-500">Error: {error}</div>}
+        {status === 'succeeded' && (
+          <div className="flex md:flex-row flex-col">
+            <div className={showFilter ? "md:w-[70%] w-full" : "md:w-[90%] w-full"}>
+              <div className={`flex ${view === 'grid' ? 'grid md:grid-cols-3' : 'flex-col'} gap-2`}>
+                {filteredTenders.length > 0 ? (
+                  filteredTenders.map(tender => (
+                    <TenderCard key={tender.code} tender={tender} view={view} />
+                  ))
+                ) : (
+                  <div className="text-center col-span-1 md:col-span-2 lg:col-span-3">
+                    <p className="text-red-500 text-lg py-4">No data found matching your criteria.</p>
+                  </div>
+                )}
+              </div>
             </div>
-          )}
-        </div>
-
+            {showFilter && (
+              <div className="md:w-[28%] w-[90%]">
+                <Filter filters={filters} setFilters={setFilters} />
+              </div>
+            )}
+          </div>
+        )}
       </div>
       {/* <Footer /> */}
     </>
   );
 };
 
-tendorlist.getLayout = (page: any) => {
+TenderListPage.getLayout = (page: any) => {
   return <BlankLayout>{page}</BlankLayout>;
 };
 
-export default tendorlist;
+export default TenderListPage;

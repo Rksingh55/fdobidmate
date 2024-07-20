@@ -29,7 +29,7 @@ const Login = () => {
             setError({ type: 'error', text: "Please enter valid email and password" });
         }
         else {
-            setError({ type: 'success', text: "Validating please wait...!!" });
+            setError({ type: 'error', text: "Something went wrong, try after some time" });
         }
         fetch(`${API_BASE_URL}${LOGIN_API_URL}`, {
             method: "POST",
@@ -57,11 +57,12 @@ const Login = () => {
                     }
                 }
                 else {
-                    setError({ type: 'error', text: "Please enter correct email & password" });
                     setShowLoader(false)
+                    setError({ type: 'error', text: "Please enter correct email & password" });
                 }
             })
             .catch((error) => {
+                setShowLoader(false)
                 console.error("Error:", error);
             });
     };

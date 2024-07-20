@@ -72,9 +72,17 @@ const RegisterCover = () => {
 
         });
     };
+    interface ApiResponse {
+        status: string;
+        message: {
+            success?: string;
+            error?: string;
+        };
+        data?: any;
+    }
 
 
-    const handleVerifyClick = async () => {
+    const handleVerifyClick = async (body: any) => {
         const { organization_name, name, email } = user;
         if (!organization_name || !name || !email) {
             toast.error("Please fill in all required fields: organization name, name, and email.");
@@ -97,24 +105,27 @@ const RegisterCover = () => {
                 },
                 body: JSON.stringify(body),
             });
-
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                const errorData: ApiResponse = await response.json();
+                throw new Error(errorData.message.error || 'Network response was not ok');
             }
-            const data = await response?.json();
-            console.log(data)
+            const data: ApiResponse = await response.json();
             const vendorid = data?.data;
             localStorage.setItem("vendor_id", vendorid);
             if (data?.status === "success") {
-                toast.success("OTP sent on email");
                 setIsOpenModal(true);
+                toast.success(data.message.success);
             } else {
-                toast.error("Email validation failed");
+                toast.error(data.message.error)
             }
         } catch (error) {
-            console.error('Error validating email:', error);
-            toast.error("something went wrong ! please try after some time");
+            if (error instanceof Error) {
+                toast.error(error.message);
+            } else {
+                toast.error("Something went wrong! Please try again later.");
+            }
         }
+
     };
 
 
@@ -129,7 +140,7 @@ const RegisterCover = () => {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('Register Cover'));
+        dispatch(setPageTitle('Register'));
     });
 
     const submitForm = (e: any) => {
@@ -156,13 +167,14 @@ const RegisterCover = () => {
                 })
                 .then((data) => {
                     if (data.status == "success") {
-                        toast.success("Registration successfull please login")
+                        toast.success(data.message);
                         setTimeout(() => {
                             router.push("/auth/login")
                         }, 2000);
                     }
                     else {
-                        toast.error("Registeration failed")
+                        toast.error(data.message.error)
+                        console.error("Error:", data.message.error);
                     }
                 })
                 .catch((error) => {

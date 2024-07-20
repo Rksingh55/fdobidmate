@@ -24,7 +24,7 @@ interface TenderCardProps {
 }
 
 const TenderCard: React.FC<TenderCardProps> = ({ tender, view }) => {
-  
+
     return (
         <>
             <div className={`${view === 'grid' ? 'w-full  ' : 'w-full'} `}>
@@ -53,14 +53,14 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, view }) => {
                         </div>
 
                     </div>
-                    {/* <Link href={`/tender-list/tender-preview/${tender.encrypt_id}`} className='flex justify-end py-2 '>
-                    <button className={`${view === 'grid' ? ' text-[#00A9E2] font-bold flex gap-2' : ' font-bold rounded-md mt-2 absolute top-[10%] right-[-2%] bg-[#00A9E2] text-white py-2 px-3 flex gap-2'} `} >More Details <MdKeyboardArrowRight className=' text-xl' />
-                    </button>
-                </Link> */}
-                    <Link href={`/tender-list/tender-preview`} className='flex justify-end py-2 '>
+                    <Link href={`/tender-list/tender-preview/${tender.encrypt_id}`} key={tender.encrypt_id} className='flex justify-end py-2 '>
                         <button className={`${view === 'grid' ? ' text-[#00A9E2] font-bold flex gap-2' : ' font-bold rounded-md mt-2 absolute top-[10%] right-[-2%] bg-[#00A9E2] text-white py-2 px-3 flex gap-2'} `} >More Details <MdKeyboardArrowRight className=' text-xl' />
                         </button>
                     </Link>
+                    {/* <Link href={`/tender-list/tender-preview`} className='flex justify-end py-2 '>
+                        <button className={`${view === 'grid' ? ' text-[#00A9E2] font-bold flex gap-2' : ' font-bold rounded-md mt-2 absolute top-[10%] right-[-2%] bg-[#00A9E2] text-white py-2 px-3 flex gap-2'} `} >More Details <MdKeyboardArrowRight className=' text-xl' />
+                        </button>
+                    </Link> */}
                 </div>
             </div>
         </>

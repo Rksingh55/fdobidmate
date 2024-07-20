@@ -36,23 +36,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Header = () => {
     const router = useRouter();
-    const showAlert = async (type: any) => {
-        if (type === 10) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Are you sure?',
-                text: "Do you really  want signout your account",
-                showCancelButton: true,
-                confirmButtonText: 'Confirm',
-                padding: '2em',
-                customClass: 'sweet-alerts',
-            }).then((result) => {
-                if (result.value) {
-                    handleLogout()
-                }
-            });
-        }
-    }
+
 
     const handleLogout = async () => {
         const token = getToken();
@@ -72,7 +56,23 @@ const Header = () => {
         }
     };
 
-
+    const showAlert = async (type: any) => {
+        if (type === 10) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Are you sure?',
+                text: "Do you really  want signout your account",
+                showCancelButton: true,
+                confirmButtonText: 'Confirm',
+                padding: '2em',
+                customClass: 'sweet-alerts',
+            }).then((result) => {
+                if (result.value) {
+                    handleLogout()
+                }
+            });
+        }
+    }
     useEffect(() => {
         const selector = document.querySelector('ul.horizontal-menu a[href="' + window.location.pathname + '"]');
         if (selector) {
