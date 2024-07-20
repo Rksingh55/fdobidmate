@@ -17,14 +17,21 @@ import { BsFiletypeTxt } from 'react-icons/bs';
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import Dashboardbredcrumb from "@/components/dashboardbredcrumb"
+import { getToken } from '@/localStorageUtil';
+import { useRouter } from 'next/router';
 
 
 const AuctionList = () => {
-
+    const router = useRouter();
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('Invoice List'));
-    });
+        const token = getToken();
+        if (!token) {
+            router.replace('/');
+        }
+        dispatch(setPageTitle('Auction-list'));
+    }, []);
+
     const [items, setItems] = useState([
         {
             id: 1,
@@ -372,7 +379,7 @@ const AuctionList = () => {
     return (
 
         <>
-                      <Dashboardbredcrumb />
+            <Dashboardbredcrumb />
 
 
             <div className="panel border-white-light px-0 dark:border-[#1b2e4b] mt-3 ">

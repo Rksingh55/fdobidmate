@@ -25,12 +25,20 @@ import IconMultipleForwardRight from '@/components/Icon/IconMultipleForwardRight
 import Dashboardbredcrumb from "@/components/dashboardbredcrumb"
 
 import { RootState } from '@/store';
+import { getToken } from '@/localStorageUtil';
+import { useRouter } from 'next/router';
 
 const Index = () => {
+    const router = useRouter();
+
     const dispatch = useDispatch();
     useEffect(() => {
+    const token = getToken();
+        if (!token) {
+            router.replace('/');
+        }
         dispatch(setPageTitle('Auction'));
-    });
+    },[]);
     const isDark = useSelector((state: RootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
     const isRtl = useSelector((state: RootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
 
@@ -412,7 +420,7 @@ const Index = () => {
     return (
         <>
             <div>
-            <Dashboardbredcrumb />
+                <Dashboardbredcrumb />
 
 
                 <div className="pt-3">
@@ -600,7 +608,7 @@ const Index = () => {
                     <div className="mb-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                         <div className="panel h-full pb-0 sm:col-span-2 xl:col-span-1">
                             <h5 className="mb-5 text-lg font-semibold dark:text-white-light">Recent Activities</h5>
-                            <PerfectScrollbar className="relative mb-4 h-[290px] ltr:-mr-3 ltr:pr-3 rtl:-ml-3 rtl:pl-3" options={{suppressScrollX: true}}>
+                            <PerfectScrollbar className="relative mb-4 h-[290px] ltr:-mr-3 ltr:pr-3 rtl:-ml-3 rtl:pl-3" options={{ suppressScrollX: true }}>
                                 <div className="cursor-pointer text-sm">
                                     <div className="group relative flex items-center py-1.5">
                                         <div className="h-1.5 w-1.5 rounded-full bg-primary ltr:mr-1 rtl:ml-1.5"></div>

@@ -20,8 +20,18 @@ import { fetchQuatationList } from '../../../Reducer/quatationSlice';
 
 import { RootState, AppDispatch } from '@/store';
 import { useSelector, useDispatch } from 'react-redux';
+import { getToken } from '@/localStorageUtil';
+import { useRouter } from 'next/router';
 
 const Quotations = () => {
+    const router = useRouter();
+    useEffect(() => {
+        const token = getToken();
+        if (!token) {
+            router.replace('/');
+        }
+    }, []);
+
     const dispatch = useDispatch<AppDispatch>();
     useEffect(() => {
         dispatch(fetchQuatationList());

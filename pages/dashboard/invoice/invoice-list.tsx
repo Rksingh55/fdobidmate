@@ -17,14 +17,22 @@ import { BsFiletypeTxt } from 'react-icons/bs';
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import Dashboardbredcrumb from "@/components/dashboardbredcrumb"
+import { getToken } from '@/localStorageUtil';
+import { useRouter } from 'next/router';
 
 
 const InvoiceList = () => {
-
+    const router = useRouter();
     const dispatch = useDispatch();
     useEffect(() => {
+        const token = getToken();
+        if (!token) {
+            router.replace('/');
+        }
         dispatch(setPageTitle('Invoice List'));
-    });
+    }, []);
+
+  
     const [items, setItems] = useState([
         {
             id: 1,
