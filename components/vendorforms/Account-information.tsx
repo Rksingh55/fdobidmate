@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
 import { RiDeleteBin5Fill } from 'react-icons/ri';
 import { MdAddBox } from 'react-icons/md';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 interface BankAccount {
     bank_name: string;
     account_holder_name: string;
@@ -158,7 +159,7 @@ function AccountInformation() {
                 setShowPopup(true);
             } else {
                 const errorData = await response.json();
-                console.error('API error:', errorData);
+                toast.error(errorData.message.error)
             }
         } catch (error) {
             console.error('Error submitting form:', error);
@@ -171,6 +172,8 @@ function AccountInformation() {
 
     return (
         <div>
+                        <ToastContainer />
+
             <SuccessPopup
                 message={message}
                 show={showPopup}

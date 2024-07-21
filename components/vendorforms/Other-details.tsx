@@ -10,7 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchvendordata } from '../../Reducer/Vendor_Registeration_Slice/getvendordata';
 import { AppDispatch, RootState } from '@/store';
 import { useRouter } from 'next/router';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function OtherDetails() {
     const router = useRouter()
     const { t, i18n } = useTranslation();
@@ -105,7 +106,7 @@ function OtherDetails() {
                 const responseData = await response.json();
                 const venderregitserd = "success";
                 localStorage.setItem("vendorRegistersuccess", venderregitserd);
-                setMessage('Account details submission successfully');
+                setMessage(responseData.message.success);
                 setShowPopup(true);
                 setTimeout(() => {
                     window.dispatchEvent(new Event('storage'));
@@ -114,7 +115,8 @@ function OtherDetails() {
 
             } else {
                 const errorData = await response.json();
-                console.error('API error:', errorData);
+                toast.error(errorData.message.error)
+
             }
         } catch (error) {
             console.error('Error submitting form:', error);
@@ -128,6 +130,7 @@ function OtherDetails() {
 
     return (
         <div>
+            <ToastContainer />
             <SuccessPopup
                 message={message}
                 show={showPopup}

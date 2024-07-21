@@ -11,6 +11,9 @@ import { getToken } from '@/localStorageUtil';
 import { fetchvendordata } from '../../Reducer/Vendor_Registeration_Slice/getvendordata';
 import SuccessPopup from '../front/SuccessPopup';
 import { API_BASE_URL, TAXBILLING_API_URL } from '@/api.config';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import FormSkeltonloader from "../cards/FormSkeltonloader"
 
 function TaxBillinginfo() {
     const { t, i18n } = useTranslation();
@@ -31,6 +34,7 @@ function TaxBillinginfo() {
     const modeofpayment = useSelector((state: RootState) => state.modeofpayment.list);
     const termsofpayment = useSelector((state: RootState) => state.termsofpayment.list);
     const vendorInformationList = useSelector((state: RootState) => state.vendordata.list);
+    const status = useSelector((state: RootState) => state.vendordata.status);
 
 
     const [pagevalidate, setpagevalidate] = useState();
@@ -80,7 +84,7 @@ function TaxBillinginfo() {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-   
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const token = getToken();
@@ -109,7 +113,13 @@ function TaxBillinginfo() {
                     setShowPopup(true);
                 } else {
                     const errorData = await response.json();
-                    console.error('API error:', errorData);
+                    if (errorData && errorData.errors) {
+                        Object.keys(errorData.errors).forEach(field => {
+                            const errorMessage = errorData.errors[field][0];
+                            toast.error(`${errorMessage}`);
+                        });
+
+                    }
                 }
             } catch (error) {
                 console.error('Error submitting form:', error);
@@ -121,109 +131,120 @@ function TaxBillinginfo() {
     };
     return (
         <div>
+            <ToastContainer />
+
             <SuccessPopup
                 message={message}
                 show={showPopup}
                 onClose={handleClosePopup}
             />
             <form className="space-y-3 dark:text-white" onSubmit={handleSubmit}>
-                <div className='row'>
-                    <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
-                        <div className="form-group form-float">
-                            <label className="mb-1" htmlFor="">{t('TAX-registration-number')}  <span className="text-red-700 relative">*</span></label>
-                            <input
-                                type="text"
-                                className={`form-input ${errors.tax_no ? 'border-red-500' : ''
-                                    }`}
-                                onChange={(e) =>
-                                    setUser({ ...user, tax_no: e.target.value })
-                                }
-                                name="TAXregistrationnumber"
-                                id="TAXregistrationnumber"
-                                value={user.tax_no}
-                                maxLength={20}
-                            />
-                            {errors.tax_no && (
-                                <p className="text-red-500 text-sm">{errors.tax_no}</p>
-                            )}
+                {status === 'loading' && (
+
+                    <FormSkeltonloader />
+
+                )}
+                {status === 'succeeded' && (
+                    <>
+                        <div className='row'>
+                            <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
+                                <div className="form-group form-float">
+                                    <label className="mb-1" htmlFor="">{t('TAX-registration-number')}  <span className="text-red-700 relative">*</span></label>
+                                    <input
+                                        type="text"
+                                        className={`form-input ${errors.tax_no ? 'border-red-500' : ''
+                                            }`}
+                                        onChange={(e) =>
+                                            setUser({ ...user, tax_no: e.target.value })
+                                        }
+                                        name="TAXregistrationnumber"
+                                        id="TAXregistrationnumber"
+                                        value={user.tax_no}
+                                        maxLength={20}
+                                    />
+                                    {errors.tax_no && (
+                                        <p className="text-red-500 text-sm">{errors.tax_no}</p>
+                                    )}
+
+                                </div>
+                            </div>
+                            <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
+                                <div className="form-group form-float">
+                                    <label className="mb-1" htmlFor="">{t('VAT-registration-number')}</label>
+                                    <input type="text" className="form-control" onChange={(e) => setUser({ ...user, vat_no: e.target.value })} value={user.vat_no} name="VATregistrationnumber" maxLength={16} id="VATregistrationnumber" />
+                                </div>
+                            </div>
+
+                            <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
+                                <div className="form-group form-float">
+                                    <label className="mb-1" htmlFor="">{t('license-number')}</label>
+                                    <input type="text" className="form-control" value={user.licence_no} onChange={(e) => setUser({ ...user, licence_no: e.target.value })} maxLength={16} name="licence_no" id="licence_no" />
+                                </div>
+                            </div>
+                            <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
+                                <div className="form-group form-float">
+                                    <label className="mb-1" htmlFor="">{t('other-government-id')}</label>
+                                    <input type="text" className="form-control" value={user.other_govt_document_no} onChange={(e) => setUser({ ...user, other_govt_document_no: e.target.value })} maxLength={16} name="other_govt_document_no" id="other_govt_document_no" />
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div className="row">
+                            <h5 className="col-xl-12 col-md-12 col-xl-12 p-2"> <b>{t('billing-information')}</b></h5>
+                            <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
+                                <div className="form-group form-float">
+                                    <label className="mb-1" htmlFor="">{t('terms-of-payment')}</label>
+                                    <select name="terms_of_payment_id" id="terms_of_payment_id" onChange={(e) => setUser({ ...user, termsofpayment_id: e.target.value })} className="form-control"
+
+                                        value={user.termsofpayment_id}
+                                    >
+                                        {termsofpayment?.map((item) => (
+                                            <option key={item.id} value={item.id}>
+                                                {item.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
+                                <div className="form-group form-float">
+                                    <label className="mb-1" htmlFor=""> {t('method-of-payment')}</label>
+                                    <select name="method_of_payment_id" id="method_of_payment_id" onChange={(e) => setUser({ ...user, modeofpayment_id: e.target.value })} className="form-control"
+                                        value={user.modeofpayment_id}
+                                    >
+
+                                        {modeofpayment?.map((item) => (
+                                            <option key={item.id} value={item.id}>
+                                                {item.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
+                                <div className="form-group form-float">
+                                    <label className="mb-1" htmlFor="">{t('delivery-terms')}</label>
+                                    <select name="delivery_terms_id" id="delivery_terms_id" onChange={(e) => setUser({ ...user, termsofdelivery_id: e.target.value })} className="form-control"
+                                        value={user.termsofdelivery_id}
+                                    >
+
+                                        {termsofdelivery?.map((item) => (
+                                            <option key={item.id} value={item.id}>
+                                                {item.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
 
                         </div>
-                    </div>
-                    <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
-                        <div className="form-group form-float">
-                            <label className="mb-1" htmlFor="">{t('VAT-registration-number')}</label>
-                            <input type="text" className="form-control" onChange={(e) => setUser({ ...user, vat_no: e.target.value })} value={user.vat_no} name="VATregistrationnumber" maxLength={16} id="VATregistrationnumber" />
+                        <div className='flex justify-start mt-10'>
+                            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ">
+                                {user.tax_no ? 'Update' : 'submit'}
+                            </button>
                         </div>
-                    </div>
-
-                    <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
-                        <div className="form-group form-float">
-                            <label className="mb-1" htmlFor="">{t('license-number')}</label>
-                            <input type="text" className="form-control" value={user.licence_no} onChange={(e) => setUser({ ...user, licence_no: e.target.value })} maxLength={16} name="licence_no" id="licence_no" />
-                        </div>
-                    </div>
-                    <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
-                        <div className="form-group form-float">
-                            <label className="mb-1" htmlFor="">{t('other-government-id')}</label>
-                            <input type="text" className="form-control" value={user.other_govt_document_no} onChange={(e) => setUser({ ...user, other_govt_document_no: e.target.value })} maxLength={16} name="other_govt_document_no" id="other_govt_document_no" />
-                        </div>
-                    </div>
-                </div>
-                <hr />
-                <div className="row">
-                    <h5 className="col-xl-12 col-md-12 col-xl-12 p-2"> <b>{t('billing-information')}</b></h5>
-                    <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
-                        <div className="form-group form-float">
-                            <label className="mb-1" htmlFor="">{t('terms-of-payment')}</label>
-                            <select name="terms_of_payment_id" id="terms_of_payment_id" onChange={(e) => setUser({ ...user, termsofpayment_id: e.target.value })} className="form-control"
-
-                                value={user.termsofpayment_id}
-                            >
-                                {termsofpayment?.map((item) => (
-                                    <option key={item.id} value={item.id}>
-                                        {item.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-                    <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
-                        <div className="form-group form-float">
-                            <label className="mb-1" htmlFor=""> {t('method-of-payment')}</label>
-                            <select name="method_of_payment_id" id="method_of_payment_id" onChange={(e) => setUser({ ...user, modeofpayment_id: e.target.value })} className="form-control"
-                                value={user.modeofpayment_id}
-                            >
-
-                                {modeofpayment?.map((item) => (
-                                    <option key={item.id} value={item.id}>
-                                        {item.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-                    <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12 mb-2">
-                        <div className="form-group form-float">
-                            <label className="mb-1" htmlFor="">{t('delivery-terms')}</label>
-                            <select name="delivery_terms_id" id="delivery_terms_id" onChange={(e) => setUser({ ...user, termsofdelivery_id: e.target.value })} className="form-control"
-                                value={user.termsofdelivery_id}
-                            >
-
-                                {termsofdelivery?.map((item) => (
-                                    <option key={item.id} value={item.id}>
-                                        {item.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-
-                </div>
-                <div className='flex justify-start mt-10'>
-                    <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ">
-                    {user.tax_no ? 'Update' : 'submit'}
-                    </button>
-                </div>
+                    </>
+                )}
             </form>
         </div>
     )

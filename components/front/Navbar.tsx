@@ -51,7 +51,9 @@ const Navbar = () => {
                                 <div className="basis-1/2 mt-4">
                                     <ul className=" flex flex-col gap-2 ">
                                         <Link href="/" onClick={togglePopup}><li className=" hover:bg-gray-100 rounded-xl px-2 py-2 flex gap-2"><AiFillHome className="mt-[2px] text-gray-400" /> Home</li></Link>
+
                                         <Link href="/tender-list" onClick={togglePopup}> <li className=" hover:bg-gray-100 rounded-xl px-2 py-2 flex gap-2"><IoDocumentSharp className="mt-[2px] text-gray-400" />Tenders</li></Link>
+                                        
                                         <Link href="/rfi" onClick={togglePopup}> <li className=" hover:bg-gray-100 rounded-xl px-2 py-2 flex gap-2"><SiInformatica className="mt-[2px] text-gray-400" />RFI</li></Link>
                                         <Link href="/auction" onClick={togglePopup}> <li className=" hover:bg-gray-100 rounded-xl px-2 py-2 flex gap-2"><RiAuctionFill className="mt-[2px] text-gray-400" />Auction</li></Link>
                                     </ul>

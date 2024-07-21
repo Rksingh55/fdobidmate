@@ -7,6 +7,9 @@ import { fetchvendordata } from '../../Reducer/Vendor_Registeration_Slice/getven
 import { getToken } from '@/localStorageUtil';
 import SuccessPopup from '../front/SuccessPopup';
 import { API_BASE_URL, QUESTIONAIRE_API_URL } from '@/api.config';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import FormSkeltonloader from "../cards/FormSkeltonloader"
 
 interface Answer {
     [key: string]: string;
@@ -81,11 +84,11 @@ function Questionnaire() {
 
             if (response.ok) {
                 const responseData = await response.json();
-                setMessage('Question answer submitted Successfully');
+                setMessage(responseData.message.success);
                 setShowPopup(true);
             } else {
                 const errorData = await response.json();
-                console.error('API error:', errorData);
+               toast.error(errorData.message.error)
             }
         } catch (error) {
             console.error('Error:', error);
@@ -94,12 +97,15 @@ function Questionnaire() {
 
     return (
         <div>
+            <ToastContainer />
+
             <SuccessPopup
                 message={message}
                 show={showPopup}
                 onClose={handleClosePopup}
             />
             <form className="space-y-3 dark:text-white" onSubmit={handleSubmit}>
+                
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="mb-3">

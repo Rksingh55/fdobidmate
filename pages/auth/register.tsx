@@ -167,7 +167,7 @@ const RegisterCover = () => {
                 })
                 .then((data) => {
                     if (data.status == "success") {
-                        toast.success(data.message);
+                        toast.success(data.message.success);
                         setTimeout(() => {
                             router.push("/auth/login")
                         }, 2000);

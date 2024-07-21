@@ -6,6 +6,7 @@ import { API_BASE_URL, VENDORATTACHMENT_API_URL } from '@/api.config';
 import { FaCloudUploadAlt } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SuccessPopup from '../front/SuccessPopup';
 interface Document {
     type: string;
     files: File[];
@@ -17,7 +18,11 @@ const HomePage: React.FC = () => {
     const [documents, setDocuments] = useState<Document[]>([]);
     const [viewDocument, setViewDocument] = useState<File | null>(null);
     const [selectedType, setSelectedType] = useState<string>('');
-
+    const [showPopup, setShowPopup] = useState(false);
+    const [message, setMessage] = useState('');
+    const handleClosePopup = () => {
+        setShowPopup(false);
+    };
     const documentTypes = [
         "Type of Business",
         "Quality and Safety Organization",
@@ -112,7 +117,9 @@ const HomePage: React.FC = () => {
                 body: formData,
             });
             if (response.ok) {
-                toast.success("Document upload successful");
+                const Data = await response.json();
+                setMessage(Data.message.success);
+                setShowPopup(true);
                 setDocuments((prevDocuments) => {
                     const existingDocument = prevDocuments.find(doc => doc.type === type);
                     if (existingDocument) {
@@ -123,7 +130,8 @@ const HomePage: React.FC = () => {
                     }
                 });
             } else {
-                console.error('Error uploading documents:', response.statusText);
+                const errorData = await response.json();
+                toast.error(errorData.message.error)
             }
         } catch (error) {
             console.error('Error uploading documents:', error);
@@ -154,7 +162,11 @@ const HomePage: React.FC = () => {
     return (
         <div className="">
             <ToastContainer />
-
+            <SuccessPopup
+                message={message}
+                show={showPopup}
+                onClose={handleClosePopup}
+            />
             {documentTypes.map((type) => (
                 <button key={type} onClick={() => handleOpenUploadPopup(type)} className='border-1 hover:bg-slate-200 rounded-md p-2 py-2 m-2'>
                     <span className='flex gap-2'> <FaCloudUploadAlt className=' text-xl' /> Upload  {type} documents</span>

@@ -69,6 +69,9 @@ const Header = () => {
             }).then((result) => {
                 if (result.value) {
                     handleLogout()
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('userName');
+                    router.push('/')
                 }
             });
         }

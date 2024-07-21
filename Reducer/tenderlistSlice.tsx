@@ -32,7 +32,7 @@ export const fetchTenderList = createAsyncThunk(
       },
     });
 
-    return response.data.data.data;
+    return response?.data?.data?.data;
   }
 );
 

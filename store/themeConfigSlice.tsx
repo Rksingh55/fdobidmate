@@ -37,7 +37,7 @@ const themeConfigSlice = createSlice({
     initialState: initialState,
     reducers: {
         toggleTheme(state, { payload }) {
-            payload = payload || state.theme; 
+            payload = payload || state.theme;
             localStorage.setItem('theme', payload);
             state.theme = payload;
             if (payload === 'light') {
@@ -101,7 +101,7 @@ const themeConfigSlice = createSlice({
         },
 
         setPageTitle(state, { payload }) {
-            document.title = `${payload} | FDO Bidmate - Powered By Amy Softech`;
+            // document.title = `${payload} | FDO Bidmate - Powered By Amy Softech`;
         },
     },
 });

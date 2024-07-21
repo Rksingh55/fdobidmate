@@ -27,7 +27,7 @@ const UploadDocumentPopup: React.FC<PopupProps> = ({
         if (e.target.files && e.target.files.length > 0) {
             const newFiles = Array.from(e.target.files);
             setSelectedFiles(prevFiles => [...prevFiles, ...newFiles]);
-            setError(null); // Clear error when files are selected
+            setError(null);
         }
     };
 
@@ -37,15 +37,14 @@ const UploadDocumentPopup: React.FC<PopupProps> = ({
 
     const handleUpload = async () => {
         if (selectedFiles.length === 0) {
+            console.log("please")
             setError('Please select at least one document before uploading.');
             toast.error('Please select at least one document before uploading.');
-
             return;
         }
-
         setUploading(true);
         setMessage(null);
-        setError(null); // Clear error before uploading
+        setError(null);
         try {
             await onUploadDocuments(documentType, selectedFiles);
             setMessage({ type: 'success', text: 'Upload successful!' });

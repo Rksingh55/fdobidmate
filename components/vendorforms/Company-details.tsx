@@ -10,7 +10,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getToken } from '@/localStorageUtil';
 import { API_BASE_URL, COMPANYDETAIL_API_URL } from '@/api.config';
 import Select from 'react-select';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 interface User {
@@ -146,12 +147,17 @@ const Companydetails: React.FC = () => {
 
                 if (response.ok) {
                     const responseData = await response.json();
-                    console.log("response", responseData);
-                    setMessage('Company data submitted successful!');
+                    setMessage(responseData.message.success);
                     setShowPopup(true);
                 } else {
                     const errorData = await response.json();
-                    console.error('API error:', errorData);
+                    if (errorData && errorData.errors) {
+                        Object.keys(errorData.errors).forEach(field => {
+                            const errorMessage = errorData.errors[field][0];
+                            toast.error(`${errorMessage}`);
+                        });
+    
+                    }
                 }
             } catch (error) {
                 console.error('Error submitting form:', error);
@@ -165,7 +171,7 @@ const Companydetails: React.FC = () => {
 
     return (
         <>
-
+  <ToastContainer />
             <div>
                 <SuccessPopup
                     message={message}
@@ -314,14 +320,14 @@ const Companydetails: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="col-lg-6 col-md-6 mb-2 bg-re">
+                        <div className="col-lg-6 col-md-6 mb-2 ">
                             <label htmlFor="category" className="mb-0">
                                 What kind of product
                             </label>
                             <Select
                                 id="category"
                                 name="category"
-                                className={`form-input form-control form-select cursor-pointer ${errors.category ? 'border-red-500' : ''}`}
+                                className={`form-input form-control pl-0  border-none form-select cursor-pointer ${errors.category ? 'border-red-500' : ''}`}
                                 placeholder="Select an option"
                                 options={options5}
                                 isMulti={true}

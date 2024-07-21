@@ -10,8 +10,9 @@ import { fetchVendorTpeList } from '../../Reducer/vendorTypeSlice';
 import SuccessPopup from '../front/SuccessPopup';
 import { fetchvendordata } from '../../Reducer/Vendor_Registeration_Slice/getvendordata';
 import { API_BASE_URL, GENERAL_INFORMATION_FORM_API_URL } from '@/api.config';
-
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import FormSkeltonloader from "../cards/FormSkeltonloader"
 interface User {
     suppliertype_id: string;
     vendor_request_id: string;
@@ -54,6 +55,9 @@ const GeneralInformation: React.FC = () => {
     const countryList = useSelector((state: RootState) => state.country.list);
     const vendorType = useSelector((state: RootState) => state.vendortype.list);
     const vendorInformationList = useSelector((state: RootState) => state.vendordata.list);
+    const status = useSelector((state: RootState) => state.vendordata.status);
+
+
     useEffect(() => {
         console.log("fetchvendordata----", vendorInformationList)
         setvendorlist(vendorInformationList)
@@ -177,286 +181,302 @@ const GeneralInformation: React.FC = () => {
                 setShowPopup(true);
             } else {
                 const errorData = await response.json();
-                console.error('API error:', errorData);
+                if (errorData && errorData.errors) {
+                    Object.keys(errorData.errors).forEach(field => {
+                        const errorMessage = errorData.errors[field][0];
+                        toast.error(`${errorMessage}`);
+                    });
+
+                }
             }
         } catch (error) {
-            console.error('Error submitting form:', error);
+            toast.error('Failed to submit form. Please try again later.');
         }
 
     };
 
     return (
         <div>
+            <ToastContainer />
             <SuccessPopup
                 message={message}
                 show={showPopup}
                 onClose={handleClosePopup}
             />
             <form className=" dark:text-white" onSubmit={handleSubmit} encType="multipart/form-data">
-                <div className='row'>
-                    {/* Vendor Request ID */}
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="vendor_requestid" className="mb-0">{t('vendor-request-id')}</label>
-                            <input
-                                type="text"
-                                id="vendor_request_id"
-                                className={`form-input bg-gray-100  placeholder:text-white-dark ${errors.vendor_request_id ? 'border-red-500' : ''}`}
-                                maxLength={10}
-                                value={user.vendor_request_id}
-                                readOnly
-                                onChange={(e) => setUser({ ...user, vendor_request_id: e.target.value })}
-                            />
-                            {errors?.vendor_request_id && (
-                                <p className="text-red-500 text-sm">{errors.vendor_request_id}</p>
-                            )}
+                {status === 'loading' && (
+
+                    <FormSkeltonloader />
+
+                )}
+                {status === 'succeeded' && (
+                    <>
+                        <div className='row'>
+                            {/* Vendor Request ID */}
+                            <div className="col-lg-6 col-md-6 mb-2">
+                                <div className="form-group form-float">
+                                    <label htmlFor="vendor_requestid" className="mb-0">{t('vendor-request-id')}</label>
+                                    <input
+                                        type="text"
+                                        id="vendor_request_id"
+                                        className={`form-input bg-gray-100  placeholder:text-white-dark ${errors.vendor_request_id ? 'border-red-500' : ''}`}
+                                        maxLength={10}
+                                        value={user.vendor_request_id}
+                                        readOnly
+                                        onChange={(e) => setUser({ ...user, vendor_request_id: e.target.value })}
+                                    />
+                                    {errors?.vendor_request_id && (
+                                        <p className="text-red-500 text-sm">{errors.vendor_request_id}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Vendor Type */}
+                            <div className="col-lg-6 col-md-6 mb-2">
+                                <div className="form-group form-float">
+                                    <label htmlFor="vendor_type" className="mb-0">{t('vendor-type')} <span className="text-red-700 relative">*</span></label>
+                                    <select
+                                        id="vendor_type"
+                                        className={`form-input ${errors.vendor_type ? 'border-red-500' : ''}`}
+                                        onChange={(e) => setUser({ ...user, vendor_type: e.target.value })}
+                                        value={user.vendor_type}
+                                    >
+                                        <option value="" disabled>{t('choose-option')}</option>
+                                        <option value="Person">Person</option>
+                                        <option value="Organisation">Organisation</option>
+
+                                    </select>
+                                    {errors.vendor_type && (
+                                        <p className="text-red-500 text-sm">{errors.vendor_type}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Company Name */}
+                            <div className="col-lg-6 col-md-6 mb-2">
+                                <div className="form-group form-float">
+                                    <label htmlFor="company_name" className="mb-0">{t('company-name')} <span className="text-red-700 relative">*</span></label>
+                                    <input
+                                        type="text"
+                                        id="company_name"
+                                        className={`form-input  placeholder:text-white-dark ${errors.organization_name ? 'border-red-500' : ''}`}
+                                        maxLength={50}
+                                        value={user.organization_name}
+                                        onChange={(e) => setUser({ ...user, organization_name: e.target.value })}
+                                    />
+                                    {errors.organization_name && (
+                                        <p className="text-red-500 text-sm">{errors.organization_name}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Contact Person Name */}
+                            <div className="col-lg-6 col-md-6 mb-2">
+                                <div className="form-group form-float">
+                                    <label htmlFor="contact_person" className="mb-0">{t('contact-person-name')}<span className="text-red-700 relative">*</span></label>
+                                    <input
+                                        type="text"
+                                        id="contact_person"
+                                        className={`form-input ${errors.name ? 'border-red-500' : ''}`}
+                                        maxLength={50}
+                                        value={user.name}
+                                        onChange={(e) => setUser({ ...user, name: e.target.value })}
+                                    />
+                                    {errors.name && (
+                                        <p className="text-red-500 text-sm">{errors.name}</p>
+                                    )}
+                                </div>
+                            </div>
+                            {/* supplier id */}
+                            <div className="col-lg-6 col-md-6 mb-2 ">
+                                <div className="form-group form-float">
+                                    <label htmlFor="" className="mb-0">
+                                        {t('supplier-type')}
+                                    </label>
+                                    <select
+                                        name="supplier_type_id"
+                                        id="supplier_type_id"
+                                        className={`form-input  placeholder:text-white-dark ${errors.suppliertype_id ? 'border-red-500' : ''}`}
+                                        onChange={(e) => setUser({ ...user, suppliertype_id: e.target.value })}
+                                        value={user.suppliertype_id}
+                                    >
+                                        {vendorType?.map((item) => (
+                                            <option key={item.id} value={item.id}>
+                                                {item.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors?.suppliertype_id && (
+                                        <p className="text-red-500 text-sm">{errors.suppliertype_id}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Contact Number */}
+                            <div className="col-lg-6 col-md-6 mb-2">
+                                <div className="form-group form-float">
+                                    <label htmlFor="contact" className="mb-0">{t('contact-no')}<span className="text-red-700 relative">*</span></label>
+                                    <input
+                                        type="text"
+                                        id="contact"
+                                        className={`form-input ${errors.phone_no ? 'border-red-500' : ''}`}
+                                        maxLength={15}
+                                        value={user.phone_no}
+                                        onChange={(e) => setUser({ ...user, phone_no: e.target.value })}
+                                    />
+                                    {errors.phone_no && (
+                                        <p className="text-red-500 text-sm">{errors.phone_no}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Email ID */}
+                            <div className="col-lg-6 col-md-6 mb-2">
+                                <div className="form-group form-float">
+                                    <label htmlFor="email_id" className="mb-0">{t('email-id')}<span className="text-red-700 relative">*</span></label>
+                                    <input
+                                        type="email"
+                                        id="email_id"
+                                        className={`form-input bg-gray-100`}
+                                        value={user.email_id}
+                                        readOnly
+                                        onChange={(e) => setUser({ ...user, email_id: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Alternative Email ID */}
+                            <div className="col-lg-6 col-md-6 mb-2">
+                                <div className="form-group form-float">
+                                    <label htmlFor="alternative_email" className="mb-0">{t('alternative-email-id')}</label>
+                                    <input
+                                        type="email"
+                                        id="alternative_email"
+                                        className="form-input"
+                                        value={user.alternative_email}
+                                        onChange={(e) => setUser({ ...user, alternative_email: e.target.value })}
+                                    />
+                                    {errors.alternative_email && (
+                                        <p className="text-red-500 text-sm">{errors.alternative_email}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Nationality */}
+                            <div className="col-lg-6 col-md-6 mb-2">
+                                <div className="form-group form-float">
+                                    <label htmlFor="amy_countries_id" className="mb-0">{t('nationality')}</label>
+                                    <select
+                                        id="amy_countries_id"
+                                        className="form-input form-select"
+                                        onChange={(e) => setUser({ ...user, amy_countries_id: e.target.value })}
+                                        value={user.amy_countries_id || ''}
+                                    >
+
+                                        {countryList?.map((item) => (
+                                            <option key={item.id} value={item.id}>
+                                                {item.name}
+                                            </option>
+                                        ))}
+
+                                    </select>
+                                    {errors.amy_countries_id && (
+                                        <p className="text-red-500 text-sm">{errors.amy_countries_id}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Upload Photo */}
+                            <div className="col-lg-6 col-md-6 mb-2">
+                                <div className="form-group form-float">
+                                    <label htmlFor="upload_picture" className="mb-0">{t('upload-photo')}</label>
+                                    <input
+                                        type="file"
+                                        id="upload_picture"
+                                        className="form-input"
+                                        onChange={handleFileChange}
+                                    />
+                                </div>
+                            </div>
+
+
+
+                            {/* Billing Address */}
+                            <div className="col-lg-6 col-md-6 mb-2">
+                                <div className="form-group form-float">
+                                    <label htmlFor="billing_address" className="mb-0">{t('billing-address')}</label>
+                                    <textarea
+                                        id="billing_address"
+                                        className="form-input"
+                                        rows={3}
+                                        value={user.billing_address}
+                                        onChange={(e) => setUser({ ...user, billing_address: e.target.value })}
+                                    ></textarea>
+                                </div>
+                            </div>
+                            {/* Primary Address */}
+                            <div className="col-lg-6 col-md-6 mb-2">
+                                <div className="form-group form-float">
+                                    <label htmlFor="primary_address">{t('primary-address')}</label>
+                                    <textarea
+                                        id="primary_address"
+                                        className={`form-input ${errors.primary_address ? 'border-red-500' : ''}`}
+                                        rows={3}
+                                        value={user.primary_address}
+                                        onChange={(e) => setUser({ ...user, primary_address: e.target.value })}
+                                    ></textarea>
+                                    {errors.primary_address && (
+                                        <p className="text-red-500 text-sm">{errors.primary_address}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Business Activities */}
+                            <div className="col-lg-6 col-md-6 mb-2">
+                                <div className="form-group form-float">
+                                    <label htmlFor="business_activity" className="mb-0">{t('business-activities-as-per-trade-license')}</label>
+                                    <textarea
+                                        id="business_activity"
+                                        className="form-input"
+                                        rows={3}
+                                        value={user.business_activity}
+                                        onChange={(e) => setUser({ ...user, business_activity: e.target.value })}
+                                    ></textarea>
+                                </div>
+                            </div>
+
+                            {/* Currency */}
+                            <div className="col-lg-6 col-md-6 mb-2">
+                                <div className="form-group form-float">
+                                    <label htmlFor="currency" className="mb-0">{t('currency')} <span className="text-red-700 relative">*</span></label>
+                                    <select
+                                        id="currency"
+                                        className={`form-input form-select ${errors.currency_id ? 'border-red-500' : ''}`}
+                                        onChange={(e) => setUser({ ...user, currency_id: e.target.value })}
+                                        value={user.currency_id}
+                                    >
+
+                                        {currencyList?.map((item: any) => (
+                                            <option key={item.id} value={item.id}>
+                                                {item.name}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                    {errors.currency_id && (
+                                        <p className="text-red-500 text-sm">{errors.currency_id}</p>
+                                    )}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-
-                    {/* Vendor Type */}
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="vendor_type" className="mb-0">{t('vendor-type')} <span className="text-red-700 relative">*</span></label>
-                            <select
-                                id="vendor_type"
-                                className={`form-input ${errors.vendor_type ? 'border-red-500' : ''}`}
-                                onChange={(e) => setUser({ ...user, vendor_type: e.target.value })}
-                                value={user.vendor_type}
-                            >
-                                <option value="" disabled>{t('choose-option')}</option>
-                                <option value="Person">Person</option>
-                                <option value="Organisation">Organisation</option>
-
-                            </select>
-                            {errors.vendor_type && (
-                                <p className="text-red-500 text-sm">{errors.vendor_type}</p>
-                            )}
+                        <div className='flex justify-start'>
+                            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ">
+                                {user.email_id ? 'Update' : 'submit'}
+                            </button>
                         </div>
-                    </div>
+                    </>
+                )}
 
-                    {/* Company Name */}
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="company_name" className="mb-0">{t('company-name')} <span className="text-red-700 relative">*</span></label>
-                            <input
-                                type="text"
-                                id="company_name"
-                                className={`form-input  placeholder:text-white-dark ${errors.organization_name ? 'border-red-500' : ''}`}
-                                maxLength={50}
-                                value={user.organization_name}
-                                onChange={(e) => setUser({ ...user, organization_name: e.target.value })}
-                            />
-                            {errors.organization_name && (
-                                <p className="text-red-500 text-sm">{errors.organization_name}</p>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Contact Person Name */}
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="contact_person" className="mb-0">{t('contact-person-name')}<span className="text-red-700 relative">*</span></label>
-                            <input
-                                type="text"
-                                id="contact_person"
-                                className={`form-input ${errors.name ? 'border-red-500' : ''}`}
-                                maxLength={50}
-                                value={user.name}
-                                onChange={(e) => setUser({ ...user, name: e.target.value })}
-                            />
-                            {errors.name && (
-                                <p className="text-red-500 text-sm">{errors.name}</p>
-                            )}
-                        </div>
-                    </div>
-                    {/* supplier id */}
-                    <div className="col-lg-6 col-md-6 mb-2 ">
-                        <div className="form-group form-float">
-                            <label htmlFor="" className="mb-0">
-                                {t('supplier-type')}
-                            </label>
-                            <select
-                                name="supplier_type_id"
-                                id="supplier_type_id"
-                                className={`form-input  placeholder:text-white-dark ${errors.suppliertype_id ? 'border-red-500' : ''}`}
-                                onChange={(e) => setUser({ ...user, suppliertype_id: e.target.value })}
-                                value={user.suppliertype_id}
-                            >
-                                {vendorType?.map((item) => (
-                                    <option key={item.id} value={item.id}>
-                                        {item.name}
-                                    </option>
-                                ))}
-                            </select>
-                            {errors?.suppliertype_id && (
-                                <p className="text-red-500 text-sm">{errors.suppliertype_id}</p>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Contact Number */}
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="contact" className="mb-0">{t('contact-no')}<span className="text-red-700 relative">*</span></label>
-                            <input
-                                type="text"
-                                id="contact"
-                                className={`form-input ${errors.phone_no ? 'border-red-500' : ''}`}
-                                maxLength={15}
-                                value={user.phone_no}
-                                onChange={(e) => setUser({ ...user, phone_no: e.target.value })}
-                            />
-                            {errors.phone_no && (
-                                <p className="text-red-500 text-sm">{errors.phone_no}</p>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Email ID */}
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="email_id" className="mb-0">{t('email-id')}<span className="text-red-700 relative">*</span></label>
-                            <input
-                                type="email"
-                                id="email_id"
-                                className={`form-input bg-gray-100`}
-                                value={user.email_id}
-                                readOnly
-                                onChange={(e) => setUser({ ...user, email_id: e.target.value })}
-                            />
-                        </div>
-                    </div>
-
-                    {/* Alternative Email ID */}
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="alternative_email" className="mb-0">{t('alternative-email-id')}</label>
-                            <input
-                                type="email"
-                                id="alternative_email"
-                                className="form-input"
-                                value={user.alternative_email}
-                                onChange={(e) => setUser({ ...user, alternative_email: e.target.value })}
-                            />
-                            {errors.alternative_email && (
-                                <p className="text-red-500 text-sm">{errors.alternative_email}</p>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Nationality */}
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="amy_countries_id" className="mb-0">{t('nationality')}</label>
-                            <select
-                                id="amy_countries_id"
-                                className="form-input form-select"
-                                onChange={(e) => setUser({ ...user, amy_countries_id: e.target.value })}
-                                value={user.amy_countries_id || ''}
-                            >
-
-                                {countryList?.map((item) => (
-                                    <option key={item.id} value={item.id}>
-                                        {item.name}
-                                    </option>
-                                ))}
-
-                            </select>
-                            {errors.amy_countries_id && (
-                                <p className="text-red-500 text-sm">{errors.amy_countries_id}</p>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Upload Photo */}
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="upload_picture" className="mb-0">{t('upload-photo')}</label>
-                            <input
-                                type="file"
-                                id="upload_picture"
-                                className="form-input"
-                                onChange={handleFileChange}
-                            />
-                        </div>
-                    </div>
-
-
-
-                    {/* Billing Address */}
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="billing_address" className="mb-0">{t('billing-address')}</label>
-                            <textarea
-                                id="billing_address"
-                                className="form-input"
-                                rows={3}
-                                value={user.billing_address}
-                                onChange={(e) => setUser({ ...user, billing_address: e.target.value })}
-                            ></textarea>
-                        </div>
-                    </div>
-                    {/* Primary Address */}
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="primary_address">{t('primary-address')}</label>
-                            <textarea
-                                id="primary_address"
-                                className={`form-input ${errors.primary_address ? 'border-red-500' : ''}`}
-                                rows={3}
-                                value={user.primary_address}
-                                onChange={(e) => setUser({ ...user, primary_address: e.target.value })}
-                            ></textarea>
-                            {errors.primary_address && (
-                                <p className="text-red-500 text-sm">{errors.primary_address}</p>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Business Activities */}
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="business_activity" className="mb-0">{t('business-activities-as-per-trade-license')}</label>
-                            <textarea
-                                id="business_activity"
-                                className="form-input"
-                                rows={3}
-                                value={user.business_activity}
-                                onChange={(e) => setUser({ ...user, business_activity: e.target.value })}
-                            ></textarea>
-                        </div>
-                    </div>
-
-                    {/* Currency */}
-                    <div className="col-lg-6 col-md-6 mb-2">
-                        <div className="form-group form-float">
-                            <label htmlFor="currency" className="mb-0">{t('currency')} <span className="text-red-700 relative">*</span></label>
-                            <select
-                                id="currency"
-                                className={`form-input form-select ${errors.currency_id ? 'border-red-500' : ''}`}
-                                onChange={(e) => setUser({ ...user, currency_id: e.target.value })}
-                                value={user.currency_id}
-                            >
-
-                                {currencyList?.map((item: any) => (
-                                    <option key={item.id} value={item.id}>
-                                        {item.name}
-                                    </option>
-                                ))}
-                            </select>
-
-                            {errors.currency_id && (
-                                <p className="text-red-500 text-sm">{errors.currency_id}</p>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-                <div className='flex justify-start'>
-                    <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ">
-                        {user.email_id ? 'Update' : 'submit'}
-                    </button>
-                </div>
 
             </form>
         </div>
