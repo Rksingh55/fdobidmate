@@ -109,7 +109,7 @@ function Index() {
                         <div className="inline-block w-full">
                             <div className="relative z-[1]">
                                 <div
-                                    className={`absolute top-[25px] -z-[1] m-auto  bg-blue-800 transition-[width]  ltr:left-[60px] rtl:right-0 border-dotted border-b-[2.5px]`}
+                                    className={`absolute top-[25px] -z-[1] m-auto  bg-blue-800 transition-[width]  ltr:left-[60px] rtl:right-0 md:border-dotted md:border-b-[2.5px]`}
                                     style={{
                                         width: `${(activeTab - 1) * (90 / (tabs?.length - 1))}%`
                                     }}
@@ -120,12 +120,12 @@ function Index() {
                                             <button
                                                 type="button"
                                                 className={`${activeTab === tab?.id ? '!border-primary !bg-primary text-white' : ''}
-                                text-xl flex h-12 w-12 items-center justify-center rounded-full border-[3px] border-[#f3f2ee] bg-white dark:border-[#1b2e4b] dark:bg-[#253b5c] cursor-none ${completedTabs.includes(tab.id) ? 'text-green-500' : ''}`}
+                                text-xl flex h-12 w-12  items-center justify-center rounded-full border-[3px] border-[#f3f2ee] bg-white dark:border-[#1b2e4b] dark:bg-[#253b5c] cursor-none ${completedTabs.includes(tab.id) ? 'text-green-500' : ''}`}
                                             // onClick={() => handleTabClick(tab.id)}
                                             >
                                                 {tab.icon}
                                             </button>
-                                            <span className={`${activeTab === tab?.id ? 'text-primary ' : ''}text-center mt-2 block`}>{tab?.label}</span>
+                                            <span className={`${activeTab === tab?.id ? 'text-primary ' : ''}text-center mt-2 block max-sm:hidden`}>{tab?.label}</span>
                                         </li>
                                     ))}
                                 </ul>
