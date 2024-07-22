@@ -81,7 +81,8 @@ const TenderPreview = () => {
             }, 3000);
             return;
         } else {
-            router.push("/dashboard");
+            // router.push("/dashboard");
+            toast.success("Tender Applied successfull")
         }
     };
 
