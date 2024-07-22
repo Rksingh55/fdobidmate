@@ -97,7 +97,7 @@ const TenderListPage = () => {
           <div className="flex items-center space-x-4">
             <select onChange={(e) => setSortBy(e.target.value)} value={sortBy} className="p-2 border max-sm:hidden">
               <option value="mostRecent">Most Recent</option>
-              {/* Add more sorting options if needed */}
+              
             </select>
             <button
               onClick={() => setShowFilter(!showFilter)}

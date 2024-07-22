@@ -16,7 +16,7 @@ import Fdomainlogo from "../../public/assets/images/fdo icon3.png";
 import { BsBuildings } from 'react-icons/bs';
 import OtpModal from "@/components/front/OtpModal"
 import { TiHome } from 'react-icons/ti';
-import { API_BASE_URL, OTPVALIDATE_API_URL, REGISTER_API_URL } from '@/api.config';
+import { API_BASE_URL, COMPANYLIST_API_URL, OTPVALIDATE_API_URL, REGISTER_API_URL } from '@/api.config';
 const RegisterCover = () => {
     const router = useRouter();
     const [message, setmessege] = useState("");
@@ -80,9 +80,31 @@ const RegisterCover = () => {
         };
         data?: any;
     }
+    const [companies, setCompanies] = useState<any[]>([]);
 
+    const fetchCompanyList = async () => {
+        const API_URL = `${API_BASE_URL}${COMPANYLIST_API_URL}`;
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const companydata = await response.json();
+            setCompanies(companydata.data)
+            return companydata;
+        } catch (error) {
+            console.error('Error fetching company list:', error);
+            throw error;
+        }
+    };
+
+    useEffect(() => {
+        fetchCompanyList()
+    }, [])
 
     const handleVerifyClick = async (body: any) => {
+
+
         const { organization_name, name, email } = user;
         if (!organization_name || !name || !email) {
             toast.error("Please fill in all required fields: organization name, name, and email.");
@@ -185,14 +207,10 @@ const RegisterCover = () => {
         }
     };
     const { t, i18n } = useTranslation();
-    const initialCompanies = [
-        { id: 1, name: 'Company A' },
-        { id: 2, name: 'Company B' },
-        { id: 3, name: 'Company C' },
-        { id: 4, name: 'Company D' },
-        { id: 5, name: 'Company E' },
-        { id: 6, name: 'Company F' }
-    ];
+
+
+
+    const initialCompanies = companies
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleDropdown = () => {
