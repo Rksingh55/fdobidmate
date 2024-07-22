@@ -32,32 +32,87 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, view }) => {
                     <h3 className="text-xl font-semibold py-1 text-[#00A9E2]">{tender.title}</h3>
                     <p className='py-2 flex gap-2'><TenderidIcon /><strong>Tender ID :</strong> {tender.code}</p>
                     <p className='py-2 '><strong>Description :</strong> {tender.description}</p>
-                    <div className={`${view === 'grid' ? 'flex flex-wrap justify-between gap-3 py-2' : 'flex justify-between max-sm:flex-col max-sm:gap-2 py-2'} `} >
+                    <div className={`${view === 'grid' ? 'flex flex-wrap justify-between gap-3 py-2' : 'flex justify-between  max-sm:flex-col max-sm:gap-2 py-2'} `} >
                         <div>
-                            <p className='flex gap-1 font-bold text-[#4b4949]' ><span className='text-[#00A9E2] font-bold'><MdOutlineDateRange className=' text-lg' /> </span> {tender.publish_date}</p>
+                            <p className='flex gap-1 font-bold text-[#4b4949] ' >
+                                <span className='text-[#00A9E2] '>
+                                    <MdOutlineDateRange className=' text-lg' />
+                                </span>
+                                <div className='flex md:    flex-col '>
+                                    <label className='font-bold'>Start date : </label>
+                                    {tender.publish_date}
+                                </div>
+                            </p>
                         </div>
                         <div>
-                            <p className='flex gap-1 font-bold text-[#4b4949]' ><span className='text-[#00A9E2] font-bold'><MdOutlineDateRange className=' text-lg' /> </span>{tender.close_date}</p>
+                            <p className='flex gap-1 font-bold text-[#4b4949]' >
+                                <span className='text-[#00A9E2] font-bold'>
+                                    <MdOutlineDateRange className=' text-lg' />
+                                </span>
+
+                                <div className='flex md:    flex-col'>
+                                    <label className='font-bold'>Close date : </label>
+                                    {tender.close_date}
+                                </div>
+                            </p>
+
                         </div>
                         <div>
-                            <p className='flex gap-1 font-bold text-[#4b4949]' ><span className='text-[#00A9E2] font-bold'><HiLocationMarker className=' text-lg' /> </span>{tender.curr_code}</p>
+                            <p className='flex gap-1 font-bold text-[#4b4949]' >
+                                <span className='text-[#00A9E2] font-bold'>
+                                    <HiLocationMarker className=' text-lg' />
+                                </span>
+                                <div className='flex md:    flex-col'>
+
+                                    <label className='font-bold'>Currency : </label>
+                                    {tender.curr_code}
+                                </div>
+                            </p>
                         </div>
                         <div>
-                            <p className='flex gap-1 font-bold text-[#4b4949]' ><span className='text-[#00A9E2] font-bold'><BiSolidPurchaseTag className=' text-lg' /> </span>{tender.tenderfeeamount}</p>
+                            <p className='flex gap-1 font-bold text-[#4b4949]' >
+                                <span className='text-[#00A9E2] font-bold'>
+                                    <BiSolidPurchaseTag className=' text-lg' />
+                                </span>
+                                <div className='flex md:    flex-col'>
+                                    <label className='font-bold'>Tender fees :</label>
+                                    {tender.tenderfeeamount}
+                                </div>
+
+                            </p>
                         </div>
                         <div>
-                            <p className='flex gap-1 font-bold text-[#4b4949]' ><span className='text-[#00A9E2] font-bold'><GiDatabase className=' text-lg' /> </span>{tender.tenderfeeamount}</p>
+                            <p className='flex gap-1 font-bold text-[#4b4949]' >
+                                <span className='text-[#00A9E2] font-bold'>
+                                    <GiDatabase className=' text-lg' /> </span>
+                                <div className='flex md:    flex-col'>
+
+                                    <label className='font-bold'>Tender Amount :</label>
+                                    {tender.tenderfeeamount}
+                                </div>
+
+                            </p>
                         </div>
                         <div>
-                            <p className='flex gap-1 font-bold text-[#4b4949]' ><span className='text-[#00A9E2] font-bold'><PiBuildingOfficeDuotone className=' text-lg' /> </span>{tender.department}</p>
+                            <p className='flex gap-1 font-bold text-[#4b4949]' >
+                                <span className='text-[#00A9E2] font-bold'>
+                                    <PiBuildingOfficeDuotone className=' text-lg' />
+                                </span>
+                                <div className='flex md:    flex-col'>
+
+                                    <label className='font-bold'>Department :</label>
+                                    {tender.department}
+                                </div>
+
+                            </p>
                         </div>
 
                     </div>
                     <Link href={`/tender-list/tender-preview/${tender.encrypt_id}`} key={tender.encrypt_id} className='flex justify-end py-2 '>
-                        <button className={`${view === 'grid' ? ' text-[#00A9E2] font-bold flex gap-2' : ' font-bold rounded-md mt-2 absolute top-[10%] right-[-2%] bg-[#00A9E2] text-white py-2 px-3 flex gap-2'} `} >More Details <MdKeyboardArrowRight className=' text-xl' />
+                        <button className={`${view === 'grid' ? ' text-[#00A9E2] font-bold flex gap-2' : ' font-bold rounded-md mt-2 absolute md:top-[10%] max-sm:bottom-[5%] right-[-2%] bg-[#00A9E2] text-white py-2 px-3 flex gap-2'} `} >More Details <MdKeyboardArrowRight className=' text-xl' />
                         </button>
                     </Link>
-                   
+
                 </div>
             </div>
         </>

@@ -67,7 +67,6 @@ const TenderListPage = () => {
   }, [filters, sortBy, tenderlist]);
 
   useEffect(() => {
-    // Update filtered tenders when search query changes
     let searchFilteredTenders = [...filteredTenders];
     searchFilteredTenders = searchFilteredTenders.filter(tender => {
       return `${tender.code} ${tender.encrypt_id} ${tender.title} ${tender.publish_date} ${tender.curr_code} ${tender.tenderfeeamount} ${tender.company} ${tender.department}`

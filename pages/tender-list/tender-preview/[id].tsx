@@ -29,13 +29,13 @@ const TenderPreview = () => {
                 const today = new Date();
                 const closeDate = new Date(data.close_date);
                 const timeDiff = closeDate.getTime() - today.getTime();
-                const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+                const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 return dayDiff;
             };
             setDaysToGo(calculateDaysRemaining());
         }
     }, [data?.close_date]);
-    
+
     const { id } = router.query;
     const [loading, setLoading] = useState<boolean>(true);
     useEffect(() => {
