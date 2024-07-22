@@ -59,9 +59,7 @@ const GeneralInformation: React.FC = () => {
 
 
     useEffect(() => {
-        console.log("fetchvendordata----", vendorInformationList)
         setvendorlist(vendorInformationList)
-        console.log("vendorlist", vendorlist)
         if (vendorlist) {
             setUser({
                 suppliertype_id: vendorlist.suppliertype_id || "",
@@ -105,7 +103,7 @@ const GeneralInformation: React.FC = () => {
     }
     );
 
-    console.log("sss", user)
+
 
     const validateForm = () => {
         const newErrors: { [key: string]: string } = {};
@@ -205,9 +203,7 @@ const GeneralInformation: React.FC = () => {
             />
             <form className=" dark:text-white" onSubmit={handleSubmit} encType="multipart/form-data">
                 {status === 'loading' && (
-
                     <FormSkeltonloader />
-
                 )}
                 {status === 'succeeded' && (
                     <>

@@ -26,7 +26,6 @@ function OtherDetails() {
         { contactperson: '', relation: '', designation: '', contactno: '' },
     ]);
     const dispatch = useDispatch<AppDispatch>();
-
     useEffect(() => {
         dispatch(fetchvendordata());
     }, [dispatch]);
@@ -45,7 +44,6 @@ function OtherDetails() {
     const vendorInformationList = useSelector((state: RootState) => state.vendordata.list);
     useEffect(() => {
         setvendorlist(vendorInformationList)
-        console.log("vendorlist other-informationpage", vendorlist?.vendor_reference)
         if (vendorlist?.vendor_reference) {
             const firstReference = vendorlist.vendor_reference[0] || {};
             setUser({
@@ -58,7 +56,6 @@ function OtherDetails() {
         }
         if (vendorlist?.vendor_reference) {
             const firstReference2 = vendorlist.vendor_reference[1] || {};
-            console.log("llll", firstReference2)
             setUser2({
                 contactperson: firstReference2.contactperson || "",
                 relation: firstReference2.relation || "",
@@ -119,7 +116,7 @@ function OtherDetails() {
 
             }
         } catch (error) {
-            console.error('Error submitting form:', error);
+            toast.error('Error submitting form')
         }
 
 

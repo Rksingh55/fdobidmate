@@ -39,13 +39,9 @@ const Companydetails: React.FC = () => {
     }, [dispatch]);
 
     const vendorInformationList = useSelector((state: RootState) => state.vendordata.list);
-
-
-
     useEffect(() => {
-        console.log("fetchvendordata----", vendorInformationList)
         setvendorlist(vendorInformationList)
-        console.log("vendorlist", vendorlist)
+        console.log("vendor",vendorlist)
         if (vendorlist) {
             setUser({
                 website: vendorlist.website || "",

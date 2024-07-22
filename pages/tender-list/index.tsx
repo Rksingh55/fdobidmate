@@ -14,7 +14,7 @@ import SkeletonCard from '@/components/cards/SkeletonCard';
 
 const TenderListPage = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const tenderlist = useSelector((state: RootState) => state.Tenderlist.list);
+  const tenderlist = useSelector((state: RootState) => state.Tenderlist.list || []);
   const status = useSelector((state: RootState) => state.Tenderlist.status);
   const error = useSelector((state: RootState) => state.Tenderlist.error);
 

@@ -25,24 +25,17 @@ function Index() {
     const [activeTab, setActiveTab] = useState(1);
     const [error, seterror] = useState('')
     const [completedTabs, setCompletedTabs] = useState([]);
-    // const [user, setuser] = useState({
-    //     org_name: " ",
-    //     name: " ",
-    //     vendor_type: " ",
-    // });
 
-    // console.log(user)
     const handleButtonClick = () => {
-        // if (!user.org_name.trim() || !user.name.trim() || !user.cr_number.trim()) {
-        //     seterror("Please fill the all required field**")
-        // } else {
         setCompletedTabs([...completedTabs, activeTab]);
         if (activeTab < tabs?.length) {
             setActiveTab(activeTab + 1);
         } else {
             console.log('Finish');
+            // -----finish button funtionlity------
+            alert("submit")
+            
         }
-        // }
     };
 
 
@@ -55,6 +48,9 @@ function Index() {
     //     }
     // };
 
+    const handleTabClick = (tabId) => {
+        setActiveTab(tabId);
+    };
     const tabs = [
         {
             id: 1, icon: <MdHome className="text-2xl" />, label: "General Information",
@@ -121,7 +117,7 @@ function Index() {
                                                 type="button"
                                                 className={`${activeTab === tab?.id ? '!border-primary !bg-primary text-white' : ''}
                                 text-xl flex h-12 w-12  items-center justify-center rounded-full border-[3px] border-[#f3f2ee] bg-white dark:border-[#1b2e4b] dark:bg-[#253b5c] cursor-none ${completedTabs.includes(tab.id) ? 'text-green-500' : ''}`}
-                                            // onClick={() => handleTabClick(tab.id)}
+                                                onClick={() => handleTabClick(tab.id)}
                                             >
                                                 {tab.icon}
                                             </button>
@@ -131,9 +127,9 @@ function Index() {
                                 </ul>
 
                             </div>
-                           
+
                             {/* <div className='flex justify-center items-center py-2'><p className='text-red-500  font-bold'>{error}</p></div> */}
-                            <div className=' h-[430px]  overflow-y-scroll overflow-x-hidden  p-2 rounded-md  '>
+                            <div className=' h-[430px]  overflow-y-scroll overflow-x-hidden  md:p-2 rounded-md  '>
                                 {tabs?.map((tab) => (
                                     <p key={tab?.id} className="mb-5">{activeTab === tab?.id && tab?.content}</p>
                                 ))}
@@ -143,7 +139,7 @@ function Index() {
 
                     </div>
                     <div className=" flex justify-end " >
-                        <div className='flex gap-2'> 
+                        <div className='flex gap-2'>
                             <button
                                 type="button"
                                 className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4  ${activeTab === 1 ? 'hidden' : ''}`}
@@ -156,7 +152,7 @@ function Index() {
                                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4  ltr:ml-auto rtl:mr-auto"
                                 onClick={handleButtonClick}
                             >
-                                {activeTab === tabs?.length ? 'Finish' : 'Next'}
+                                {activeTab === tabs?.length ? 'Verify' : 'Next'}
                             </button>
                         </div>
                     </div>

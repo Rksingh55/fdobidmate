@@ -17,7 +17,6 @@ import FormSkeltonloader from "../cards/FormSkeltonloader"
 
 function TaxBillinginfo() {
     const { t, i18n } = useTranslation();
-    const router = useRouter();
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [vendorlist, setvendorlist] = useState<any>();
     const [message, setMessage] = useState('');
@@ -50,7 +49,6 @@ function TaxBillinginfo() {
     }
     useEffect(() => {
         setvendorlist(vendorInformationList)
-        console.log("vendorlist", vendorlist)
         if (vendorlist) {
             setUser({
                 tax_no: vendorlist.tax_no || "",
@@ -104,25 +102,17 @@ function TaxBillinginfo() {
                     },
                     body: JSON.stringify(payload),
                 });
-
-
                 if (response.ok) {
                     const responseData = await response.json();
-                    console.log("response", responseData);
                     setMessage('Tax & Billing details data submitted');
                     setShowPopup(true);
                 } else {
                     const errorData = await response.json();
-                    if (errorData && errorData.errors) {
-                        Object.keys(errorData.errors).forEach(field => {
-                            const errorMessage = errorData.errors[field][0];
-                            toast.error(`${errorMessage}`);
-                        });
+                    toast.error(errorData.message.success);
 
-                    }
                 }
             } catch (error) {
-                console.error('Error submitting form:', error);
+                toast.error('Error submitting form');
             }
         }
     };

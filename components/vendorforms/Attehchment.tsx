@@ -25,16 +25,20 @@ const HomePage: React.FC = () => {
     };
     const documentTypes = [
         "Type of Business",
-        "Quality and Safety Organization",
         "Commercial Registration",
         "Licenses",
         "TAX Registration",
-        "VAT Registration",
+        // "VAT Registration", ---as per requirement its not required
         "Agency Certificate",
         "Bank Certificate",
         "Local Company Certificate",
+        "Quality and Safety Organization",
         "Other Document"
     ];
+    const requiredDocumentTypes = documentTypes.filter(
+        (type) => type !== "Quality and Safety Organization" && type !== "Other Document"
+    );
+
     const handleOpenUploadPopup = (type: string) => {
         setSelectedType(type);
         setIsUploadPopupVisible(true);
@@ -44,49 +48,6 @@ const HomePage: React.FC = () => {
         setIsUploadPopupVisible(false);
     };
 
-
-    // const VendorAttachmentApiUrl = "/api/vendor/vendor_attachements"
-    // const handleUploadDocuments = async (type: string, files: File[]) => {
-    //     console.log("selected filesssssss------->", files)
-    //     const formDataEntries: [string, FormDataEntryValue][] = [];
-    //     const formData = new FormData();
-    //     formData.append('attachment_type', type);
-    //     const vendor_profile_id = localStorage.getItem("vendorId")?.replace(/['"]/g, '');
-    //     formData.append('vendor_profile_id', vendor_profile_id || '');
-    //     files.forEach((files, index) => {
-    //         formData.append(`files[${index}]`, files);
-    //         formDataEntries.push([`files[${index}]`, files]);
-    //     });
-
-    //     console.log("FormData Entries:", formDataEntries);
-    //     const token = getToken();
-    //     try {
-    //         const response = await fetch("https://httpbin.org/post", {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Authorization': `Bearer ${token}`,
-    //                 'contentType': 'application/octet-stream',
-    //             },
-    //             body: formData,
-    //         });
-    //         if (response.ok) {
-    //             alert("Document upload success");
-    //             setDocuments((prevDocuments) => {
-    //                 const existingDocument = prevDocuments.find(doc => doc.type === type);
-    //                 if (existingDocument) {
-    //                     existingDocument.files = [];
-    //                     return [...prevDocuments];
-    //                 } else {
-    //                     return prevDocuments;
-    //                 }
-    //             });
-    //         } else {
-    //             console.error('Error uploading documents:', response.statusText);
-    //         }
-    //     } catch (error) {
-    //         console.error('Error uploading documents:', error);
-    //     }
-    // };
     const handleUploadDocuments = async (type: string, files: File[]) => {
         const encodeFileToBase64 = (file: File): Promise<string> => {
             return new Promise((resolve, reject) => {
@@ -134,7 +95,8 @@ const HomePage: React.FC = () => {
                 toast.error(errorData.message.error)
             }
         } catch (error) {
-            console.error('Error uploading documents:', error);
+            toast.error('Error uploading documents')
+
         }
     };
 
@@ -169,7 +131,9 @@ const HomePage: React.FC = () => {
             />
             {documentTypes.map((type) => (
                 <button key={type} onClick={() => handleOpenUploadPopup(type)} className='border-1 hover:bg-slate-200 rounded-md p-2 py-2 m-2'>
-                    <span className='flex gap-2'> <FaCloudUploadAlt className=' text-xl' /> Upload  {type} documents</span>
+                    <span className='flex gap-2'> <FaCloudUploadAlt className=' text-xl' /> Upload  {type} documents {requiredDocumentTypes.includes(type) && (
+                        <span className="text-red-500 ml-2 font-extrabold ">*</span>
+                    )}</span>
                 </button>
             ))}
             <UploadDocumentPopup

@@ -9,19 +9,14 @@ import SuccessPopup from '../front/SuccessPopup';
 import { API_BASE_URL, QUESTIONAIRE_API_URL } from '@/api.config';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import FormSkeltonloader from "../cards/FormSkeltonloader"
-
 interface Answer {
     [key: string]: string;
 }
-
 function Questionnaire() {
     const { t } = useTranslation();
     const [vendorlist, setVendorlist] = useState<any>();
     const [message, setMessage] = useState('');
-
     const [showPopup, setShowPopup] = useState(false);
-
     const [user, setUser] = useState({
         question_ans: {} as Answer,
     });
@@ -40,7 +35,6 @@ function Questionnaire() {
 
     useEffect(() => {
         setVendorlist(vendorInformationList);
-        console.log("vendorlist question", vendorlist?.vendor_questionnaire)
         if ( vendorlist?.vendor_questionnaire) {
             setUser(prevUser => ({
                 ...prevUser,
@@ -48,7 +42,6 @@ function Questionnaire() {
             }));
         }
     }, [vendorInformationList]);
-
     const handleAnswerChange = (questionId: string, answer: string) => {
         setAnswers(prevAnswers => ({
             ...prevAnswers,
@@ -144,6 +137,7 @@ function Questionnaire() {
                                                             name={`question_${item.id}`}
                                                             value="no"
                                                             onChange={() => handleAnswerChange(item.id, 'no')}
+                                                            
                                                             required
                                                         />
                                                     </div>

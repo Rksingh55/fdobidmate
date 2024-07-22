@@ -15,25 +15,27 @@ import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { API_BASE_URL, TENDERPREVIEW_API_URL } from '@/api.config';
-import SkeletonCard from '@/components/cards/SkeletonCard';
 import Skelotonfull from '@/components/cards/Skelotonfull';
-
-// interface Tender {
-//     encrypt_id: string;
-//     title: string;
-//     id: string;
-//     start_date: string;
-//     end_date: string;
-//     location: string;
-//     price: string;
-//     entity: string;
-//     department: string;
-// }
 
 const TenderPreview = () => {
     const router = useRouter();
     const [data, setData] = useState<any>(null);
-    console.log("tender-preview", data)
+    // console.log("tender-preview", data);
+    const [daysToGo, setDaysToGo] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (data?.close_date) {
+            const calculateDaysRemaining = () => {
+                const today = new Date();
+                const closeDate = new Date(data.close_date);
+                const timeDiff = closeDate.getTime() - today.getTime();
+                const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Convert milliseconds to days
+                return dayDiff;
+            };
+
+            setDaysToGo(calculateDaysRemaining());
+        }
+    }, [data?.close_date]);
     const { id } = router.query;
     const [loading, setLoading] = useState<boolean>(true);
     useEffect(() => {
@@ -99,7 +101,9 @@ const TenderPreview = () => {
                             <div className="max-w-4xl mx-auto md:p-3 p-1">
                                 <div className='flex justify-between py-2'>
                                     <div className="text-2xl flex gap-2 items-center font-semibold mb-2 text-[#00A9E2]">  <div className='h-[40px] w-[5px] bg-[#00A9E2]'></div> {data?.title}</div>
-                                    <button className=' bg-[#FC8404] text-white font-semibold rounded-sm px-4 shadow-md'>5 Days to go</button>
+                                    <button className='bg-[#FC8404] text-white font-semibold rounded-sm px-4 shadow-md'>
+                                        {daysToGo !== null ? `${daysToGo} Days to go` : 'Calculating...'}
+                                    </button>
                                 </div>
                                 <div className='flex md:flex-row justify-between gap-2 py-2 max-sm:flex-wrap'>
                                     <div className="py-2 flex justify-center items-center gap-2">
@@ -108,15 +112,15 @@ const TenderPreview = () => {
                                     </div>
                                     <div className="py-2 flex justify-center items-center gap-2">
                                         <OMRicon />
-                                        <span>OMR</span>
+                                        <span>{data?.currency.code}</span>
                                     </div>
                                     <div className="py-2 flex justify-center items-center gap-2">
                                         <Tenderdepartmenticon />
-                                        <span>Department</span>
+                                        <span>{data?.department.code}</span>
                                     </div>
                                     <div className="py-2 flex justify-center items-center gap-2">
                                         <OMrtransectionIcon />
-                                        <span>{data?.tenderfeeamount} OMR</span>
+                                        <span>{data?.tenderfeeamount} {data?.currency.code}</span>
                                     </div>
 
                                 </div>
@@ -124,7 +128,7 @@ const TenderPreview = () => {
                                 <div className="py-10">
                                     <h2 className="text-2xl font-semibold mb-2 text-[#00A9E2]">Brief Information</h2>
                                     <p className='py-2'>
-                                        Design And Construction Of Elevated Metro Viaduct Of Length 17.624 Km Between Ch.21256.814 To Ch.38881.7 Including Railway Spans Of Length 79m & 100m And 6-Lane Double-Decker Portion With Vehicular Underpass (Vup) From Ch. 25755.211 To 26895.211 For A Total Length Of 1.14km In Reach-1a Of Nmrp Phase-2
+                                        {data?.description || 'No Description available'}
                                     </p>
                                 </div>
 
@@ -140,19 +144,19 @@ const TenderPreview = () => {
                                         <tbody className=''>
                                             <tr>
                                                 <td className='p-2'>Tender Float Date</td>
-                                                <td className='p-2'>25 May, 2024</td>
+                                                <td className='p-2'>{data?.float_date}</td>
                                             </tr>
                                             <tr>
                                                 <td className='p-2'>Bid Submission Date</td>
-                                                <td className='p-2'>28 May, 2024</td>
+                                                <td className='p-2'>{data?.bidsubmissiondeadline_date}</td>
                                             </tr>
                                             <tr>
                                                 <td className='p-2'>Clarification End Date</td>
-                                                <td className='p-2'>29 May, 2024</td>
+                                                <td className='p-2'>{data?.clarificationend_date}</td>
                                             </tr>
                                             <tr>
                                                 <td className='p-2'>Tender End Date</td>
-                                                <td className='p-2'>3 June, 2024</td>
+                                                <td className='p-2'>{data?.close_date}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -170,11 +174,17 @@ const TenderPreview = () => {
                                         <tbody>
                                             <tr>
                                                 <td className='p-2'>Bid Bond Fees</td>
-                                                <td className='p-2'>34323</td>
+                                                {data?.bidbondfeepercentage
+                                                    ? `${data.bidbondfeepercentage}%`
+                                                    : data?.bidbondfeeamount || 'N/A'}
                                             </tr>
                                             <tr>
                                                 <td className='p-2'>Tender Fees</td>
-                                                <td className='p-2'>786786</td>
+                                                <td className='p-2'>
+                                                    {data?.tenderfeepercentage
+                                                        ? `${data.tenderfeepercentage}%`
+                                                        : data?.tenderfeeamount || 'N/A'}
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -194,22 +204,21 @@ const TenderPreview = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td className='p-2'>1</td>
-                                                <td className='p-2'>Document Name</td>
-                                                <td className='p-2'>PDF</td>
-                                                <td className='p-2'>55kb</td>
-                                                <td className='p-2 flex justify-center'><MdCloudDownload className='text-[#00A9E2] text-xl' /></td>
-
-                                            </tr>
-                                            <tr>
-                                                <td className='p-2'>2</td>
-                                                <td className='p-2'>Document Name</td>
-                                                <td className='p-2'>PNG</td>
-                                                <td className='p-2'>7mb</td>
-                                                <td className='p-2 flex justify-center'><FaLock /></td>
-
-                                            </tr>
+                                            {Array.isArray(data.tender_document) ? (
+                                                data.tender_document.map((item: any, index: any) => (
+                                                    <tr key={item.id} >
+                                                        <td className='p-2'>{index + 1}</td>
+                                                        <td className='p-2'>{item.name?.toString() || 'N/A'}</td>
+                                                        <td className='p-2'>{item.type?.toString() || 'N/A'}</td>
+                                                        <td className='p-2'>Kb</td>
+                                                        <td className='p-2 flex justify-center'><MdCloudDownload className='text-[#00A9E2] text-xl cursor-pointer' /></td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                <tr>
+                                                    <td className='p-2'>No data available</td>
+                                                </tr>
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>
@@ -227,22 +236,23 @@ const TenderPreview = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td className='p-2'>1</td>
-                                                <td className='p-2'>Procurement_Category</td>
-                                                <td className='p-2'>Lab Supply Agreement</td>
-                                                <td className='p-2'>PCS</td>
-                                                <td className='p-2'>300</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td className='p-2'>3</td>
-                                                <td className='p-2'>Procurement_Category</td>
-                                                <td className='p-2'>Mouse</td>
-                                                <td className='p-2'>DOJEN</td>
-                                                <td className='p-2'>100</td>
-                                            </tr>
+                                            {Array.isArray(data.tenderline) ? (
+                                                data.tenderline.map((item: any) => (
+                                                    <tr key={item.id}>
+                                                        <td className='p-2'>{item.line_no?.toString() || 'N/A'}</td>
+                                                        <td className='p-2'>{item.item_no?.toString() || 'N/A'}</td>
+                                                        <td className='p-2'>{item.product_name?.toString() || 'N/A'}</td>
+                                                        <td className='p-2'>{item.unit.name?.toString() || 'N/A'}</td>
+                                                        <td className='p-2'>{item.quantity?.toString() || 'N/A'}</td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                <tr>
+                                                    <td className='p-2'>No data available</td>
+                                                </tr>
+                                            )}
                                         </tbody>
+
                                     </table>
                                 </div>
                                 <div className='p-10 flex justify-center'>

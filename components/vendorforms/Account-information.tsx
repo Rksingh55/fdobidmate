@@ -179,10 +179,8 @@ function AccountInformation() {
                 show={showPopup}
                 onClose={handleClosePopup}
             />
-            {/* Bank Accounts Section */}
-
+         
             <form className="space-y-3 dark:text-white">
-
                 <div className='border-1 p-2 rounded-md flex flex-col gap-2'>
                     <div className="row">
                         <div className="col-lg-12 justify-end flex ">
