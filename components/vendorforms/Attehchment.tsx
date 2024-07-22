@@ -129,15 +129,43 @@ const HomePage: React.FC = () => {
                 show={showPopup}
                 onClose={handleClosePopup}
             />
-            {documentTypes.map((type) => (
-                <button key={type} onClick={() => handleOpenUploadPopup(type)} className='border-1 hover:bg-slate-200 rounded-md p-2 py-2 m-2'>
-                    <span className='flex gap-2'> <FaCloudUploadAlt className=' text-xl' /> Upload  {type} documents {requiredDocumentTypes.includes(type) && (
-                        <span className="text-red-500 ml-2 font-extrabold ">*</span>
-                    )}</span>
-                </button>
-            ))}
+            <div className="overflow-x-auto">
+                <table className="min-w-full bg-white border border-gray-200">
+                    <thead>
+                        <tr className="border-b bg-gray-50">
+                            <th className="py-2 px-4 text-left text-gray-600">S. No</th>
+                            <th className="py-2 px-4 text-left text-gray-600">Document Name</th>
+                            <th className="py-2 px-4 text-left text-gray-600">Action</th>
+                            <th className="py-2 px-4 text-center text-gray-600">Total Uploaded Documents</th>
+                        </tr>
+                    </thead>
+                    <tbody className=''>
+                        {documentTypes?.map((type, index) => (
+                            <tr key={type} className="border-b">
+                                <td>{index + 1}.</td>
+                                <td className="py-2 px-4 text-gray-800">{type}
+                                    {requiredDocumentTypes?.includes(type) && (
+                                        <span className="text-red-500 ml-2 font-extrabold">*</span>
+                                    )}</td>
+                                <td className="py-2 px-4">
+                                    <button
+                                        onClick={() => handleOpenUploadPopup(type)}
+                                        className='border-1 hover:bg-slate-200 rounded-md p-2 flex items-center gap-2'
+                                    >
+                                        <FaCloudUploadAlt className='text-xl' />
+                                        Upload
+                                    </button>
+                                </td>
+                                <td className=" text-gray-800 text-center">
+                                    Static data -  ( 2 )
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
 
-            
+
             <UploadDocumentPopup
                 isVisible={isUploadPopupVisible}
                 onClose={handleCloseUploadPopup}

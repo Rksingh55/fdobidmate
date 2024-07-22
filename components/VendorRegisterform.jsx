@@ -26,7 +26,7 @@ function Index() {
     const [error, seterror] = useState('')
     const [completedTabs, setCompletedTabs] = useState([]);
     const [isPopupOpen, setPopupOpen] = useState(false);
-    const [message, setMessage] = useState('This is a review message.');
+    const [message, setMessage] = useState('Please Verify or recheck all the Information before submit the form');
 
     const handleButtonClick = () => {
         setCompletedTabs([...completedTabs, activeTab]);
@@ -105,12 +105,6 @@ function Index() {
         <>
             <ToastContainer />
             <div className="">
-                {/* <button
-                    onClick={handleOpenPopup}
-                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                >
-                    Show Review Message
-                </button> */}
                 <ReviewPopup isOpen={isPopupOpen} onClose={handleClosePopup} message={message} />
             </div>
             <div className='animate__animated'>
