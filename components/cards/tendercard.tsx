@@ -4,9 +4,9 @@ import { HiLocationMarker } from "react-icons/hi";
 import { BiSolidPurchaseTag } from 'react-icons/bi';
 import { GiDatabase } from "react-icons/gi";
 import { PiBuildingOfficeDuotone } from 'react-icons/pi';
-import { TenderidIcon } from '../../public/icons';
+import { OMRicon, TenderidIcon } from '../../public/icons';
 import Link from 'next/link';
-
+import { HiMiniQueueList } from "react-icons/hi2";
 interface TenderCardProps {
     tender: {
         encrypt_id: string;
@@ -19,6 +19,7 @@ interface TenderCardProps {
         tenderfeeamount: string;
         company: string;
         department: string;
+        entity: string;
     };
     view: 'list' | 'grid';
 }
@@ -28,9 +29,9 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, view }) => {
     return (
         <>
             <div className={`${view === 'grid' ? 'w-full  ' : 'w-full'} `}>
-                <div className="  mt-2  border-2 rounded-md  bg-white border-[#FC8404]  relative md:p-9 p-3  hover:shadow-md">
+                <div className="  mt-2  border-2 rounded-md  bg-white border-[#1E3567] hover:border-[#FC8404]  relative md:p-9 p-3  hover:shadow-md">
                     <h3 className="text-xl font-semibold py-1 text-[#00A9E2]">{tender.title}</h3>
-                    <p className='py-2 flex gap-2'><TenderidIcon /><strong>Tender ID :</strong> {tender.code}</p>
+                    <p className='py-2 flex gap-2'><TenderidIcon /><strong>Tender ID </strong> {tender.code}</p>
                     <p className='py-2 '><strong>Description :</strong> {tender.description}</p>
                     <div className={`${view === 'grid' ? 'flex flex-wrap justify-between gap-3 py-2' : 'flex justify-between  max-sm:flex-col max-sm:gap-2 py-2'} `} >
                         <div>
@@ -38,8 +39,8 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, view }) => {
                                 <span className='text-[#00A9E2] '>
                                     <MdOutlineDateRange className=' text-lg' />
                                 </span>
-                                <div className='flex md:    flex-col '>
-                                    <label className='font-bold'>Start date : </label>
+                                <div className='flex    flex-col '>
+                                    <label className='font-bold'>Start Date  </label>
                                     {tender.publish_date}
                                 </div>
                             </p>
@@ -50,8 +51,8 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, view }) => {
                                     <MdOutlineDateRange className=' text-lg' />
                                 </span>
 
-                                <div className='flex md:    flex-col'>
-                                    <label className='font-bold'>Close date : </label>
+                                <div className='flex    flex-col'>
+                                    <label className='font-bold'>Close Date  </label>
                                     {tender.close_date}
                                 </div>
                             </p>
@@ -60,11 +61,11 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, view }) => {
                         <div>
                             <p className='flex gap-1 font-bold text-[#4b4949]' >
                                 <span className='text-[#00A9E2] font-bold'>
-                                    <HiLocationMarker className=' text-lg' />
+                                    <OMRicon />
                                 </span>
-                                <div className='flex md:    flex-col'>
+                                <div className='flex    flex-col'>
 
-                                    <label className='font-bold'>Currency : </label>
+                                    <label className='font-bold'>Currency  </label>
                                     {tender.curr_code}
                                 </div>
                             </p>
@@ -74,8 +75,8 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, view }) => {
                                 <span className='text-[#00A9E2] font-bold'>
                                     <BiSolidPurchaseTag className=' text-lg' />
                                 </span>
-                                <div className='flex md:    flex-col'>
-                                    <label className='font-bold'>Tender fees :</label>
+                                <div className='flex    flex-col'>
+                                    <label className='font-bold'>Tender Fees </label>
                                     {tender.tenderfeeamount}
                                 </div>
 
@@ -84,23 +85,25 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, view }) => {
                         <div>
                             <p className='flex gap-1 font-bold text-[#4b4949]' >
                                 <span className='text-[#00A9E2] font-bold'>
-                                    <GiDatabase className=' text-lg' /> </span>
-                                <div className='flex md:    flex-col'>
 
-                                    <label className='font-bold'>Tender Amount :</label>
-                                    {tender.tenderfeeamount}
+                                    <HiMiniQueueList className='text-lg' />
+                                </span>
+                                <div className='flex     flex-col'>
+                                    <label className='font-bold'>Entity  </label>
+                                    {tender?.company}
                                 </div>
 
                             </p>
                         </div>
+
                         <div>
                             <p className='flex gap-1 font-bold text-[#4b4949]' >
                                 <span className='text-[#00A9E2] font-bold'>
                                     <PiBuildingOfficeDuotone className=' text-lg' />
                                 </span>
-                                <div className='flex md:    flex-col'>
+                                <div className='flex    flex-col'>
 
-                                    <label className='font-bold'>Department :</label>
+                                    <label className='font-bold'>Department </label>
                                     {tender.department}
                                 </div>
 

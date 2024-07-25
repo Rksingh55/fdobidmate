@@ -19,7 +19,7 @@ interface User {
     website: string;
     cr_number: string;
     number_of_employee: string;
-    type_of_business: string;
+    type_of_business: any;
     category: [];
     quality_safety: string;
 
@@ -41,7 +41,7 @@ const Companydetails: React.FC = () => {
     const vendorInformationList = useSelector((state: RootState) => state.vendordata.list);
     useEffect(() => {
         setvendorlist(vendorInformationList)
-        console.log("vendor",vendorlist)
+        console.log("vendor", vendorlist)
         if (vendorlist) {
             setUser({
                 website: vendorlist.website || "",
@@ -90,15 +90,22 @@ const Companydetails: React.FC = () => {
     }));
 
     // Function to handle category changes
-    const handleCategoryChange = (selectedOptions: any) => {
-        const selectedCategories = selectedOptions.map((option: any) => ({
-            id: option.value,
-            name: option.label,
-        }));
+    // const handleCategoryChange = (selectedOptions: any) => {
+    //     const selectedCategories = selectedOptions.map((option: any) => ({
+    //         id: option.value,
+    //         name: option.label,
+    //     }));
 
+    //     setUser({
+    //         ...user,
+    //         category: selectedCategories,
+    //     });
+    // };
+    const handleCategoryChange = (selectedOptions: any) => {
+        const selectedCategoryIds = selectedOptions.map((option: any) => option.value);
         setUser({
             ...user,
-            category: selectedCategories,
+            category: selectedCategoryIds,
         });
     };
 
@@ -152,7 +159,7 @@ const Companydetails: React.FC = () => {
                             const errorMessage = errorData.errors[field][0];
                             toast.error(`${errorMessage}`);
                         });
-    
+
                     }
                 }
             } catch (error) {
@@ -167,7 +174,7 @@ const Companydetails: React.FC = () => {
 
     return (
         <>
-  <ToastContainer />
+            <ToastContainer />
             <div>
                 <SuccessPopup
                     message={message}
@@ -273,18 +280,19 @@ const Companydetails: React.FC = () => {
                                     className={`form-input ${errors.type_of_business ? 'border-red-500' : ''
                                         }`}
                                     onChange={(e) =>
-                                        setUser({ ...user, type_of_business: e.target.value })
+                                        setUser({ ...user, type_of_business: parseInt(e.target.value, 10) })
+                                        // setUser({ ...user, type_of_business: e.target.value })
                                     }
                                     value={user.type_of_business}
                                     id="typebusiness"
                                 >
 
-                                    <option value="corporation-company">
+                                    <option value={1}>
                                         {t('corporation-company')}
                                     </option>
-                                    <option value="subsidiary">{t('subsidiary')}</option>
-                                    <option value="division">{t('division')}</option>
-                                    <option value="partnership">{t('partnership')}</option>
+                                    <option value={2}>{t('subsidiary')}</option>
+                                    <option value={3}>{t('division')}</option>
+                                    <option value={4}>{t('partnership')}</option>
                                 </select>
                                 {errors.type_of_business && (
                                     <p className="text-red-500 text-sm">{errors.type_of_business}</p>

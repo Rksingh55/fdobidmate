@@ -31,7 +31,7 @@ const Filter: React.FC<FilterProps> = ({ filters, setFilters }) => {
                 Filter By
             </div>
             <div className='p-2 flex flex-col gap-2 border-[#00A9E2]'>
-                <button onClick={() => setFilters({})} className="text-[#00A9E2] gap-2 font-bold flex justify-end">Reset Filter <GrPowerReset className='mt-[2px]' /></button>
+                {/* <button onClick={() => setFilters({})} className="text-[#00A9E2] gap-2 font-bold flex justify-end">Reset Filter <GrPowerReset className='mt-[2px]' /></button> */}
                 <input
                     type="text"
                     name="tenderId"

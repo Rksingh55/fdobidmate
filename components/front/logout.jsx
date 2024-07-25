@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { getToken, } from '../../localStorageUtil';
+import { API_BASE_URL, LOGOUT_API_URL } from '@/api.config';
 
+// ----------------this components not used any where--------------
 const LogoutComponent = () => {
     const router = useRouter();
     const [token, setToken] = useState(getToken());
     const handleLogout = async () => {
-
-        const res = await fetch('http://10.10.10.212/FDO-bidmate/public/api/logout', {
+        const res = await fetch(`${API_BASE_URL}${LOGOUT_API_URL}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -18,32 +19,16 @@ const LogoutComponent = () => {
         if (res.ok) {
             localStorage.removeItem('token');
             localStorage.removeItem('userName');
-            router.push('/');
+            setTimeout(() => {
+                router.push('/');
+            }, 1000)
         } else {
             toast.error('Failed to logout');
         }
     };
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            localStorage.removeItem('token');
-            localStorage.removeItem('userName');
-            router.push('/');
-        }, 10000);
-
-        return () => clearTimeout(timer);
-    }, []);
-
-    useEffect(() => {
-        if (!token) {
-            handleLogout();
-        }
-    }, [token]);
-
     return (
         <button onClick={handleLogout}>Logout</button>
     );
 };
-
 export default LogoutComponent;
 

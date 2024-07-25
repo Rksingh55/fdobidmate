@@ -11,7 +11,6 @@ interface Document {
     type: string;
     files: File[];
 }
-
 const HomePage: React.FC = () => {
     const [isUploadPopupVisible, setIsUploadPopupVisible] = useState(false);
     const [isViewPopupVisible, setIsViewPopupVisible] = useState(false);
@@ -24,16 +23,15 @@ const HomePage: React.FC = () => {
         setShowPopup(false);
     };
     const documentTypes = [
-        "Type of Business",
-        "Commercial Registration",
-        "Licenses",
-        "TAX Registration",
-        // "VAT Registration", ---as per requirement its not required
-        "Agency Certificate",
-        "Bank Certificate",
-        "Local Company Certificate",
-        "Quality and Safety Organization",
-        "Other Document"
+        'Type of Business',
+        'Business Reference File',
+        'Commercial Registration',
+        'Licenses',
+        'TAX Registration',
+        'VAT Registration',
+        'Agency Certificate',
+        'Bank Certificate',
+        'Local Company Certificate',
     ];
     const requiredDocumentTypes = documentTypes.filter(
         (type) => type !== "Quality and Safety Organization" && type !== "Other Document"

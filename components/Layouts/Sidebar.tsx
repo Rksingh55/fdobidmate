@@ -16,12 +16,13 @@ import { BiSolidPurchaseTag } from 'react-icons/bi';
 import { TbBlockquote } from 'react-icons/tb';
 import { GoListUnordered } from "react-icons/go";
 import { LiaFileInvoiceDollarSolid, LiaFileInvoiceSolid } from "react-icons/lia";
-import { IoDocumentOutline } from 'react-icons/io5';
-import { LuLayoutList, LuTextQuote } from "react-icons/lu";
+
 import { CgProfile } from "react-icons/cg";
 import IconMenuTables from '@/components/Icon/Menu/IconMenuTables';
 import { BsBorderAll } from 'react-icons/bs';
 import { GrNotes } from 'react-icons/gr';
+import { LuTextQuote } from 'react-icons/lu';
+import { IoDocumentText } from 'react-icons/io5';
 const Sidebar = () => {
     const router = useRouter();
     const [currentMenu, setCurrentMenu] = useState<string>('');
@@ -102,10 +103,10 @@ const Sidebar = () => {
             <nav
                 className={`sidebar fixed bottom-0 top-0 z-50 h-full min-h-screen w-[260px] shadow-[5px_0_25px_0_rgba(94,92,154,0.1)] transition-all duration-300 ${semidark ? 'text-white-dark' : ''}`}
             >
-                <div className="h-full bg-white dark:bg-black">
+                <div className="h-full bg-[#00A9E2] dark:bg-black  ">
                     <div className="flex items-center justify-between px-2 py-3">
                         <Link href="/" className="main-logo flex shrink-0 items-center">
-                            <img src="/assets/images/FDO_Logo1.svg" alt="Logo" className=" w-[60px] ml-5 flex-none" />
+                            <img src="/assets/images/fdo dashboard logo.png" alt="Logo" className="  ml-2 flex-none" />
                         </Link>
 
                         <button
@@ -122,8 +123,8 @@ const Sidebar = () => {
                             <li className="nav-item">
                                 <Link href="/dashboard/user/profile" className="nav-link sv-nav text-light">
                                     <div className="flex items-center">
-                                        <MdDashboard className="shrink-0 group-hover:!text-primary" />
-                                        <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">
+                                        <MdDashboard className="shrink-0  text-white " />
+                                        <span className="text-white ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">
                                             {t('Profile')}
                                         </span>
                                     </div>
@@ -132,8 +133,8 @@ const Sidebar = () => {
                             <li className="nav-item">
                                 <Link href="/dashboard/vendor-register" className="nav-link sv-nav text-light">
                                     <div className="flex items-center">
-                                        <CgProfile className="shrink-0 group-hover:!text-primary" />
-                                        <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">
+                                        <CgProfile className="shrink-0  text-white" />
+                                        <span className="text-white  ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">
                                             {t('Update Profile')}
                                         </span>
                                     </div>
@@ -141,163 +142,181 @@ const Sidebar = () => {
                             </li>
 
                             {/* {vendorRegisterSuccess && ( */}
-                                <>
-                                    <li className="nav-item">
-                                        <Link href="/dashboard/tender" className="nav-link sv-nav text-light">
-                                            <div className="flex items-center">
-                                                <MdDashboard className="shrink-0 group-hover:!text-primary" />
-                                                <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">
-                                                    {t('Dashboard')}
-                                                </span>
-                                            </div>
-                                        </Link>
-                                    </li>
-                                    <li className="menu nav-item">
-                                        <button type="button" className={`${currentMenu === 'quotations' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('quotations')}>
-                                            <div className="flex items-center">
-                                                <LuTextQuote className="shrink-0 group-hover:!text-primary" />
-                                                <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{t('Quotations')}</span>
-                                            </div>
+                            <>
+                                <li className="nav-item">
+                                    <Link href="/dashboard" className="nav-link sv-nav text-light">
+                                        <div className="flex items-center">
+                                            <MdDashboard className="shrink-0 group-hover:!text-primary text-white" />
+                                            <span className="text-white  ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">
+                                                {t('Dashboard')}
+                                            </span>
+                                        </div>
+                                    </Link>
+                                </li>
+                                <li className="menu nav-item">
+                                    <button type="button" className={`${currentMenu === 'tender' ? 'active' : ''} nav-link group w-full `} onClick={() => toggleMenu('tender')}>
+                                        <div className="flex items-center">
+                                            <IoDocumentText className="shrink-0  text-white" />
+                                            <span className="text-white  ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{t('Tender')}</span>
+                                        </div>
 
-                                            <div className={currentMenu !== 'quotations' ? '-rotate-90 rtl:rotate-90' : ''}>
-                                                <IconCaretDown />
-                                            </div>
-                                        </button>
+                                        <div className={currentMenu !== 'tender' ? '-rotate-90 rtl:rotate-90' : ''}>
+                                            <IconCaretDown className='text-white' />
+                                        </div>
+                                    </button>
 
-                                        <AnimateHeight duration={300} height={currentMenu === 'quotations' ? 'auto' : 0}>
-                                            <ul className="sub-menu text-gray-500">
-                                                <li>
-                                                    <Link href="/dashboard/quotations">{t('quotations')}</Link>
-                                                </li>
-                                            </ul>
-                                        </AnimateHeight>
-                                    </li>
+                                    <AnimateHeight duration={300} height={currentMenu === 'tender' ? 'auto' : 0}>
+                                        <ul className="sub-menu text-white">
+                                            <li>
+                                                <Link href="/dashboard/tender" className=''>{t('tender-list')}</Link>
+                                            </li>
+                                        </ul>
+                                    </AnimateHeight>
+                                </li>
+                                <li className="menu nav-item">
+                                    <button type="button" className={`${currentMenu === 'quotations' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('quotations')}>
+                                        <div className="flex items-center">
+                                            <LuTextQuote className="shrink-0  text-white" />
+                                            <span className="text-white  ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{t('Quotations')}</span>
+                                        </div>
 
-                                    <li className="menu nav-item">
-                                        <button type="button" className={`${currentMenu === 'purchase-order' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('purchase-order')}>
-                                            <div className="flex items-center">
-                                                <BsBorderAll className="shrink-0 group-hover:!text-primary" />
-                                                <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{t('Purchase-order')}</span>
-                                            </div>
-                                            <div className={currentMenu !== 'purchase-order' ? '-rotate-90 rtl:rotate-90' : ''}>
-                                                <IconCaretDown />
-                                            </div>
-                                        </button>
-                                        <AnimateHeight duration={300} height={currentMenu === 'purchase-order' ? 'auto' : 0}>
-                                            <ul className="sub-menu text-gray-500">
-                                                <li>
-                                                    <Link href="/dashboard/purchase-orders">{t('purchase-order')}</Link>
-                                                    {/* <Link href="/dashboard/purchase-orders-list">{t('purchase-order-list')}</Link> */}
-                                                </li>
-                                            </ul>
-                                        </AnimateHeight>
-                                    </li>
+                                        <div className={currentMenu !== 'quotations' ? '-rotate-90 rtl:rotate-90' : ''}>
+                                            <IconCaretDown className='text-white' />
+                                        </div>
+                                    </button>
 
-                                    <li className="menu nav-item">
-                                        <button type="button" className={`${currentMenu === 'grn' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('grn')}>
-                                            <div className="flex items-center">
-                                                <GrNotes className="shrink-0 group-hover:!text-primary" />
-                                                <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{t('Grn')}</span>
-                                            </div>
-                                            <div className={currentMenu !== 'grn' ? '-rotate-90 rtl:rotate-90' : ''}>
-                                                <IconCaretDown />
-                                            </div>
-                                        </button>
-                                        <AnimateHeight duration={300} height={currentMenu === 'grn' ? 'auto' : 0}>
-                                            <ul className="sub-menu text-gray-500">
-                                                <li>
-                                                    <Link href="/dashboard/grn">{t('grn')}</Link>
-                                                    <Link href="/dashboard/grn/grn-list">{t('grn-list')}</Link>
-                                                </li>
-                                            </ul>
-                                        </AnimateHeight>
-                                    </li>
-                                    <li className="menu nav-item">
-                                        <button type="button" className={`${currentMenu === 'rfi' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('rfi')}>
-                                            <div className="flex items-center">
-                                                <IconMenuTables className="shrink-0 group-hover:!text-primary" />
-                                                <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{t('rfi')}</span>
-                                            </div>
+                                    <AnimateHeight duration={300} height={currentMenu === 'quotations' ? 'auto' : 0}>
+                                        <ul className="sub-menu text-white">
+                                            <li>
+                                                <Link href="/dashboard/quotations">{t('quotations')}</Link>
+                                            </li>
+                                        </ul>
+                                    </AnimateHeight>
+                                </li>
 
-                                            <div className={currentMenu !== 'rfi' ? '-rotate-90 rtl:rotate-90' : ''}>
-                                                <IconCaretDown />
-                                            </div>
-                                        </button>
+                                <li className="menu nav-item">
+                                    <button type="button" className={`${currentMenu === 'purchase-order' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('purchase-order')}>
+                                        <div className="flex items-center">
+                                            <BsBorderAll className="shrink-0  text-white" />
+                                            <span className="text-white  ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{t('Purchase-order')}</span>
+                                        </div>
+                                        <div className={currentMenu !== 'purchase-order' ? '-rotate-90 rtl:rotate-90' : ''}>
+                                            <IconCaretDown className='text-white' />
+                                        </div>
+                                    </button>
+                                    <AnimateHeight duration={300} height={currentMenu === 'purchase-order' ? 'auto' : 0}>
+                                        <ul className="sub-menu text-white">
+                                            <li>
+                                                <Link href="/dashboard/purchase-orders">{t('purchase-order')}</Link>
+                                                {/* <Link href="/dashboard/purchase-orders-list">{t('purchase-order-list')}</Link> */}
+                                            </li>
+                                        </ul>
+                                    </AnimateHeight>
+                                </li>
 
-                                        <AnimateHeight duration={300} height={currentMenu === 'rfi' ? 'auto' : 0}>
-                                            <ul className="sub-menu text-gray-500">
-                                                <li>
-                                                    <Link href="/dashboard/rfi">{t('rfi')}</Link>
-                                                </li>
-                                                <li>
-                                                    <Link href="/dashboard/rfi/rfi-list">{t('rfi-list')}</Link>
-                                                </li>
-                                            </ul>
-                                        </AnimateHeight>
-                                    </li>
-                                    <li className="menu nav-item">
-                                        <button type="button" className={`${currentMenu === 'dashboard' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('dashboard')}>
-                                            <div className="flex items-center">
-                                                <RiAuctionFill className="shrink-0 group-hover:!text-primary" />
-                                                <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{t('auction')}</span>
-                                            </div>
+                                <li className="menu nav-item">
+                                    <button type="button" className={`${currentMenu === 'grn' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('grn')}>
+                                        <div className="flex items-center">
+                                            <GrNotes className="shrink-0  text-white" />
+                                            <span className="text-white  ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{t('GRN')}</span>
+                                        </div>
+                                        <div className={currentMenu !== 'grn' ? '-rotate-90 rtl:rotate-90' : ''}>
+                                            <IconCaretDown className='text-white' />
+                                        </div>
+                                    </button>
+                                    <AnimateHeight duration={300} height={currentMenu === 'grn' ? 'auto' : 0}>
+                                        <ul className="sub-menu text-white">
+                                            <li>
+                                                <Link href="/dashboard/grn">{t('grn')}</Link>
+                                                <Link href="/dashboard/grn/grn-list">{t('grn-list')}</Link>
+                                            </li>
+                                        </ul>
+                                    </AnimateHeight>
+                                </li>
+                                <li className="menu nav-item">
+                                    <button type="button" className={`${currentMenu === 'rfi' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('rfi')}>
+                                        <div className="flex items-center">
+                                            <IconMenuTables className="shrink-0  text-white" />
+                                            <span className="text-white  ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{t('rfi')}</span>
+                                        </div>
 
-                                            <div className={currentMenu !== 'dashboard' ? '-rotate-90 rtl:rotate-90' : ''}>
-                                                <IconCaretDown />
-                                            </div>
-                                        </button>
+                                        <div className={currentMenu !== 'rfi' ? '-rotate-90 rtl:rotate-90' : ''}>
+                                            <IconCaretDown className='text-white' />
+                                        </div>
+                                    </button>
 
-                                        <AnimateHeight duration={300} height={currentMenu === 'dashboard' ? 'auto' : 0}>
-                                            <ul className="sub-menu text-gray-500 bg-white">
-                                                <li>
-                                                    <Link href="/dashboard/auction">{t('auction')}</Link>
-                                                </li>
-                                                <li>
-                                                    <Link href="/dashboard/auction/auction-list">{t('auction-list')}</Link>
-                                                </li>
+                                    <AnimateHeight duration={300} height={currentMenu === 'rfi' ? 'auto' : 0}>
+                                        <ul className="sub-menu text-white">
+                                            <li>
+                                                <Link href="/dashboard/rfi">{t('rfi')}</Link>
+                                            </li>
+                                           
+                                        </ul>
+                                    </AnimateHeight>
+                                </li>
+                                <li className="menu nav-item">
+                                    <button type="button" className={`${currentMenu === 'dashboard' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('dashboard')}>
+                                        <div className="flex items-center">
+                                            <RiAuctionFill className="shrink-0  text-white" />
+                                            <span className="text-white  ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{t('auction')}</span>
+                                        </div>
+
+                                        <div className={currentMenu !== 'dashboard' ? '-rotate-90 rtl:rotate-90' : ''}>
+                                            <IconCaretDown className='text-white' />
+                                        </div>
+                                    </button>
+
+                                    <AnimateHeight duration={300} height={currentMenu === 'dashboard' ? 'auto' : 0}>
+                                        <ul className="sub-menu text-white bg-white">
+                                            <li>
+                                                <Link href="/dashboard/auction">{t('auction')}</Link>
+                                            </li>
+                                            <li>
+                                                <Link href="/dashboard/auction/auction-list">{t('auction-list')}</Link>
+                                            </li>
 
 
-                                            </ul>
-                                        </AnimateHeight>
-                                    </li>
-                                    <li className="menu nav-item">
-                                        <button type="button" className={`${currentMenu === 'invoice' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('invoice')}>
-                                            <div className="flex items-center">
-                                                <LiaFileInvoiceDollarSolid className="shrink-0 group-hover:!text-primary" />
-                                                <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{t('invoice')}</span>
-                                            </div>
-                                            <div className={currentMenu !== 'invoice' ? '-rotate-90 rtl:rotate-90' : ''}>
-                                                <IconCaretDown />
-                                            </div>
-                                        </button>
-                                        <AnimateHeight duration={300} height={currentMenu === 'invoice' ? 'auto' : 0}>
-                                            <ul className="sub-menu text-gray-500">
-                                                <li>
-                                                    <Link href="/dashboard/invoice">{t('invoice')}</Link>
-                                                    <Link href="/dashboard/invoice/invoice-list">{t('invoice-list')}</Link>
-                                                </li>
-                                            </ul>
-                                        </AnimateHeight>
-                                    </li>
-                                    <li className="menu nav-item">
-                                        <button type="button" className={`${currentMenu === 'Payment' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('Payment')}>
-                                            <div className="flex items-center">
-                                                <MdPayments className="shrink-0 group-hover:!text-primary" />
-                                                <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{t('Payment')}</span>
-                                            </div>
-                                            <div className={currentMenu !== 'Payment' ? '-rotate-90 rtl:rotate-90' : ''}>
-                                                <IconCaretDown />
-                                            </div>
-                                        </button>
-                                        <AnimateHeight duration={300} height={currentMenu === 'Payment' ? 'auto' : 0}>
-                                            <ul className="sub-menu text-gray-500">
-                                                <li>
-                                                    <Link href="/dashboard/payment">{t('Payment')}</Link>
-                                                </li>
-                                            </ul>
-                                        </AnimateHeight>
-                                    </li>
-                                </>
+                                        </ul>
+                                    </AnimateHeight>
+                                </li>
+                                <li className="menu nav-item">
+                                    <button type="button" className={`${currentMenu === 'invoice' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('invoice')}>
+                                        <div className="flex items-center">
+                                            <LiaFileInvoiceDollarSolid className="shrink-0  text-white" />
+                                            <span className="text-white  ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{t('invoice')}</span>
+                                        </div>
+                                        <div className={currentMenu !== 'invoice' ? '-rotate-90 rtl:rotate-90' : ''}>
+                                            <IconCaretDown className='text-white' />
+                                        </div>
+                                    </button>
+                                    <AnimateHeight duration={300} height={currentMenu === 'invoice' ? 'auto' : 0}>
+                                        <ul className="sub-menu text-white">
+                                            <li>
+                                                <Link href="/dashboard/invoice">{t('invoice')}</Link>
+                                                <Link href="/dashboard/invoice/invoice-list">{t('invoice-list')}</Link>
+                                            </li>
+                                        </ul>
+                                    </AnimateHeight>
+                                </li>
+                                <li className="menu nav-item">
+                                    <button type="button" className={`${currentMenu === 'Payment' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('Payment')}>
+                                        <div className="flex items-center">
+                                            <MdPayments className="shrink-0  text-white" />
+                                            <span className="text-white  ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{t('Payment')}</span>
+                                        </div>
+                                        <div className={currentMenu !== 'Payment' ? '-rotate-90 rtl:rotate-90' : ''}>
+                                            <IconCaretDown className='text-white' />
+                                        </div>
+                                    </button>
+                                    <AnimateHeight duration={300} height={currentMenu === 'Payment' ? 'auto' : 0}>
+                                        <ul className="sub-menu text-white">
+                                            <li>
+                                                <Link href="/dashboard/payment">{t('Payment')}</Link>
+                                            </li>
+                                        </ul>
+                                    </AnimateHeight>
+                                </li>
+                            </>
                             {/* )} */}
 
 

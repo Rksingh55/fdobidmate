@@ -17,7 +17,6 @@ function Tenders() {
         </div>
         <Rficard />
       </div>
-
       <Footer />
 
     </>

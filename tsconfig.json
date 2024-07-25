@@ -52,7 +52,7 @@
     "components/front/Navbar.jsx",
     "components/front/profile-dropdown.jsx",
     "components/front/OtpModal.tsx"
-, "components/front/logout.jsx", "components/vendorforms/Attehchment.jsx", "components/documentupload/UploadDocumentPopup.jsx"  ],
+, "components/front/logout.jsx", "components/vendorforms/Attehchment.jsx", "components/documentupload/UploadDocumentPopup.jsx", "components/cards/creditcard.jsx"  ],
   "exclude": [
     "node_modules"
   ]

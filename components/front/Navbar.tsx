@@ -108,7 +108,7 @@ const Navbar = () => {
                             </ul>
 
 
-                            {/* <div className="input-wrapper ">
+                            <div className="input-wrapper ">
                                 <button className="icon" >
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="15px" width="15px">
                                         <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="black" d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"></path>
@@ -116,14 +116,13 @@ const Navbar = () => {
                                     </svg>
                                 </button>
                                 <input placeholder="Search.." className="input" name="text" type="text" />
-                            </div> */}
+                            </div>
 
                             <div className="ml-2"> <Language /></div>
                             <div className="bg-white ">
                                 <div className="bg-white flex justify-between py-3  m-auto font-semibold ">
                                     <div className="">
                                         <div className="  text-black flex  gap-2  ">
-
                                             {name !== "" ? (
                                                 <Link href="/dashboard/tender">
                                                     <button className="bg-[#00A9E2] px-6 py-2 text-white rounded-full">
@@ -143,13 +142,13 @@ const Navbar = () => {
 
                                 </div>
                             </div>
-                            {isSearchOpen && <SearchPopup onClose={() => setIsSearchOpen(false)} isSearchOpen={isSearchOpen} />}
+                            {/* {isSearchOpen && <SearchPopup onClose={() => setIsSearchOpen(false)} isSearchOpen={isSearchOpen} />}
                             <div onClick={() => setIsSearchOpen(true)} className=" cursor-pointer bg-[#E0F4FB] p-[12px] rounded-full">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="15px" width="15px">
                                     <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="black" d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"></path>
                                     <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="black" d="M22 22L20 20"></path>
                                 </svg>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </nav>

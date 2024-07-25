@@ -13,7 +13,7 @@ import SuccessPopup from '../front/SuccessPopup';
 import { API_BASE_URL, TAXBILLING_API_URL } from '@/api.config';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import FormSkeltonloader from "../cards/FormSkeltonloader"
+import FormSkeltonloader from "../cards/FormSkeletonloader"
 
 function TaxBillinginfo() {
     const { t, i18n } = useTranslation();

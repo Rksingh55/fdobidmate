@@ -13,14 +13,19 @@ import { useTranslation } from 'react-i18next';
 import Loader from '@/components/front/loader';
 import { TiHome } from "react-icons/ti";
 import { API_BASE_URL, LOGIN_API_URL } from '@/api.config';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+
 const Login = () => {
     const router = useRouter()
     const [email, setemail] = useState("");
     const [showLoader, setShowLoader] = useState(false);
     const [password, setpassword] = useState("");
     const [error, setError] = useState<{ type: 'success' | 'error'; text: string }>({ type: 'error', text: '' });
-
-
+    const [showPassword, setShowPassword] = useState(false);
+    
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
     const handleSubmit = (e: any) => {
         e.preventDefault();
         const data = { email, password };
@@ -43,7 +48,6 @@ const Login = () => {
                 return response.json();
             })
             .then((data) => {
-                console.log(data.message);
                 setError({ type: 'error', text: data.message })
                 if (data.status == "success") {
                     router.push('/dashboard/vendor-register')
@@ -131,7 +135,6 @@ const Login = () => {
                                             </div>
                                         )}
                                         {/* {error && <p className='font-bold text-red-500 text-center pb-3'>{error}</p>} */}
-
                                         <div className="relative text-white-dark">
                                             <input type="text" className="form-input py-3 ps-10 placeholder:text-white-dark rounded-full border-[#FC8404]" placeholder="Enter Email" name="email" value={email}
                                                 onChange={handleChange} id="Email" />
@@ -141,15 +144,26 @@ const Login = () => {
                                         </div>
                                     </div>
                                     <div>
-
                                         <div className="relative text-white-dark">
-                                            <input type="password" className="form-input ps-10 placeholder:text-white-dark rounded-full py-3 border-[#FC8404]" name="password" placeholder="Enter Password" value={password}
+                                            <input
+                                                className="form-input ps-10 placeholder:text-white-dark rounded-full py-3 border-[#FC8404]" name="password" placeholder="Enter Password" value={password}
                                                 onChange={handleChange}
-
-                                                id="Password" />
+                                                id="Password" type={showPassword ? 'text' : 'password'}
+                                            />
                                             <span className="absolute start-4 top-1/2 -translate-y-1/2">
                                                 <IconLockDots fill={true} />
                                             </span>
+                                            <button
+                                                type="button"
+                                                onClick={togglePasswordVisibility}
+                                                className="absolute inset-y-0 right-4 flex items-center pr-3"
+                                            >
+                                                {showPassword ? (
+                                                    <FaEyeSlash className='text-lg' />
+                                                ) : (
+                                                    <FaEye className='text-lg' />
+                                                )}
+                                            </button>
                                         </div>
                                     </div>
                                     <div className='flex justify-between'>

@@ -12,7 +12,7 @@ import { fetchvendordata } from '../../Reducer/Vendor_Registeration_Slice/getven
 import { API_BASE_URL, GENERAL_INFORMATION_FORM_API_URL } from '@/api.config';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import FormSkeltonloader from "../cards/FormSkeltonloader"
+import FormSkeltonloader from "../cards/FormSkeletonloader"
 interface User {
     suppliertype_id: string;
     vendor_request_id: string;

@@ -15,13 +15,23 @@ import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { API_BASE_URL, TENDERPREVIEW_API_URL } from '@/api.config';
-import Skelotonfull from '@/components/cards/Skelotonfull';
+import Skelotonfull from '@/components/cards/Skeletonfull';
+import { HiMiniQueueList } from 'react-icons/hi2';
+import { AppDispatch, RootState } from '@/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTenderList } from '../../../Reducer/tenderlistSlice';
 
 const TenderPreview = () => {
+    const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
     const [data, setData] = useState<any>(null);
-    // console.log("tender-preview", data);
     const [daysToGo, setDaysToGo] = useState<number | null>(null);
+    const tenderlist = useSelector((state: RootState) => state.Tenderlist.list || []);
+    console.log("tender-tenderlist", tenderlist);
+
+    useEffect(() => {
+        dispatch(fetchTenderList());
+    }, [dispatch]);
 
     useEffect(() => {
         if (data?.close_date) {
@@ -107,21 +117,44 @@ const TenderPreview = () => {
                                     </button>
                                 </div>
                                 <div className='flex md:flex-row justify-between gap-2 py-2 max-sm:flex-wrap'>
-                                    <div className="py-2 flex justify-center items-center gap-2">
-                                        <TDRicon />
-                                        <span>{data?.code}</span>
+                                    <div className="py-2 flex  gap-2">
+                                        
+                                        <MdOutlineDateRange className='text-[#00A9E2] text-xl' />
+                                        <div className='flex    flex-col '>
+                                            <label className='font-bold'>Start Date  </label>
+                                            {data.publish_date}
+                                        </div>
                                     </div>
-                                    <div className="py-2 flex justify-center items-center gap-2">
+                                    <div className="py-2 flex gap-2">
+                                        <MdOutlineDateRange className='text-[#00A9E2] text-xl' />
+                                        <div className='flex    flex-col'>
+                                            <label className='font-bold'>Close Date  </label>
+                                            {data?.close_date}
+                                        </div>
+                                    </div>
+                                    <div className="py-2 flex gap-2">
                                         <OMRicon />
-                                        <span>{data?.currency.code}</span>
+                                        <div className='flex    flex-col'>
+                                            <label className='font-bold'>Currency  </label>
+                                            {data?.currency.code}
+                                        </div>
+
                                     </div>
-                                    <div className="py-2 flex justify-center items-center gap-2">
+
+                                    <div className="py-2 flex gap-2">
+                                        <HiMiniQueueList className='text-lg text-[#00A9E2]' />
+                                        <div className='flex    flex-col'>
+                                            <label className='font-bold'>Entity  </label>
+                                            {data?.company.name}
+                                        </div>
+
+                                    </div>
+                                    <div className="py-2 flex gap-2">
                                         <Tenderdepartmenticon />
-                                        <span>{data?.department.code}</span>
-                                    </div>
-                                    <div className="py-2 flex justify-center items-center gap-2">
-                                        <OMrtransectionIcon />
-                                        <span>{data?.tenderfeeamount} {data?.currency.code}</span>
+                                        <div className='flex md:    flex-col'>
+                                            <label className='font-bold'>Department  </label>
+                                            {data?.department.code}
+                                        </div>
                                     </div>
 
                                 </div>
@@ -270,37 +303,36 @@ const TenderPreview = () => {
                             Recent Tenders</div>
                         <div>
                             <div className="">
-                                {array?.map(() => (
-                                    <Link href="/tender-list/tender-preview">
-                                        <div className="cursor-pointer  mt-2  border-2 rounded-md  bg-white border-[#FC8404]  relative md:p-9 p-3  hover:shadow-md">
-                                            <h3 className="text-xl font-semibold py-1 text-[#00A9E2]">Supply of HID Cards</h3>
-                                            <p className='py-2'><strong>Tender ID :</strong>      TDR-000003</p>
+                                {tenderlist?.slice(0, 4).map((item) => (
+                                    <Link href={`/tender-list/tender-preview/${item?.encrypt_id}`} key={item?.encrypt_id} >
+                                        <div className="cursor-pointer mt-2 border-2 rounded-md bg-white border-[#1E3567] hover:border-[#FC8404]  relative md:p-9 p-3 hover:shadow-md">
+                                            <h3 className="text-xl font-semibold py-1 text-[#00A9E2]">{item?.title}</h3>
+                                            <p className='py-2'><strong>Tender ID :</strong>{item?.code}</p>
 
-                                            <div className='flex flex-wrap justify-between gap-3 py-2'  >
+                                            <div className='flex flex-wrap justify-between gap-3 py-2'>
                                                 <div>
-                                                    <p className='flex gap-1  text-[#4b4949]' ><span className='text-[#00A9E2] '><MdOutlineDateRange className=' text-lg' /> </span> Start Date</p>
+                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><MdOutlineDateRange className='text-lg' /></span> Start Date : {item?.publish_date}</p>
                                                 </div>
                                                 <div>
-                                                    <p className='flex gap-1  text-[#4b4949]' ><span className='text-[#00A9E2] '><MdOutlineDateRange className=' text-lg' /> </span>End Date</p>
+                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><MdOutlineDateRange className='text-lg' /></span> End Date : {item?.close_date}</p>
                                                 </div>
                                                 <div>
-                                                    <p className='flex gap-1  text-[#4b4949]' ><span className='text-[#00A9E2] '><HiLocationMarker className=' text-lg' /> </span>Middle East</p>
+                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><HiLocationMarker className='text-lg' /></span> Currency : {item?.curr_code}</p>
                                                 </div>
                                                 <div>
-                                                    <p className='flex gap-1  text-[#4b4949]' ><span className='text-[#00A9E2] '><BiSolidPurchaseTag className=' text-lg' /> </span>$100</p>
+                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><BiSolidPurchaseTag className='text-lg' /></span> Tender Fees : ${item?.tenderfeeamount}</p>
                                                 </div>
                                                 <div>
-                                                    <p className='flex gap-1  text-[#4b4949]' ><span className='text-[#00A9E2] '><GiDatabase className=' text-lg' /> </span>Entity</p>
+                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><GiDatabase className='text-lg' /></span> Entity : {item?.company}</p>
                                                 </div>
                                                 <div>
-                                                    <p className='flex gap-1  text-[#4b4949]' ><span className='text-[#00A9E2] '><PiBuildingOfficeDuotone className=' text-lg' /> </span>department</p>
+                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><PiBuildingOfficeDuotone className='text-lg' /></span> Department : {item?.department}</p>
                                                 </div>
-
                                             </div>
-
                                         </div>
                                     </Link>
                                 ))}
+
                             </div>
                         </div>
 
@@ -309,7 +341,7 @@ const TenderPreview = () => {
 
                 </div>
             </div>
-            <Footer />
+            {/* <Footer /> */}
         </>
     )
 }

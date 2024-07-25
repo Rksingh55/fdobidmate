@@ -1,4 +1,3 @@
-import BlankLayout from '@/components/Layouts/BlankLayout';
 import { MdHome, MdOutlineAttachment } from "react-icons/md";
 import { FaBuilding, FaMoneyCheckAlt } from "react-icons/fa";
 import { RiAccountCircleLine, RiPsychotherapyLine } from "react-icons/ri";
@@ -11,35 +10,76 @@ import Questionnaire from "../components/vendorforms/Questionnaire"
 import Attehchment from "../components/vendorforms/Attehchment"
 import Otherdetails from "../components/vendorforms/Other-details"
 import React from 'react'
-import { useEffect, useState } from 'react';
-import IconUser from '@/components/Icon/IconUser';
-import { GrOrganization } from 'react-icons/gr';
-import { FcOk } from "react-icons/fc";
+import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 import ReviewPopup from "../components/cards/ReviewPopup"
-
+import { API_BASE_URL, VERIFY_VENDORDATA_API_URL } from '../api.config';
+import { useRouter } from 'next/router';
+import { getToken } from '../localStorageUtil';
 
 function Index() {
+    const router = useRouter()
     const [activeTab, setActiveTab] = useState(1);
     const [error, seterror] = useState('')
     const [completedTabs, setCompletedTabs] = useState([]);
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [message, setMessage] = useState('Please Verify or recheck all the Information before submit the form');
+    const [user, setUser] = useState({
+    });
+    const Applyapproval = async () => {
+        const token = getToken();
+        const vendor_profile_id = localStorage.getItem("vendorId")?.replace(/['"]/g, '');
+        const payload = {
+            ...user,
+            vendor_profile_id: vendor_profile_id,
+        };
+        try {
+            const response = await fetch(`${API_BASE_URL}${VERIFY_VENDORDATA_API_URL}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify(payload),
+            });
+            if (response.ok) {
+                const responseData = await response.json();
+                // toast.success(responseData.message.success);
+             alert(responseData.message.success);
 
-    const handleButtonClick = () => {
+                return true;
+            } else {
+                const errorData = await response.json();
+                // toast.error(errorData.message.error)
+             alert(errorData.message.error)
+
+
+                return false;
+            }
+        } catch (error) {
+            // toast.error(error.message.error)
+           alert(error.message.error)
+            return false;
+
+        }
+    };
+
+    const handleButtonClick = async () => {
         setCompletedTabs([...completedTabs, activeTab]);
         if (activeTab < tabs?.length) {
             setActiveTab(activeTab + 1);
         } else {
-            console.log('Finish');
-            setPopupOpen(true);
+            const approvalSuccess = await Applyapproval();
+            if (approvalSuccess) {
+                setPopupOpen(true);
+            } else {
+                setPopupOpen(false);
+            }
         }
     };
-    const handleOpenPopup = () => {
-        setPopupOpen(true);
-    };
+
+
     const handleClosePopup = () => {
         setPopupOpen(false);
     };
@@ -133,10 +173,8 @@ function Index() {
                                         </li>
                                     ))}
                                 </ul>
-
                             </div>
 
-                            {/* <div className='flex justify-center items-center py-2'><p className='text-red-500  font-bold'>{error}</p></div> */}
                             <div className=' h-[430px]  overflow-y-scroll overflow-x-hidden  md:p-2 rounded-md  '>
                                 {tabs?.map((tab) => (
                                     <p key={tab?.id} className="mb-5">{activeTab === tab?.id && tab?.content}</p>
@@ -144,7 +182,6 @@ function Index() {
                             </div>
 
                         </div>
-
                     </div>
                     <div className=" flex justify-end " >
                         <div className='flex gap-2'>
@@ -158,7 +195,11 @@ function Index() {
                             <button
                                 type="button"
                                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4  ltr:ml-auto rtl:mr-auto"
-                                onClick={handleButtonClick}
+                                onClick={() => {
+                                    handleButtonClick();
+                                }}
+
+
                             >
                                 {activeTab === tabs?.length ? 'Verify' : 'Next'}
                             </button>

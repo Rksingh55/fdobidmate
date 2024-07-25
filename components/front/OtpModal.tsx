@@ -1,4 +1,4 @@
-import { API_BASE_URL, OTPVALIDATE_API_URL, OTPVERIFY_API_URL } from '@/api.config';
+import { API_BASE_URL, OTPVALIDATE_API_URL, OTPVERIFY_API_URL, RESEND_API_URL } from '@/api.config';
 import { useState, useRef, ChangeEvent, KeyboardEvent } from 'react';
 
 interface OtpModalProps {
@@ -61,12 +61,12 @@ const OtpModal: React.FC<OtpModalProps> = ({ isOpen, onClose, onOtpSubmit }) => 
                     setTimeout(() => {
                         setOtp("")
                         onClose();
-                    }, 3000)
+                    }, 2000)
                 } else {
                     setResponseMessage("OTP validation failed");
                     setTimeout(() => {
                         setOtp("")
-                    }, 3000)
+                    }, 2000)
                 }
             } else {
                 setResponseMessage(data.message.error);
@@ -81,7 +81,28 @@ const OtpModal: React.FC<OtpModalProps> = ({ isOpen, onClose, onOtpSubmit }) => 
         setTimeout(() => {
             setResponseMessage(null);
             onClose();
-        }, 800000000);
+        }, 8000000);
+
+    };
+    const ResendOTP = async () => {
+        try {
+            const vendor_id = localStorage.getItem("vendor_id");
+            const response = await fetch(`${API_BASE_URL}${RESEND_API_URL}${vendor_id}`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const data = await response.json();
+            console.log("response", data);
+            if (response.ok) {
+                setResponseMessage(data.message.success);
+            } else {
+                setResponseMessage(data.message.error);
+            }
+        } catch (error) {
+            setResponseMessage("something went wrong ! please try after some time");
+        }
 
     };
 
@@ -112,7 +133,10 @@ const OtpModal: React.FC<OtpModalProps> = ({ isOpen, onClose, onOtpSubmit }) => 
                         />
                     ))}
                 </div>
-                <div className="flex flex-col gap-3 mt-4">
+                <div className='flex justify-end py-3'>
+                    <button className='font-bold text-[#00A9E2]' onClick={ResendOTP}>Resend OTP</button>
+                </div>
+                <div className="flex flex-col gap-3">
                     <button
                         onClick={handleSubmit}
                         className="btn w-full uppercase bg-[#00A9E2] hover:bg-[#0077cc] text-white py-3 rounded-full"

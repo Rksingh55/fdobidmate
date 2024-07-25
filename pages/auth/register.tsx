@@ -14,14 +14,16 @@ import Image from 'next/image'
 import Herosectionleftimage from "../../public/assets/images/herosection_left_image.png";
 import Fdomainlogo from "../../public/assets/images/fdo icon3.png";
 import { BsBuildings } from 'react-icons/bs';
+import Loader from '@/components/front/loader';
 import OtpModal from "@/components/front/OtpModal"
 import { TiHome } from 'react-icons/ti';
 import { API_BASE_URL, COMPANYLIST_API_URL, OTPVALIDATE_API_URL, REGISTER_API_URL } from '@/api.config';
+
 const RegisterCover = () => {
     const router = useRouter();
     const [message, setmessege] = useState("");
     const [emailvalidate, setemailvalidate] = useState(true);
-
+    const [showLoader, setShowLoader] = useState(false);
     const [user, setuser] = useState<any>({
         organization_name: "",
         name: "",
@@ -34,7 +36,6 @@ const RegisterCover = () => {
         company_id: [],
     });
 
-
     const isFormValid = user.organization_name !== ""
         && user.name !== ""
         && user.email !== ""
@@ -44,13 +45,10 @@ const RegisterCover = () => {
     const validateEmail = (email: string): boolean => {
         const isEmailValid = /^[A-Za-z0-9._-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email);
         return isEmailValid;
-
     };
-
     const validatePhoneNumber = (value: string): boolean => {
         return /^\d{8,10}$/.test(value);
     };
-
     const validateAddress = (value: string): boolean => {
         const wordCount = value.trim().split(/\s+/).length;
         return wordCount <= 20 && /^[^<>#\[\]{}()?|]+$/.test(value);;
@@ -60,8 +58,6 @@ const RegisterCover = () => {
         validateEmail(user.email) &&
         validatePhoneNumber(user.phone_no) &&
         validateAddress(user.address);
-
-
     const [isOpenModal, setIsOpenModal] = useState(false);
     const handleInputChange = (e: any) => {
         const emailValue = e.target.value;
@@ -81,7 +77,6 @@ const RegisterCover = () => {
         data?: any;
     }
     const [companies, setCompanies] = useState<any[]>([]);
-
     const fetchCompanyList = async () => {
         const API_URL = `${API_BASE_URL}${COMPANYLIST_API_URL}`;
         try {
@@ -103,9 +98,8 @@ const RegisterCover = () => {
     }, [])
 
     const handleVerifyClick = async (body: any) => {
-
-
         const { organization_name, name, email } = user;
+        setShowLoader(true)
         if (!organization_name || !name || !email) {
             toast.error("Please fill in all required fields: organization name, name, and email.");
             return;
@@ -128,6 +122,7 @@ const RegisterCover = () => {
                 body: JSON.stringify(body),
             });
             if (!response.ok) {
+                setShowLoader(false)
                 const errorData: ApiResponse = await response.json();
                 throw new Error(errorData.message.error || 'Network response was not ok');
             }
@@ -135,6 +130,7 @@ const RegisterCover = () => {
             const vendorid = data?.data;
             localStorage.setItem("vendor_id", vendorid);
             if (data?.status === "success") {
+                setShowLoader(false)
                 setIsOpenModal(true);
                 toast.success(data.message.success);
             } else {
@@ -142,24 +138,21 @@ const RegisterCover = () => {
             }
         } catch (error) {
             if (error instanceof Error) {
+                setShowLoader(false)
                 toast.error(error.message);
             } else {
+                setShowLoader(false)
                 toast.error("Something went wrong! Please try again later.");
             }
         }
 
     };
-
-
-
     const handleOtpSubmit = (otp: any) => {
         console.log('Submitting OTP:', otp);
         setTimeout(() => {
             setIsOpenModal(false);
         }, 80000000)
     };
-
-
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setPageTitle('Register'));
@@ -167,7 +160,6 @@ const RegisterCover = () => {
 
     const submitForm = (e: any) => {
         e.preventDefault();
-
         if (!FormValididate) {
             // toast.error("Please validate required fields")
         } else {
@@ -251,6 +243,9 @@ const RegisterCover = () => {
     return (
         <>
             <ToastContainer />
+            {showLoader && (
+                <Loader />
+            )}
             <div className='md:p-12  bg-gradient-to-b from-[#C1E9FF] to-[#00A9E2] min-h-[100vh]  max-sm:p-3 max-sm:flex  max-sm:items-center'>
 
                 <div style={{
@@ -439,7 +434,7 @@ const RegisterCover = () => {
                                                         <input
                                                             onChange={(e) => setuser({ ...user, cr_number: e.target.value })}
                                                             id="cr_number"
-                                                            type="number"
+                                                            type="text"
                                                             placeholder="CR Number *"
                                                             className="form-input py-3 ps-10 placeholder-text-white-dark rounded-full border-[#FC8404]"
                                                         />

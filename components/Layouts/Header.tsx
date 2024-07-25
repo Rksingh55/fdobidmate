@@ -33,14 +33,13 @@ import Swal from 'sweetalert2';
 import { getToken } from '@/localStorageUtil';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { API_BASE_URL, LOGOUT_API_URL } from '@/api.config';
 
 const Header = () => {
     const router = useRouter();
-
-
     const handleLogout = async () => {
         const token = getToken();
-        const res = await fetch('http://10.10.10.212/FDO-bidmate/public/api/logout', {
+        const res = await fetch(`${API_BASE_URL}${LOGOUT_API_URL}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -48,9 +47,6 @@ const Header = () => {
             }
         });
         if (res.ok) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('userName');
-            router.push('/')
         } else {
             toast.error('Failed to logout');
         }

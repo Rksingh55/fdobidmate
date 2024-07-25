@@ -101,14 +101,8 @@ function OtherDetails() {
             });
             if (response.ok) {
                 const responseData = await response.json();
-                const venderregitserd = "success";
-                localStorage.setItem("vendorRegistersuccess", venderregitserd);
                 setMessage(responseData.message.success);
                 setShowPopup(true);
-                setTimeout(() => {
-                    window.dispatchEvent(new Event('storage'));
-                    router.push("/dashboard/tender")
-                }, 2000);
 
             } else {
                 const errorData = await response.json();

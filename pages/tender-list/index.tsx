@@ -11,6 +11,7 @@ import { fetchTenderList } from '../../Reducer/tenderlistSlice';
 import { RootState, AppDispatch } from '@/store';
 import { useSelector, useDispatch } from 'react-redux';
 import SkeletonCard from '@/components/cards/SkeletonCard';
+import { GrPowerReset } from 'react-icons/gr';
 
 const TenderListPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -30,6 +31,7 @@ const TenderListPage = () => {
     tenderfeeamount: string;
     publish_date: any;
   }>>({});
+
   const [filteredTenders, setFilteredTenders] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'mostRecent' | string>('mostRecent');
@@ -94,10 +96,10 @@ const TenderListPage = () => {
             onChange={handleSearchChange}
           />
           <div className="flex items-center space-x-4">
-            <select onChange={(e) => setSortBy(e.target.value)} value={sortBy} className="p-2 border max-sm:hidden">
+            {/* <select onChange={(e) => setSortBy(e.target.value)} value={sortBy} className="p-2 border max-sm:hidden">
               <option value="mostRecent">Most Recent</option>
-              
-            </select>
+            </select> */}
+            <button onClick={() => setFilters({})} className="text-[#00A9E2] gap-2 font-bold flex justify-end">Reset Filter <GrPowerReset className='mt-[2px]' /></button>
             <button
               onClick={() => setShowFilter(!showFilter)}
               className={`p-2 ${showFilter ? 'bg-[#FC8404] flex gap-2 font-bold text-white' : 'border flex gap-2 font-bold'}`}

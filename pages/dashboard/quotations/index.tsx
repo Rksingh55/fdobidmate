@@ -17,7 +17,7 @@ import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import Dashboardbredcrumb from "@/components/dashboardbredcrumb"
 import { fetchQuatationList } from '../../../Reducer/quatationSlice';
-
+import FormSkeltonloader from "../../../components/cards/FormSkeletonloader"
 import { RootState, AppDispatch } from '@/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { getToken } from '@/localStorageUtil';
@@ -33,16 +33,23 @@ const Quotations = () => {
     }, []);
 
     const dispatch = useDispatch<AppDispatch>();
+    const quotation = useSelector((state: RootState) => state.quotation.list);
+    const status = useSelector((state: RootState) => state.quotation.status);
+    const error = useSelector((state: RootState) => state.quotation.error);
+
     useEffect(() => {
         dispatch(fetchQuatationList());
-    }, []);
-    const quotation = useSelector((state: RootState) => state.quotation.list);
-    console.log(" QHS PHASE",quotation);
+    }, [dispatch]);
+    const [initialRecords, setInitialRecords] = useState<any[]>(sortBy(quotation));
+    useEffect(() => {
+        setInitialRecords(sortBy(quotation));
+    }, [quotation]);
+
+    console.log("quotation", quotation);
 
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-    const [initialRecords, setInitialRecords] = useState(sortBy(quotation));
     const [records, setRecords] = useState(initialRecords);
     const [selectedRecords, setSelectedRecords] = useState<any>([]);
     const [search, setSearch] = useState('');
@@ -219,7 +226,7 @@ const Quotations = () => {
     };
     return (
         <>
-        <Dashboardbredcrumb />
+            <Dashboardbredcrumb />
             <div className="panel border-white-light px-0 dark:border-[#1b2e4b] mt-3 ">
 
                 <div className="invoice-table">
@@ -252,6 +259,14 @@ const Quotations = () => {
                     </div>
 
                     <div className="datatables pagination-padding pago">
+                    {status === 'loading' && (
+                            <div className="flex flex-wrap gap-4">
+                                {Array.from({ length: 6 }).map((_, index) => (
+                                    <FormSkeltonloader />
+                                ))}
+                            </div>
+                        )}
+                           {status === 'succeeded' && (
                         <DataTable
                             className="table-hover whitespace-nowrap  "
                             records={records}
@@ -324,6 +339,7 @@ const Quotations = () => {
                             onSelectedRecordsChange={setSelectedRecords}
                             paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
                         />
+                           )}
                     </div>
                 </div>
             </div>

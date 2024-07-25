@@ -1,822 +1,207 @@
 import Link from 'next/link';
-import Dropdown from '@/components/Dropdown';
-import { useDispatch, useSelector } from 'react-redux';
-import { setPageTitle } from '@/store/themeConfigSlice';
-import { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-import IconHorizontalDots from '@/components/Icon/IconHorizontalDots';
-import IconEye from '@/components/Icon/IconEye';
-import IconBitcoin from '@/components/Icon/IconBitcoin';
-import IconEthereum from '@/components/Icon/IconEthereum';
-import IconLitecoin from '@/components/Icon/IconLitecoin';
-import IconBinance from '@/components/Icon/IconBinance';
-import IconTether from '@/components/Icon/IconTether';
-import IconSolana from '@/components/Icon/IconSolana';
-import IconCircleCheck from '@/components/Icon/IconCircleCheck';
-import IconInfoCircle from '@/components/Icon/IconInfoCircle';
-import { IoCloseCircleSharp } from 'react-icons/io5';
+import { DataTable, DataTableSortStatus } from 'mantine-datatable';
+import { useState, useEffect } from 'react';
+import sortBy from 'lodash/sortBy';
+import { PiDotsThreeOutlineVerticalLight, PiDotsThreeVerticalBold, PiFilePdfDuotone } from 'react-icons/pi';
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 import Dashboardbredcrumb from "@/components/dashboardbredcrumb"
-import { RootState } from '@/store';
-const ReactApexChart = dynamic(() => import('react-apexcharts'), {
-    ssr: false,
-});
-const Finance = () => {
-    const dispatch = useDispatch();
+import { fetchQuatationList } from '../../../Reducer/quatationSlice';
+import FormSkeltonloader from "../../../components/cards/FormSkeletonloader"
+import { RootState, AppDispatch } from '@/store';
+import { useSelector, useDispatch } from 'react-redux';
+import { getToken } from '@/localStorageUtil';
+import { useRouter } from 'next/router';
+import Dropdown from '@/components/Dropdown';
+
+const Quotations = () => {
+    const router = useRouter();
     useEffect(() => {
-        dispatch(setPageTitle('Tender'));
-    });
-    const [isMounted, setIsMounted] = useState(false);
+        const token = getToken();
+        if (!token) {
+            router.replace('/');
+        }
+    }, []);
+
+    const dispatch = useDispatch<AppDispatch>();
+    const quotation = useSelector((state: RootState) => state.quotation.list);
+    const status = useSelector((state: RootState) => state.quotation.status);
+    const error = useSelector((state: RootState) => state.quotation.error);
     useEffect(() => {
-        setIsMounted(true);
+        dispatch(fetchQuatationList());
+    }, [dispatch]);
+    
+    const [initialRecords, setInitialRecords] = useState<any[]>(sortBy(quotation));
+    useEffect(() => {
+        setInitialRecords(sortBy(quotation));
+    }, [quotation]);
+
+    console.log("quotation", quotation);
+    const [page, setPage] = useState(1);
+    const PAGE_SIZES = [10, 20, 30, 50, 100];
+    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
+    const [records, setRecords] = useState(initialRecords);
+    const [selectedRecords, setSelectedRecords] = useState<any>([]);
+    const [search, setSearch] = useState('');
+    const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
+        columnAccessor: 'firstName',
+        direction: 'asc',
     });
 
-    //bitcoinoption
-    const bitcoin: any = {
-        series: [
-            {
-                data: [21, 9, 36, 12, 44, 25, 59, 41, 25, 66],
-            },
-        ],
-        options: {
-            chart: {
-                height: 45,
-                type: 'line',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            stroke: {
-                width: 2,
-            },
-            markers: {
-                size: 0,
-            },
-            colors: ['#00ab55'],
-            grid: {
-                padding: {
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                },
-            },
-            tooltip: {
-                x: {
-                    show: false,
-                },
-                y: {
-                    title: {
-                        formatter: () => {
-                            return '';
-                        },
-                    },
-                },
-            },
-            responsive: [
-                {
-                    breakPoint: 576,
-                    options: {
-                        chart: {
-                            height: 95,
-                        },
-                        grid: {
-                            padding: {
-                                top: 45,
-                                bottom: 0,
-                                left: 0,
-                            },
-                        },
-                    },
-                },
-            ],
-        },
+    useEffect(() => {
+        setPage(1);
+    }, [pageSize]);
+
+    useEffect(() => {
+        const from = (page - 1) * pageSize;
+        const to = from + pageSize;
+        setRecords([...initialRecords.slice(from, to)]);
+    }, [page, pageSize, initialRecords]);
+
+    useEffect(() => {
+        setInitialRecords(() => {
+            return quotation.filter((item) => {
+                return (
+                    item.code.toLowerCase().includes(search.toLowerCase()) ||
+                    item.title.toLowerCase().includes(search.toLowerCase()) ||
+                    item.purchase_type.toLowerCase().includes(search.toLowerCase()) ||
+                    item.delivery_date.toLowerCase().includes(search.toLowerCase()) ||
+                    item.status.toLowerCase().includes(search.toLowerCase()) ||
+                    item.id.toLowerCase().includes(search.toLowerCase())
+                );
+            });
+        });
+    }, [search]);
+
+    useEffect(() => {
+        const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
+        setRecords(sortStatus.direction === 'desc' ? data2.reverse() : data2);
+        setPage(1);
+    }, [sortStatus]);
+
+
+
+    const capitalize = (text: any) => {
+        return text
+            .replace('_', ' ')
+            .replace('-', ' ')
+            .toLowerCase()
+            .split(' ')
+            .map((s: any) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
     };
 
-    //ethereumoption
-    const ethereum: any = {
-        series: [
-            {
-                data: [44, 25, 59, 41, 66, 25, 21, 9, 36, 12],
-            },
-        ],
-        options: {
-            chart: {
-                height: 45,
-                type: 'line',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            stroke: {
-                width: 2,
-            },
-            markers: {
-                size: 0,
-            },
-            colors: ['#e7515a'],
-            grid: {
-                padding: {
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                },
-            },
-            tooltip: {
-                x: {
-                    show: false,
-                },
-                y: {
-                    title: {
-                        formatter: () => {
-                            return '';
-                        },
-                    },
-                },
-            },
-            responsive: [
-                {
-                    breakPoint: 576,
-                    options: {
-                        chart: {
-                            height: 95,
-                        },
-                        grid: {
-                            padding: {
-                                top: 45,
-                                bottom: 0,
-                                left: 0,
-                            },
-                        },
-                    },
-                },
-            ],
-        },
+    const renderActions = (rowData: any) => {
+        return (
+            <div className="dropdown z-[999]">
+                <Dropdown
+                    offset={[0, 5]}
+                    placement="top-end"
+                    button={<PiDotsThreeVerticalBold className="opacity-70 cursor-pointer" />}
+                >
+                    <div className='flex flex-col bg-white shadow-md rounded-md border-1'>
+                        <Link href="/dashboard/tender/tender-details">
+                            <button className='bg-white p-2 rounded-md hover:text-blue-400  px-3' type="button" onClick={() => handleAction(rowData, 'view')}>View</button>
+                        </Link>
+                    </div>
+                </Dropdown>
+            </div>
+        );
     };
 
-    //litecoinoption
-    const litecoin: any = {
-        series: [
-            {
-                data: [9, 21, 36, 12, 66, 25, 44, 25, 41, 59],
-            },
-        ],
-        options: {
-            chart: {
-                height: 45,
-                type: 'line',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            stroke: {
-                width: 2,
-            },
-            markers: {
-                size: 0,
-            },
-            colors: ['#00ab55'],
-            grid: {
-                padding: {
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                },
-            },
-            tooltip: {
-                x: {
-                    show: false,
-                },
-                y: {
-                    title: {
-                        formatter: () => {
-                            return '';
-                        },
-                    },
-                },
-            },
-            responsive: [
-                {
-                    breakPoint: 576,
-                    options: {
-                        chart: {
-                            height: 95,
-                        },
-                        grid: {
-                            padding: {
-                                top: 45,
-                                bottom: 0,
-                                left: 0,
-                            },
-                        },
-                    },
-                },
-            ],
-        },
+    const handleAction = (rowData: any, action: string) => {
+        console.log(`Performing action "${action}" on row with ID: ${rowData.id}`);
     };
-
-    //binanceoption
-    const binance: any = {
-        series: [
-            {
-                data: [25, 44, 25, 59, 41, 21, 36, 12, 19, 9],
-            },
-        ],
-        options: {
-            chart: {
-                height: 45,
-                type: 'line',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            stroke: {
-                width: 2,
-            },
-            markers: {
-                size: 0,
-            },
-            colors: ['#e7515a'],
-            grid: {
-                padding: {
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                },
-            },
-            tooltip: {
-                x: {
-                    show: false,
-                },
-                y: {
-                    title: {
-                        formatter: () => {
-                            return '';
-                        },
-                    },
-                },
-            },
-            responsive: [
-                {
-                    breakPoint: 576,
-                    options: {
-                        chart: {
-                            height: 95,
-                        },
-                        grid: {
-                            padding: {
-                                top: 45,
-                                bottom: 0,
-                                left: 0,
-                            },
-                        },
-                    },
-                },
-            ],
-        },
-    };
-
-    //tetheroption
-    const tether: any = {
-        series: [
-            {
-                data: [21, 59, 41, 44, 25, 66, 9, 36, 25, 12],
-            },
-        ],
-        options: {
-            chart: {
-                height: 45,
-                type: 'line',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            stroke: {
-                width: 2,
-            },
-            markers: {
-                size: 0,
-            },
-            colors: ['#00ab55'],
-            grid: {
-                padding: {
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                },
-            },
-            tooltip: {
-                x: {
-                    show: false,
-                },
-                y: {
-                    title: {
-                        formatter: () => {
-                            return '';
-                        },
-                    },
-                },
-            },
-            responsive: [
-                {
-                    breakPoint: 576,
-                    options: {
-                        chart: {
-                            height: 95,
-                        },
-                        grid: {
-                            padding: {
-                                top: 45,
-                                bottom: 0,
-                                left: 0,
-                            },
-                        },
-                    },
-                },
-            ],
-        },
-    };
-
-    //solanaoption
-    const solana: any = {
-        series: [
-            {
-                data: [21, -9, 36, -12, 44, 25, 59, -41, 66, -25],
-            },
-        ],
-        options: {
-            chart: {
-                height: 45,
-                type: 'line',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            stroke: {
-                width: 2,
-            },
-            markers: {
-                size: 0,
-            },
-            colors: ['#e7515a'],
-            grid: {
-                padding: {
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                },
-            },
-            tooltip: {
-                x: {
-                    show: false,
-                },
-                y: {
-                    title: {
-                        formatter: () => {
-                            return '';
-                        },
-                    },
-                },
-            },
-            responsive: [
-                {
-                    breakPoint: 576,
-                    options: {
-                        chart: {
-                            height: 95,
-                        },
-                        grid: {
-                            padding: {
-                                top: 45,
-                                bottom: 0,
-                                left: 0,
-                            },
-                        },
-                    },
-                },
-            ],
-        },
-    };
-
-    const isRtl = useSelector((state: RootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
-
     return (
-        <div>
+        <>
             <Dashboardbredcrumb />
-            <div className="pt-3">
-                <div className="mb-6 grid grid-cols-1 gap-6 text-white sm:grid-cols-2 xl:grid-cols-4">
-                    <Link href="/tender-list">
+            <div className="mb-4.5 flex flex-col gap-5 px-2 md:flex-row md:items-center">
+                {/* <div className="ltr:ml-auto rtl:mr-auto">
+                    <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
+                </div> */}
+            </div>
+            <div className="panel border-white-light px-0 dark:border-[#1b2e4b] mt-3 ">
+                <div className="invoice-table">
+                    <div className="datatables pagination-padding pago ">
+                        {status === 'loading' && (
+                            <div className="flex flex-wrap gap-4">
+                                {Array.from({ length: 6 }).map((_, index) => (
+                                    <FormSkeltonloader />
+                                ))}
+                            </div>
+                        )}
+                        {status === 'succeeded' && (
+                            <DataTable
+                                className="table-hover whitespace-nowrap  "
+                                records={records}
+                                columns={[
+                                    {
+                                        accessor: 'Tender ID ',
+                                        sortable: true,
+                                        render: ({ code, id }: any) => (
+                                            <div className="flex items-center font-semibold">
+                                                <div> TDR-000003</div>
+                                            </div>
+                                        ),
+                                    },
+                                    {
+                                        accessor: ('title'),
+                                        sortable: true,
+                                        titleClassName: 'text-left',
+                                        render: ({ title, id }) => <div className="text-left font-semibold">{`${title}`}</div>,
+                                    },
+                                    {
+                                        accessor: 'Start Date',
+                                        sortable: true,
+                                        render: ({ purchase_type, id }) => <div className="text-left font-semibold"> 05 / 07 / 2024</div>,
+                                    },
+                                    {
+                                        accessor: 'End Date',
+                                        sortable: true,
+                                        render: ({ delivery_date, id }) => <div className="text-left font-semibold">{`${delivery_date}`}</div>,
+                                    },
+                                    {
+                                        accessor: 'Entity',
+                                        sortable: true,
+                                        render: ({ status }) => <div className="text-left font-semibold">{`${status}`}</div>,
+                                    },
 
-                        <div className="panel bg-gradient-to-r from-green-500 to-green-300 cursor-pointer">
-                            <div className="flex justify-between ">
-                                <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">
-                                    <span className="absolute top-3 flex h-3 w-3 ltr:right-1 rtl:left-0">
-                                        <span className="absolute -top-[3px] inline-flex h-full w-full animate-ping rounded-full bg-success/50 opacity-75 ltr:-left-[3px] rtl:-right-[3px]"></span>
-                                        <span className="relative inline-flex h-[6px] w-[6px] rounded-full bg-success"></span>
-                                    </span>
-                                    Latest Active Tenders</div>
+                                    {
+                                        accessor: 'Department',
+                                        sortable: true,
+                                        render: ({ status }) => <div className="text-left font-semibold">Department 1</div>,
+                                    },
+                                    {
+                                        accessor: 'Status',
+                                        sortable: true,
+                                        render: ({ status }) => <div className="text-left font-semibold">active</div>,
+                                    },
+                                    {
+                                        accessor: 'action',
+                                        title: 'Action',
+                                        sortable: false,
+                                        render: (rowData) => renderActions(rowData),
+                                    },
 
-                            </div>
-                            <div className="mt-5 flex items-center">
-                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> 170 </div>
-                                {/* <div className="badge bg-white/30">+ 2.35% </div> */}
-                            </div>
-                            <div className="mt-5 flex items-center font-semibold">
-                                <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                Last Week 44
-                            </div>
-                        </div>
-                    </Link>
-
-                    {/* Sessions */}
-                    <div className="panel bg-gradient-to-r from-violet-500 to-violet-400 cursor-pointer">
-                        <div className="flex justify-between">
-                            <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">
-                                Tender Issued Today</div>
-                            <div className="dropdown">
-                                <Dropdown
-                                    offset={[0, 5]}
-                                    placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
-                                    btnClassName="hover:opacity-80"
-                                    button={<IconHorizontalDots className="hover:opacity-80 opacity-70" />}
-                                >
-                                    <ul className="text-black dark:text-white-dark">
-                                        <li>
-                                            <button type="button">View Report</button>
-                                        </li>
-                                        <li>
-                                            <button type="button">Edit Report</button>
-                                        </li>
-                                    </ul>
-                                </Dropdown>
-                            </div>
-                        </div>
-                        <div className="mt-5 flex items-center">
-                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> 7 </div>
-                            {/* <div className="badge bg-white/30">- 2.35% </div> */}
-                        </div>
-                        <div className="mt-5 flex items-center font-semibold">
-                            <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Last Week 55
-                        </div>
-                    </div>
-
-                    {/*  Time On-Site */}
-                    <div className="panel bg-gradient-to-r from-red-400 to-red-300 cursor-pointer">
-                        <div className="flex justify-between">
-                            <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">
-
-                                Tender Closed in last 30 days</div>
-                            <div className="dropdown">
-                                <Dropdown
-                                    offset={[0, 5]}
-                                    placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
-                                    btnClassName="hover:opacity-80"
-                                    button={<IconHorizontalDots className="hover:opacity-80 opacity-70" />}
-                                >
-                                    <ul className="text-black dark:text-white-dark">
-                                        <li>
-                                            <button type="button">View Report</button>
-                                        </li>
-                                        <li>
-                                            <button type="button">Edit Report</button>
-                                        </li>
-                                    </ul>
-                                </Dropdown>
-                            </div>
-                        </div>
-                        <div className="mt-5 flex items-center">
-                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> 38 </div>
-                            {/* <div className="badge bg-white/30">+ 1.35% </div> */}
-                        </div>
-                        <div className="mt-5 flex items-center font-semibold">
-                            <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Last Week 7
-                        </div>
-                    </div>
-
-                    {/* Bounce Rate */}
-                    <div className="panel bg-gradient-to-r from-fuchsia-500 to-fuchsia-400 cursor-pointer">
-                        <div className="flex justify-between">
-                            <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Latest EOI</div>
-                            <div className="dropdown">
-                                <Dropdown
-                                    offset={[0, 5]}
-                                    placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
-                                    btnClassName="hover:opacity-80"
-                                    button={<IconHorizontalDots className="hover:opacity-80 opacity-70" />}
-                                >
-                                    <ul className="text-black dark:text-white-dark">
-                                        <li>
-                                            <button type="button">View Report</button>
-                                        </li>
-                                        <li>
-                                            <button type="button">Edit Report</button>
-                                        </li>
-                                    </ul>
-                                </Dropdown>
-                            </div>
-                        </div>
-                        <div className="mt-5 flex items-center">
-                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> 90 </div>
-                            {/* <div className="badge bg-white/30">- 0.35% </div> */}
-                        </div>
-                        <div className="mt-5 flex items-center font-semibold">
-                            <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Last Week 30
-                        </div>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-                    {/*  Favorites  */}
-                    <div>
-                        <div className="mb-5 flex items-center font-bold">
-                            <span className="text-lg">Favorites</span>
-                            <button type="button" className="text-primary hover:text-black ltr:ml-auto rtl:mr-auto dark:hover:text-white-dark">
-                                See All
-                            </button>
-                        </div>
-                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 md:mb-5">
-                            {/*  Bitcoin  */}
-                            <div className="panel">
-                                <div className="mb-5 flex items-center font-semibold">
-                                    <div className="grid h-10 w-10 shrink-0 place-content-center rounded-full">
-                                        <IconBitcoin />
-                                    </div>
-                                    <div className="ltr:ml-2 rtl:mr-2">
-                                        <h6 className="text-dark dark:text-white-light">BTC</h6>
-                                        <p className="text-xs text-white-dark">Bitcoin</p>
-                                    </div>
-                                </div>
-                                <div className="mb-5">{isMounted && <ReactApexChart series={bitcoin.series} options={bitcoin.options} type="line" height={45} width={'100%'} />}</div>
-                                <div className="flex items-center justify-between text-base font-bold">
-                                    $20,000 <span className="text-sm font-normal text-success">+0.25%</span>
-                                </div>
-                            </div>
-                            {/*  Ethereum*/}
-                            <div className="panel">
-                                <div className="mb-5 flex items-center font-semibold">
-                                    <div className="grid h-10 w-10 shrink-0 place-content-center rounded-full bg-warning p-2">
-                                        <IconEthereum />
-                                    </div>
-                                    <div className="ltr:ml-2 rtl:mr-2">
-                                        <h6 className="text-dark dark:text-white-light">ETH</h6>
-                                        <p className="text-xs text-white-dark">Ethereum</p>
-                                    </div>
-                                </div>
-                                <div className="mb-5">{isMounted && <ReactApexChart series={ethereum.series} options={ethereum.options} type="line" height={45} width={'100%'} />}</div>
-                                <div className="flex items-center justify-between text-base font-bold">
-                                    $21,000 <span className="text-sm font-normal text-danger">-1.25%</span>
-                                </div>
-                            </div>
-                            {/*  Litecoin*/}
-                            <div className="panel">
-                                <div className="mb-5 flex items-center font-semibold">
-                                    <div className="grid h-10 w-10 shrink-0 place-content-center rounded-full">
-                                        <IconLitecoin />
-                                    </div>
-                                    <div className="ltr:ml-2 rtl:mr-2">
-                                        <h6 className="text-dark dark:text-white-light">LTC</h6>
-                                        <p className="text-xs text-white-dark">Litecoin</p>
-                                    </div>
-                                </div>
-                                <div className="mb-5">{isMounted && <ReactApexChart series={litecoin.series} options={litecoin.options} type="line" height={45} width={'100%'} />}</div>
-                                <div className="flex items-center justify-between text-base font-bold">
-                                    $11,657 <span className="text-sm font-normal text-success">+0.25%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {/*  Prices  */}
-                    <div>
-                        <div className="mb-5 flex items-center font-bold">
-                            <span className="text-lg">Live Prices</span>
-                            <button type="button" className="text-primary hover:text-black ltr:ml-auto rtl:mr-auto dark:hover:text-white-dark">
-                                See All
-                            </button>
-                        </div>
-                        <div className="mb-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
-                            {/*  Binance */}
-                            <div className="panel">
-                                <div className="mb-5 flex items-center font-semibold">
-                                    <div className="grid h-10 w-10 shrink-0 place-content-center rounded-full">
-                                        <IconBinance />
-                                    </div>
-                                    <div className="ltr:ml-2 rtl:mr-2">
-                                        <h6 className="text-dark dark:text-white-light">BNB</h6>
-                                        <p className="text-xs text-white-dark">Binance</p>
-                                    </div>
-                                </div>
-                                <div className="mb-5">{isMounted && <ReactApexChart series={binance.series} options={binance.options} type="line" height={45} width={'100%'} />}</div>
-                                <div className="flex items-center justify-between text-base font-bold">
-                                    $21,000 <span className="text-sm font-normal text-danger">-1.25%</span>
-                                </div>
-                            </div>
-                            {/*  Tether  */}
-                            <div className="panel">
-                                <div className="mb-5 flex items-center font-semibold">
-                                    <div className="grid h-10 w-10 shrink-0 place-content-center rounded-full">
-                                        <IconTether />
-                                    </div>
-                                    <div className="ltr:ml-2 rtl:mr-2">
-                                        <h6 className="text-dark dark:text-white-light">USDT</h6>
-                                        <p className="text-xs text-white-dark">Tether</p>
-                                    </div>
-                                </div>
-                                <div className="mb-5">{isMounted && <ReactApexChart series={tether.series} options={tether.options} type="line" height={45} width={'100%'} />}</div>
-                                <div className="flex items-center justify-between text-base font-bold">
-                                    $20,000 <span className="text-sm font-normal text-success">+0.25%</span>
-                                </div>
-                            </div>
-                            {/*  Solana */}
-                            <div className="panel">
-                                <div className="mb-5 flex items-center font-semibold">
-                                    <div className="grid h-10 w-10 shrink-0 place-content-center rounded-full bg-warning p-2">
-                                        <IconSolana />
-                                    </div>
-                                    <div className="ltr:ml-2 rtl:mr-2">
-                                        <h6 className="text-dark dark:text-white-light">SOL</h6>
-                                        <p className="text-xs text-white-dark">Solana</p>
-                                    </div>
-                                </div>
-                                <div className="mb-5">{isMounted && <ReactApexChart series={solana.series} options={solana.options} type="line" height={45} width={'100%'} />}</div>
-                                <div className="flex items-center justify-between text-base font-bold">
-                                    $21,000 <span className="text-sm font-normal text-danger">-1.25%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-                    <div className="grid gap-6 xl:grid-flow-row">
-                        {/*  Previous Statement  */}
-                        <div className="panel overflow-hidden">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-lg font-bold">Previous Statement</div>
-                                    <div className="text-success"> Paid on June 27, 2022 </div>
-                                </div>
-                                <div className="dropdown">
-                                    <Dropdown
-                                        offset={[0, 5]}
-                                        placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
-                                        btnClassName="hover:opacity-80"
-                                        button={<IconHorizontalDots className="hover:opacity-80 opacity-70" />}
-                                    >
-                                        <ul>
-                                            <li>
-                                                <button type="button">View Report</button>
-                                            </li>
-                                            <li>
-                                                <button type="button">Edit Report</button>
-                                            </li>
-                                        </ul>
-                                    </Dropdown>
-                                </div>
-                            </div>
-                            <div className="relative mt-10">
-                                <div className="absolute -bottom-12 h-24 w-24 ltr:-right-12 rtl:-left-12">
-                                    {/* <IconCircleCheck className="text-success opacity-20 w-full h-full" /> */}
-                                </div>
-                                <div className="grid grid-cols-2 gap-6 md:grid-cols-3">
-                                    <div>
-                                        <div className="text-primary">Card Limit</div>
-                                        <div className="mt-2 text-xl font-semibold">$50,000.00</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-primary">Spent</div>
-                                        <div className="mt-2 text-xl font-semibold">$15,000.00</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-primary">Minimum</div>
-                                        <div className="mt-2 text-xl font-semibold">$2,500.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {/*  Current Statement */}
-                        <div className="panel overflow-hidden">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-lg font-bold">Current Statement</div>
-                                    <div className="text-danger"> Must be paid before July 27, 2022 </div>
-                                </div>
-                                <div className="dropdown">
-                                    <Dropdown
-                                        offset={[0, 5]}
-                                        placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
-                                        button={<IconHorizontalDots className="hover:opacity-80 opacity-70" />}
-                                    >
-                                        <ul>
-                                            <li>
-                                                <button type="button">View Report</button>
-                                            </li>
-                                            <li>
-                                                <button type="button">Edit Report</button>
-                                            </li>
-                                        </ul>
-                                    </Dropdown>
-                                </div>
-                            </div>
-                            <div className="relative mt-10">
-                                <div className="absolute -bottom-12 h-24 w-24 ltr:-right-12 rtl:-left-12">
-                                    {/* <IconInfoCircle className="text-danger opacity-20 w-24 h-full" /> */}
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-6 md:grid-cols-3">
-                                    <div>
-                                        <div className="text-primary">Card Limit</div>
-                                        <div className="mt-2 text-xl font-semibold">$50,000.00</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-primary">Spent</div>
-                                        <div className="mt-2 text-xl font-semibold">$30,500.00</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-primary">Minimum</div>
-                                        <div className="mt-2 text-xl font-semibold">$8,000.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/*  Recent Transactions  */}
-                    <div className="panel">
-                        <div className="mb-3 text-lg font-bold">Recent Transactions</div>
-                        <div className="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th className="ltr:rounded-l-md rtl:rounded-r-md">ID</th>
-                                        <th>DATE</th>
-                                        <th>AUCTION</th>
-                                        <th>AMOUNT</th>
-                                        <th className="text-center ltr:rounded-r-md rtl:rounded-l-md">STATUS</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td className="font-semibold">#01</td>
-                                        <td className="whitespace-nowrap">Oct 08, 2021</td>
-                                        <td className="whitespace-nowrap">Eric Page</td>
-                                        <td>$1,358.75</td>
-                                        <td className="text-center">
-                                            <span className="badge rounded-full bg-success/20 text-success hover:top-0">Completed</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="font-semibold">#02</td>
-                                        <td className="whitespace-nowrap">Dec 18, 2021</td>
-                                        <td className="whitespace-nowrap">Nita Parr</td>
-                                        <td>-$1,042.82</td>
-                                        <td className="text-center">
-                                            <span className="badge rounded-full bg-info/20 text-info hover:top-0">In Process</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="font-semibold">#03</td>
-                                        <td className="whitespace-nowrap">Dec 25, 2021</td>
-                                        <td className="whitespace-nowrap">Carl Bell</td>
-                                        <td>$1,828.16</td>
-                                        <td className="text-center">
-                                            <span className="badge rounded-full bg-danger/20 text-danger hover:top-0">Pending</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="font-semibold">#04</td>
-                                        <td className="whitespace-nowrap">Nov 29, 2021</td>
-                                        <td className="whitespace-nowrap">Dan Hart</td>
-                                        <td>$1,647.55</td>
-                                        <td className="text-center">
-                                            <span className="badge rounded-full bg-success/20 text-success hover:top-0">Completed</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="font-semibold">#05</td>
-                                        <td className="whitespace-nowrap">Nov 24, 2021</td>
-                                        <td className="whitespace-nowrap">Jake Ross</td>
-                                        <td>$927.43</td>
-                                        <td className="text-center">
-                                            <span className="badge rounded-full bg-success/20 text-success hover:top-0">Completed</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="font-semibold">#06</td>
-                                        <td className="whitespace-nowrap">Jan 26, 2022</td>
-                                        <td className="whitespace-nowrap">Anna Bell</td>
-                                        <td>$250.00</td>
-                                        <td className="text-center">
-                                            <span className="badge rounded-full bg-info/20 text-info hover:top-0">In Process</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                ]}
+                                highlightOnHover
+                                totalRecords={initialRecords.length}
+                                recordsPerPage={pageSize}
+                                page={page}
+                                onPageChange={(p) => setPage(p)}
+                                recordsPerPageOptions={PAGE_SIZES}
+                                onRecordsPerPageChange={setPageSize}
+                                sortStatus={sortStatus}
+                                onSortStatusChange={setSortStatus}
+                                onSelectedRecordsChange={setSelectedRecords}
+                                paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
+                            />
+                        )}
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
-export default Finance;
+export default Quotations;

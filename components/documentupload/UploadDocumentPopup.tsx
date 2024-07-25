@@ -55,9 +55,7 @@ const UploadDocumentPopup: React.FC<PopupProps> = ({
             setUploading(false);
         }
     };
-
     if (!isVisible) return null;
-
     return (
         <>
             <ToastContainer />
@@ -73,7 +71,6 @@ const UploadDocumentPopup: React.FC<PopupProps> = ({
                     <form>
                         <input type="file" multiple onChange={handleFileChange} className="mb-4 w-full border p-2" />
                     </form>
-
                     <div className="mt-4">
                         {selectedFiles.length > 0 && (
                             <>
@@ -94,9 +91,6 @@ const UploadDocumentPopup: React.FC<PopupProps> = ({
                             </>
                         )}
                     </div>
-
-
-
                     <div className="flex justify-end mt-4">
                         <button onClick={onClose} className="bg-red-500 text-white py-2 px-4 mr-2">
                             Close
