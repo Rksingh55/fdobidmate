@@ -12,12 +12,16 @@ import { RootState, AppDispatch } from '@/store';
 import { useSelector, useDispatch } from 'react-redux';
 import SkeletonCard from '@/components/cards/SkeletonCard';
 import { GrPowerReset } from 'react-icons/gr';
+import { GridIcon, ListIcon } from '@/public/icons';
 
 const TenderListPage = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const tenderlist = useSelector((state: RootState) => state.Tenderlist.list || []);
+  const tenderlist = useSelector((state: RootState) => state.Tenderlist.list);
   const status = useSelector((state: RootState) => state.Tenderlist.status);
   const error = useSelector((state: RootState) => state.Tenderlist.error);
+  useEffect(() => {
+    dispatch(fetchTenderList());
+  }, [dispatch]);
 
   const [view, setView] = useState<'list' | 'grid'>('list');
   const [filters, setFilters] = useState<Partial<{
@@ -38,10 +42,10 @@ const TenderListPage = () => {
   const [showFilter, setShowFilter] = useState<boolean>(false);
 
   useEffect(() => {
-    dispatch(fetchTenderList());
-  }, [dispatch]);
-
-  useEffect(() => {
+    if (!Array.isArray(tenderlist)) {
+      console.error('Tenderlist is not an array', tenderlist);
+      return;
+    }
     let tempTenders = [...tenderlist];
     if (filters?.encrypt_id) {
       tempTenders = tempTenders.filter(tender => tender.encrypt_id.includes(filters.encrypt_id));
@@ -96,21 +100,18 @@ const TenderListPage = () => {
             onChange={handleSearchChange}
           />
           <div className="flex items-center space-x-4">
-            {/* <select onChange={(e) => setSortBy(e.target.value)} value={sortBy} className="p-2 border max-sm:hidden">
-              <option value="mostRecent">Most Recent</option>
-            </select> */}
             <button onClick={() => setFilters({})} className="text-[#00A9E2] gap-2 font-bold flex justify-end">Reset Filter <GrPowerReset className='mt-[2px]' /></button>
             <button
               onClick={() => setShowFilter(!showFilter)}
-              className={`p-2 ${showFilter ? 'bg-[#FC8404] flex gap-2 font-bold text-white' : 'border flex gap-2 font-bold'}`}
+              className={`p-2 ${showFilter ? 'bg-[#00A9E2] rounded-md flex gap-2 font-bold text-white' : 'border rounded-md flex gap-2 font-bold'}`}
             >
               <BiSliderAlt className='text-lg' />Filter
             </button>
-            <button onClick={() => setView('grid')} className={`p-2 ${view === 'grid' ? 'bg-blue-500 text-white' : 'border'}`}>
-              <IoGridSharp className='text-lg' />
+            <button onClick={() => setView('grid')} className={` ${view === 'grid' ? '' : ''}`}>
+              <GridIcon />
             </button>
-            <button onClick={() => setView('list')} className={`p-2 ${view === 'list' ? 'bg-blue-500 text-white' : 'border'}`}>
-              <BiSolidServer className='text-lg' />
+            <button onClick={() => setView('list')} className={`p-2 ${view === 'list' ? '' : ''}`}>
+              <ListIcon />
             </button>
           </div>
         </div>
@@ -121,7 +122,7 @@ const TenderListPage = () => {
             ))}
           </div>
         )}
-        {status === 'failed' && <div className="text-red-500">Error: {error}</div>}
+        {status === 'failed' && <div className="text-red-500 text-center mt-12 font-bold">  {error}</div>}
         {status === 'succeeded' && (
           <div className="flex md:flex-row flex-col">
             <div className={showFilter ? "md:w-[70%] w-full" : "md:w-[90%] w-full"}>

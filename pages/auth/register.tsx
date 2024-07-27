@@ -11,13 +11,14 @@ import { AiTwotoneHome, AiTwotoneMail } from "react-icons/ai";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Image from 'next/image'
-import Herosectionleftimage from "../../public/assets/images/herosection_left_image.png";
+import Herosectionleftimage from "../../public/assets/images/fdoIcon_black.png";
 import Fdomainlogo from "../../public/assets/images/fdo icon3.png";
 import { BsBuildings } from 'react-icons/bs';
 import Loader from '@/components/front/loader';
 import OtpModal from "@/components/front/OtpModal"
 import { TiHome } from 'react-icons/ti';
 import { API_BASE_URL, COMPANYLIST_API_URL, OTPVALIDATE_API_URL, REGISTER_API_URL } from '@/api.config';
+import { AddressIcon, CompanyNameIcon, ConatctNumberIcon, CrNumberIcon, EmailsIcon, FullNameIcon, LoginbuttonIcon, OrganiszationIcon, RegisterbuttonIcon } from '@/public/icons';
 
 const RegisterCover = () => {
     const router = useRouter();
@@ -82,16 +83,20 @@ const RegisterCover = () => {
         try {
             const response = await fetch(API_URL);
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                console.error(`HTTP error! Status: ${response.status}`);
+                setCompanies([]);
+                return { data: [] };
             }
             const companydata = await response.json();
-            setCompanies(companydata.data)
+            setCompanies(companydata.data);
             return companydata;
         } catch (error) {
             console.error('Error fetching company list:', error);
-            throw error;
+            setCompanies([]);
+            return { data: [] };
         }
     };
+
 
     useEffect(() => {
         fetchCompanyList()
@@ -242,68 +247,80 @@ const RegisterCover = () => {
 
     return (
         <>
-            <ToastContainer />
-            {showLoader && (
-                <Loader />
-            )}
-            <div className='md:p-12  bg-gradient-to-b from-[#C1E9FF] to-[#00A9E2] min-h-[100vh]  max-sm:p-3 max-sm:flex  max-sm:items-center'>
-
-                <div style={{
-                    backgroundImage: "url('/assets/images/herosection_bg.png')",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                    minHeight: "100vh"
-                }} className='  rounded-xl  shadow-2xl '>
+            <div>
+                <ToastContainer />
+                {showLoader && (
+                    <Loader />
+                )}
+                <div className='  bg-[#FFFEFC] p-4  '>
                     <div className="  text-black  flex flex-col gap-5 md:flex-row  items-center  ">
-                        <div className='basis-[60%] flex flex-col  items-center  gap-5 max-sm:hidden '>
-                            <div className=''>
-                                <Image
-                                    src={Fdomainlogo}
-                                    width={500}
-                                    height={500}
-                                    alt="herosection_left_image"
-                                />
+                        <div className='md:basis-[60%] flex flex-col  items-center justify-end  max-sm:hidden'>
+                            <div className='relative md:w-[50vw] md:h-[90vh] md:rounded-lg' style={{
+                                backgroundImage: "url('/assets/images/Authenticationimg.png')",
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                                backgroundRepeat: "no-repeat",
+                                paddingBottom: "56.25%",
+                            }}>
+                                <div className='absolute top-0 left-0 w-full h-full' />
+                                <div className='flex flex-col items-center justify-center min-h-screen'>
+                                <div className='flex flex-col items-center justify-center min-h-screen'>
+                                    <h1 className="text-xl font-bold !leading-snug text-white md:text-4xl text-center">
+                                        Welcome to FDO
+                                    </h1>
+                                    <p className="text-md  font-semibold leading-normal text-white py-2 p-3 text-center">
+                                        Leading Oman's sustainable fishing and aquaculture, Fisheries Development Oman (FDO) innovates with seven specialized companies. From European seabream to shrimp cultivation, FDO drives marine industry revitalization with large-scale, cutting-edge projects.
+                                    </p>
                             </div>
-                            <div className='flex justify-center items-center mt-12'>
-                                <Image
-                                    src={Herosectionleftimage}
-                                    width={670}
-                                    height={670}
-                                    alt="herosection_left_image"
-                                />
+                                </div>
+
                             </div>
                         </div>
-                        <div className="  md:p-4 basis-[40%]     text-center "  >
-                            <Link href="/">
-                                <div className='flex justify-end   px-4 max-sm:py-3'>
-                                    <div className='hover:bg-[#00A9E2] bg-[#80d2ee] rounded-full p-2'><TiHome className='text-xl text-white' /></div>
-                                </div></Link>
-                            <div className="relative flex w-full flex-col items-center justify-center gap-6 px-4 pb-16 pt-6 sm:px-6 lg:max-w-[667px]">
+                        <div className=" md:basis-[40%] text-center "  >
+                            <div className='justify-center flex ' >
+                                <Image
+                                    src={Herosectionleftimage}
+                                    width={400}
+                                    height={300}
+                                    alt="herosection_left_image"
+                                />
+                            </div>
+                            <div className='flex items-center gap-2'>
+                            <div className='bg-[#00A9E2] md:w-[60%] w-full m-auto flex gap-2 justify-center p-2 rounded-full '>
+                                <Link href="/auth/login">
+                                    <button className=' hover:bg-[#20427F]  px-8 py-2 rounded-full text-white font-bold flex gap-2'><LoginbuttonIcon />Login</button>
+                                </Link>
+                                <Link href="/auth/register">
+                                    <button className='px-8 py-2 bg-[#20427F] rounded-full text-white font-bold flex gap-2'>
+                                        <RegisterbuttonIcon />Register</button>
+                                </Link>
+                            </div>
+                                <div>
+                                    <Link href="/">
+                                        <div className='flex justify-end   md:px-4 max-sm:py-3'>
+                                            <div className='hover:bg-[#00A9E2] bg-[#80d2ee] rounded-full p-2'><TiHome className='text-xl text-white' /></div>
+                                        </div></Link>
+                                </div>
+                            </div>
+                            <div className="relative flex w-full flex-col items-center justify-center gap-6 md:px-4 pb-16  sm:px-6 lg:max-w-[667px]">
                                 <div className="w-full max-w-[440px] ">
-                                    <div className="">
-                                        <h1 className="text-xl font-bold  !leading-snug text-[#00A9E2] md:text-2xl">Welcome to FDO</h1>
-                                        <p className="text-base font-bold leading-normal text-white-dark py-2">Fill Out the Form Carefully for Registration</p>
-                                    </div>
-
                                     <div className='text-center py-2'>
                                         {message && <p className='text-red-500 font-bold'>{message}*</p>}
                                     </div>
                                     <div className='pb-2'>
-
                                     </div>
                                     <form className="space-y-3 dark:text-white" onSubmit={submitForm}>
-
+                                        <p className="text-start font-semibold">Fill Out the Form Carefully for Registration</p>
                                         <div className="relative text-white-dark">
                                             <input
                                                 onChange={(e) => setuser({ ...user, organization_name: e.target.value })}
                                                 id="OrganizationName"
                                                 type="text"
                                                 placeholder="Organization Name *"
-                                                className="form-input py-3 ps-10 placeholder-text-white-dark rounded-full border-[#FC8404]"
+                                                className="form-input py-3 ps-10 placeholder-text-white-dark border-2 rounded-full border-[#00A9E2]"
                                             />
                                             <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                                                <GrOrganization />
+                                                <OrganiszationIcon />
                                             </span>
                                         </div>
 
@@ -313,10 +330,10 @@ const RegisterCover = () => {
                                                 id="ContactPersonName"
                                                 type="text"
                                                 placeholder="Contact Person Name *"
-                                                className="form-input py-3 ps-10 placeholder-text-white-dark rounded-full border-[#FC8404]"
+                                                className="form-input py-3 ps-10 placeholder-text-white-dark border-2 rounded-full border-[#00A9E2]"
                                             />
                                             <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                                                <BsBuildings />
+                                                <FullNameIcon />
                                             </span>
                                         </div>
 
@@ -329,12 +346,12 @@ const RegisterCover = () => {
                                                 id="Email"
                                                 type="email"
                                                 placeholder="Email *"
-                                                className={`form-input py-3 pl-10 placeholder-text-white-dark rounded-full border-[#FC8404] ${user.email.trim() === '' || validateEmail(user.email) ? 'text-green-500' : 'text-red-500'}`}
+                                                className={`form-input py-3 pl-10 placeholder-text-white-dark border-2 rounded-full border-[#00A9E2] ${user.email.trim() === '' || validateEmail(user.email) ? 'text-green-500' : 'text-red-500'}`}
                                                 required
                                             />
 
                                             <span className="absolute left-4 top-1/2 -translate-y-1/2">
-                                                <AiTwotoneMail />
+                                                <EmailsIcon />
                                             </span>
 
                                             {user.showVerifyButton && (
@@ -360,7 +377,7 @@ const RegisterCover = () => {
                                                 <div className="relative text-white-dark">
                                                     <div
                                                         onClick={toggleDropdown}
-                                                        className="flex items-center justify-between cursor-pointer form-input py-3 ps-10 placeholder-text-white-dark rounded-full border-[#FC8404]"
+                                                        className="flex items-center justify-between cursor-pointer form-input py-3 ps-10 placeholder-text-white-dark border-2 rounded-full border-[#00A9E2]"
                                                     >
                                                         <input
                                                             type="text"
@@ -373,14 +390,14 @@ const RegisterCover = () => {
                                                             }
                                                         />
                                                         <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                                                            <GrOrganization className='text-white-dark' />
+                                                            <CompanyNameIcon/>
                                                         </span>
                                                         <span>
                                                             <MdArrowDropDown className="text-xl" />
                                                         </span>
                                                     </div>
                                                     {isOpen && (
-                                                        <div className="absolute top-full mt-1 border-1 border-[#FC8404] bg-white rounded-lg w-full z-[100]">
+                                                        <div className="absolute top-full mt-1 border-1 border-[#00A9E2] bg-white rounded-lg w-full z-[100]">
                                                             <ul className="py-1 overflow-y-auto max-h-40">
                                                                 <li className="px-4 py-2 cursor-pointer flex items-center">
                                                                     <input
@@ -421,11 +438,11 @@ const RegisterCover = () => {
                                                             id="ContactNumber"
                                                             type="number"
                                                             placeholder="Contact Number *"
-                                                            className={`form-input py-3 ps-10 placeholder-text-white-dark rounded-full border-[#FC8404]  sm:text-sm ${validatePhoneNumber(user.phone_no) ? 'text-green-500' : 'border-red-500 text-red-600'}`}
+                                                            className={`form-input py-3 ps-10 placeholder-text-white-dark border-2 rounded-full border-[#00A9E2]  sm:text-sm ${validatePhoneNumber(user.phone_no) ? 'text-green-500' : 'border-[#00A9E2] text-red-600'}`}
 
                                                         />
                                                         <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                                                            <MdPhone />
+                                                            <ConatctNumberIcon />
                                                         </span>
                                                     </div>
 
@@ -436,10 +453,10 @@ const RegisterCover = () => {
                                                             id="cr_number"
                                                             type="text"
                                                             placeholder="CR Number *"
-                                                            className="form-input py-3 ps-10 placeholder-text-white-dark rounded-full border-[#FC8404]"
+                                                            className="form-input py-3 ps-10 placeholder-text-white-dark border-2 rounded-full border-[#00A9E2]"
                                                         />
                                                         <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                                                            <MdFormatListNumbered />
+                                                            <CrNumberIcon />
                                                         </span>
                                                     </div>
                                                 </div>
@@ -452,10 +469,10 @@ const RegisterCover = () => {
                                                         onChange={(e) => setuser({ ...user, address: e.target.value })}
                                                         type="text"
                                                         placeholder="Address"
-                                                        className={`form-input py-3 ps-10 placeholder-text-white-dark rounded-full border-[#FC8404]   sm:text-sm ${validateAddress(user.address) ? '' : 'text-red-500'}`}
+                                                        className={`form-input py-3 ps-10 placeholder-text-white-dark border-2 rounded-full border-[#00A9E2]   sm:text-sm ${validateAddress(user.address) ? '' : 'text-red-500'}`}
                                                     />
                                                     <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                                                        <AiTwotoneHome />
+                                                        <AddressIcon />
                                                     </span>
                                                 </div>
                                                 {user.address !== '' && !validateAddress(user.address) && (
@@ -484,38 +501,28 @@ const RegisterCover = () => {
 
                                         <button
                                             type="submit"
-                                            className={` rounded-full   w-full border-2 uppercase border-[#00A9E2]  py-3 font-bold ${!isFormValid ? 'bg-transparent  py-3 border-gray-400 text-black shadow-none cursor-not-allowed' : '  bg-[#00A9E2]  text-white'}`}
+                                            className={` rounded-full mt-3  w-full border-2    font-bold py-3 ${!isFormValid ? 'bg-transparent  text-gray-500 py-3 shadow-none cursor-not-allowed border-gray-500' : '  bg-[#20427F]  text-white'}`}
                                             disabled={!isFormValid}
                                         >
                                             Submit
                                         </button>
-                                    </form>
-                                    <div className="text-center dark:text-white mt-3">
-                                        Already have an account ?&nbsp;
-                                        <Link href="/auth/login" className="uppercase text-[#00A9E2] underline transition hover:font-bold dark:hover:text-white">
-                                            LOG IN
-                                        </Link>
-                                    </div>
-                                </div>
 
+                                        <p className='text-black font-bold text-center'>Already Have Account ?  <Link href="/auth/login">
+                                        <span className='text-[#00A9E2]'>Login</span></Link></p>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-
                     </div>
-                    <div style={{ borderRadius: "0px 0px 10px 10px" }} className='bg-[#20427F]  font-bold  text-center'>
-                        <footer className="py-3 md:w-[90%] w-[95%] m-auto">
-                            <div className="container mx-auto ">
-                                <div className="text-center ">
-                                    <p className="text-white">© 2024 FDO {t("All rights reserved")} Powered by Amysoftech.com</p>
-                                </div>
+                    <div className='  font-bold  text-center'>
+                        <footer className=" md:w-[90%]  m-auto">
+                            <div className="text-center ">
+                                <p className="text-black">© 2024 FDO {t("All rights reserved")} Powered by Amysoftech.com</p>
                             </div>
                         </footer>
                     </div>
                 </div>
             </div>
-
-
-
         </>
     );
 };

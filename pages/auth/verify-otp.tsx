@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-toastify/dist/ReactToastify.css';
-import Herosectionleftimage from "../../public/assets/images/herosection_left_image.png";
+import Herosectionleftimage from "../../public/assets/images/fdoIcon_black.png";
 import Fdomainlogo from "../../public/assets/images/fdo icon3.png";
 import Image from 'next/image'
 import Loader from '@/components/front/loader';
@@ -50,42 +50,47 @@ const Login = () => {
     };
 
     return (
-        <div className='md:p-12 max-sm:p-3  bg-gradient-to-b from-[#C1E9FF] to-[#00A9E2] min-h-[100vh]  max-sm:flex  max-sm:items-center'>
+        <div className=''>
             <ToastContainer />
             {showLoader && (
                 <Loader />
             )}
-            <div style={{
-                backgroundImage: "url('/assets/images/herosection_bg.png')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-
-            }} className='  rounded-xl  shadow-2xl '>
+            <div className='  bg-[#FFFEFC] md:p-4'>
                 <div className="  text-black   flex flex-col gap-5 md:flex-row  items-center  ">
-                    <div className='md:basis-[60%] w-full flex flex-col   items-center   gap-4 max-sm:hidden '>
-                        <div className=''>
-                            <Image
-                                src={Fdomainlogo}
-                                width={500}
-                                height={500}
-                                alt="herosection_left_image"
-                            />
-                        </div>
-                        <div className='flex justify-center items-center mt-12'>
-                            <Image
-                                src={Herosectionleftimage}
-                                width={670}
-                                height={670}
-                                alt="herosection_left_image"
-                            />
+                    <div className='md:basis-[60%] flex flex-col  items-center justify-end  max-sm:hidden'>
+                        <div className='relative md:w-[50vw] md:h-[90vh] md:rounded-lg' style={{
+                            backgroundImage: "url('/assets/images/Authenticationimg.png')",
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                            backgroundRepeat: "no-repeat",
+                            paddingBottom: "56.25%",
+                        }}>
+                            <div className='absolute top-0 left-0 w-full h-full' />
+                            <div className='flex flex-col items-center justify-center min-h-screen'>
+                                    <h1 className="text-xl font-bold !leading-snug text-white md:text-4xl text-center">
+                                        Welcome to FDO
+                                    </h1>
+                                    <p className="text-md  font-semibold leading-normal text-white py-2 p-3 text-center">
+                                        Leading Oman's sustainable fishing and aquaculture, Fisheries Development Oman (FDO) innovates with seven specialized companies. From European seabream to shrimp cultivation, FDO drives marine industry revitalization with large-scale, cutting-edge projects.
+                                    </p>
+                            </div>
+
                         </div>
                     </div>
                     <div className=" md:p-4 basis-[40%]     text-center  max-sm:mt-10 "  >
-                    <Link href="/">
-                            <div className='flex justify-end px-2   '>
+                        <div className='justify-center flex ' >
+                            <Image
+                                src={Herosectionleftimage}
+                                width={400}
+                                height={300}
+                                alt="herosection_left_image"
+                            />
+                        </div>
+                        <Link href="/">
+                            <div className='flex justify-end px-2 max-sm:px-5  '>
                                 <div className='hover:bg-[#00A9E2] bg-[#80d2ee] rounded-full p-2'><TiHome className='text-xl text-white' /></div>
-                            </div></Link>
+                            </div>
+                        </Link>
                         <div className="relative flex w-full flex-col items-center justify-center gap-6 px-4 pb-16 sm:px-6 lg:max-w-[667px]">
                             <div className="w-full max-w-[440px] lg:mt-16">
                                 <div className="mb-6">
@@ -103,7 +108,7 @@ const Login = () => {
                                                     type="text"
                                                     maxLength={1}
                                                     onFocus={() => setIsPasswordFocused(true)}
-                                                    className="w-12 h-12 text-center border rounded"
+                                                    className="w-12 h-12 text-center  rounded border-2 border-[#00A9E2]"
                                                     value={digit}
                                                     onChange={(e) => handleChange(e, index)}
                                                     onKeyDown={(e) => handleKeyDown(e, index)}
@@ -115,7 +120,7 @@ const Login = () => {
                                     <Link href="/auth/password-reset">
                                         <input
                                             type="submit"
-                                            className={`btn  rounded-full hover:bg-[#00A9E2] !mt-6 w-full border-2 uppercase ${isPasswordFocused ? 'bg-[#00A9E2] border-[#00A9E2] text-white py-3' : 'bg-gray-400 py-3 border-gray-400 shadow-none'}`}
+                                            className={`btn  rounded-full hover:bg-[#20427F] !mt-6 w-full border-2 font-bold   ${isPasswordFocused ? 'bg-[#20427F]    text-white py-3' : 'border-[#00A9E2] py-3  shadow-none text-[#00A9E2]'}`}
                                             value="Verify"
                                             disabled={!isPasswordFocused}
                                         />
@@ -131,11 +136,11 @@ const Login = () => {
                     </div>
 
                 </div>
-                <div style={{ borderRadius: "0px 0px 10px 10px" }} className='bg-[#20427F]  font-bold  text-center'>
-                    <footer className="py-3 md:w-[90%] w-[95%] m-auto">
+                <div className='  font-bold  text-center'>
+                    <footer className="p-2 md:w-[90%]  m-auto">
                         <div className="container mx-auto ">
                             <div className="text-center ">
-                                <p className="text-white">© 2024 FDO {("All rights reserved")} Powered by Amysoftech.com</p>
+                                <p className="text-black">© 2024 FDO {("All rights reserved")} Powered by Amysoftech.com</p>
                             </div>
                         </div>
                     </footer>

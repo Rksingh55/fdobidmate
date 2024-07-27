@@ -55,7 +55,7 @@ const Language = () => {
                             </>
                         }
                     >
-                        <ul className="flex gap-1 flex-col  !px-2 font-semibold text-dark dark:text-white-dark dark:text-white-light/90">
+                        <ul className="flex gap-1 flex-col  !px-2 font-semibold  text-dark dark:text-white-dark dark:text-white-light/90">
                             {themeConfig.languageList.map((item: any) => {
                                 return (
                                     <li key={item.code}>

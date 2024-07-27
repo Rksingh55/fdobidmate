@@ -3,13 +3,8 @@ import Header from '@/components/front/Pageheader';
 import Frontheader from '@/components/front/Navbar';
 import React, { useEffect, useState } from 'react';
 import Footer from '@/components/Layouts/Footer';
-import { TDRicon, OMRicon, Tenderdepartmenticon, OMrtransectionIcon } from '../../../public/icons';
+import { StartdateIcon, OMRIcon, RfidepartmentIcon, OrganiszationIcon, TenderDepartmentIcon, TenderEntityIcon,  TenderfeesIcon } from '../../../public/icons';
 import { MdCloudDownload, MdOutlineDateRange } from 'react-icons/md';
-import { FaLock } from 'react-icons/fa';
-import { HiLocationMarker } from 'react-icons/hi';
-import { BiSolidPurchaseTag } from 'react-icons/bi';
-import { GiDatabase } from 'react-icons/gi';
-import { PiBuildingOfficeDuotone } from 'react-icons/pi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
@@ -118,22 +113,22 @@ const TenderPreview = () => {
                                 </div>
                                 <div className='flex md:flex-row justify-between gap-2 py-2 max-sm:flex-wrap'>
                                     <div className="py-2 flex  gap-2">
-                                        
-                                        <MdOutlineDateRange className='text-[#00A9E2] text-xl' />
+
+                                        <StartdateIcon />
                                         <div className='flex    flex-col '>
                                             <label className='font-bold'>Start Date  </label>
-                                            {data.publish_date}
+                                            {data?.publish_date}
                                         </div>
                                     </div>
                                     <div className="py-2 flex gap-2">
-                                        <MdOutlineDateRange className='text-[#00A9E2] text-xl' />
+                                        <StartdateIcon />
                                         <div className='flex    flex-col'>
                                             <label className='font-bold'>Close Date  </label>
                                             {data?.close_date}
                                         </div>
                                     </div>
                                     <div className="py-2 flex gap-2">
-                                        <OMRicon />
+                                        <OMRIcon />
                                         <div className='flex    flex-col'>
                                             <label className='font-bold'>Currency  </label>
                                             {data?.currency.code}
@@ -142,7 +137,7 @@ const TenderPreview = () => {
                                     </div>
 
                                     <div className="py-2 flex gap-2">
-                                        <HiMiniQueueList className='text-lg text-[#00A9E2]' />
+                                        <TenderEntityIcon />
                                         <div className='flex    flex-col'>
                                             <label className='font-bold'>Entity  </label>
                                             {data?.company.name}
@@ -150,7 +145,7 @@ const TenderPreview = () => {
 
                                     </div>
                                     <div className="py-2 flex gap-2">
-                                        <Tenderdepartmenticon />
+                                        <TenderDepartmentIcon />
                                         <div className='flex md:    flex-col'>
                                             <label className='font-bold'>Department  </label>
                                             {data?.department.code}
@@ -168,11 +163,11 @@ const TenderPreview = () => {
 
                                 <div className='mt-3'>
                                     <h3 className="text-xl font-semibold mb-2 text-[#00A9E2]">Tender Dates</h3>
-                                    <table className='rounded-md bg-white mt-3 border-[4px] border-[#00A9E2] '>
+                                    <table className='rounded-md bg-white mt-3 border-[4px] border-[#192B56] '>
                                         <thead className=''>
                                             <tr className=''>
-                                                <th className='p-2 bg-[#00A9E2] text-white'>Date</th>
-                                                <th className='p-2 bg-[#00A9E2] text-white'>Type</th>
+                                                <th className='p-2 bg-[#192B56] text-white'>Date</th>
+                                                <th className='p-2 bg-[#192B56] text-white'>Type</th>
                                             </tr>
                                         </thead>
                                         <tbody className=''>
@@ -198,25 +193,25 @@ const TenderPreview = () => {
 
                                 <div className='mt-12'>
                                     <h3 className="text-xl font-semibold mb-2 text-[#00A9E2]">Applicable Fees</h3>
-                                    <table className='rounded-md bg-white mt-3 border-[4px] border-[#00A9E2] '>
+                                    <table className='rounded-md bg-white mt-3 border-[4px] border-[#192B56] '>
                                         <thead>
                                             <tr className='bg-[#F4F7FF]'>
-                                                <th className='p-2 bg-[#00A9E2] text-white'>Type</th>
-                                                <th className='p-2 bg-[#00A9E2] text-white'>Amount</th>
+                                                <th className='p-2 bg-[#192B56] text-white'>Type</th>
+                                                <th className='p-2 bg-[#192B56] text-white'>Amount</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td className='p-2'>Bid Bond Fees</td>
                                                 {data?.bidbondfeepercentage
-                                                    ? `${data.bidbondfeepercentage}%`
+                                                    ? `${data?.bidbondfeepercentage}%`
                                                     : data?.bidbondfeeamount || 'N/A'}
                                             </tr>
                                             <tr>
                                                 <td className='p-2'>Tender Fees</td>
                                                 <td className='p-2'>
                                                     {data?.tenderfeepercentage
-                                                        ? `${data.tenderfeepercentage}%`
+                                                        ? `${data?.tenderfeepercentage}%`
                                                         : data?.tenderfeeamount || 'N/A'}
                                                 </td>
                                             </tr>
@@ -226,20 +221,20 @@ const TenderPreview = () => {
 
                                 <div className='mt-12'>
                                     <h3 className="text-xl font-semibold mb-2 text-[#00A9E2]">Tender Documents</h3>
-                                    <table className='rounded-md bg-white mt-3 border-[4px] border-[#00A9E2] '>
+                                    <table className='rounded-md bg-white mt-3 border-[4px] border-[#192B56] '>
                                         <thead>
                                             <tr className='bg-[#F4F7FF]'>
-                                                <th className='p-2 bg-[#00A9E2] text-white'>Sr. No</th>
-                                                <th className='p-2 bg-[#00A9E2] text-white'>File Name</th>
-                                                <th className='p-2 bg-[#00A9E2] text-white'>Type</th>
-                                                <th className='p-2 bg-[#00A9E2] text-white'>Size</th>
-                                                <th className='p-2 bg-[#00A9E2] text-white md:flex md:justify-center'>Download</th>
+                                                <th className='p-2 bg-[#192B56] text-white'>Sr. No</th>
+                                                <th className='p-2 bg-[#192B56] text-white'>File Name</th>
+                                                <th className='p-2 bg-[#192B56] text-white'>Type</th>
+                                                <th className='p-2 bg-[#192B56] text-white'>Size</th>
+                                                <th className='p-2 bg-[#192B56] text-white md:flex md:justify-center'>Download</th>
 
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {Array.isArray(data.tender_document) ? (
-                                                data.tender_document.map((item: any, index: any) => (
+                                            {Array?.isArray(data?.tender_document) ? (
+                                                data?.tender_document?.map((item: any, index: any) => (
                                                     <tr key={item.id} >
                                                         <td className='p-2'>{index + 1}</td>
                                                         <td className='p-2'>{item.name?.toString() || 'N/A'}</td>
@@ -259,25 +254,25 @@ const TenderPreview = () => {
 
                                 <h1 className='text-2xl font-semibold mt-12 text-[#00A9E2]'>Item List</h1>
                                 <div className='max-sm:overflow-scroll'>
-                                    <table className='rounded-md bg-white mt-3 border-[4px] border-[#00A9E2] '>
+                                    <table className='rounded-md bg-white mt-3 border-[4px] border-[#192B56] '>
                                         <thead>
                                             <tr className='bg-[#F4F7FF]'>
-                                                <th className='p-2 bg-[#00A9E2] text-white'>Sr. No.</th>
-                                                <th className='p-2 bg-[#00A9E2] text-white'>Category</th>
-                                                <th className='p-2 bg-[#00A9E2] text-white'>Item Name</th>
-                                                <th className='p-2 bg-[#00A9E2] text-white'>UOM</th>
-                                                <th className='p-2 bg-[#00A9E2] text-white'>Quantity</th>
+                                                <th className='p-2 bg-[#192B56] text-white'>Sr. No.</th>
+                                                <th className='p-2 bg-[#192B56] text-white'>Category</th>
+                                                <th className='p-2 bg-[#192B56] text-white'>Item Name</th>
+                                                <th className='p-2 bg-[#192B56] text-white'>UOM</th>
+                                                <th className='p-2 bg-[#192B56] text-white'>Quantity</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {Array.isArray(data.tenderline) ? (
-                                                data.tenderline.map((item: any) => (
+                                            {Array?.isArray(data?.tenderline) ? (
+                                                data?.tenderline?.map((item: any) => (
                                                     <tr key={item.id}>
-                                                        <td className='p-2'>{item.line_no?.toString() || 'N/A'}</td>
-                                                        <td className='p-2'>{item.item_no?.toString() || 'N/A'}</td>
-                                                        <td className='p-2'>{item.product_name?.toString() || 'N/A'}</td>
-                                                        <td className='p-2'>{item.unit.name?.toString() || 'N/A'}</td>
-                                                        <td className='p-2'>{item.quantity?.toString() || 'N/A'}</td>
+                                                        <td className='p-2'>{item?.line_no?.toString() || 'N/A'}</td>
+                                                        <td className='p-2'>{item?.item_no?.toString() || 'N/A'}</td>
+                                                        <td className='p-2'>{item?.product_name?.toString() || 'N/A'}</td>
+                                                        <td className='p-2'>{item?.unit.name?.toString() || 'N/A'}</td>
+                                                        <td className='p-2'>{item?.quantity?.toString() || 'N/A'}</td>
                                                     </tr>
                                                 ))
                                             ) : (
@@ -303,7 +298,7 @@ const TenderPreview = () => {
                             Recent Tenders</div>
                         <div>
                             <div className="">
-                                {tenderlist?.slice(0, 4).map((item) => (
+                                {tenderlist?.slice(0, 4)?.map((item) => (
                                     <Link href={`/tender-list/tender-preview/${item?.encrypt_id}`} key={item?.encrypt_id} >
                                         <div className="cursor-pointer mt-2 border-2 rounded-md bg-white border-[#1E3567] hover:border-[#FC8404]  relative md:p-9 p-3 hover:shadow-md">
                                             <h3 className="text-xl font-semibold py-1 text-[#00A9E2]">{item?.title}</h3>
@@ -311,22 +306,22 @@ const TenderPreview = () => {
 
                                             <div className='flex flex-wrap justify-between gap-3 py-2'>
                                                 <div>
-                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><MdOutlineDateRange className='text-lg' /></span> Start Date : {item?.publish_date}</p>
+                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><StartdateIcon /></span> Start Date : {item?.publish_date}</p>
                                                 </div>
                                                 <div>
-                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><MdOutlineDateRange className='text-lg' /></span> End Date : {item?.close_date}</p>
+                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><StartdateIcon /></span> End Date : {item?.close_date}</p>
                                                 </div>
                                                 <div>
-                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><HiLocationMarker className='text-lg' /></span> Currency : {item?.curr_code}</p>
+                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><OMRIcon /></span> Currency : {item?.curr_code}</p>
                                                 </div>
                                                 <div>
-                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><BiSolidPurchaseTag className='text-lg' /></span> Tender Fees : ${item?.tenderfeeamount}</p>
+                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><TenderfeesIcon /></span> Tender Fees : ${item?.tenderfeeamount}</p>
                                                 </div>
                                                 <div>
-                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><GiDatabase className='text-lg' /></span> Entity : {item?.company}</p>
+                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><TenderEntityIcon/></span> Entity : {item?.company}</p>
                                                 </div>
                                                 <div>
-                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><PiBuildingOfficeDuotone className='text-lg' /></span> Department : {item?.department}</p>
+                                                    <p className='flex gap-1 text-[#4b4949]'><span className='text-[#00A9E2]'><TenderDepartmentIcon /></span> Department : {item?.department}</p>
                                                 </div>
                                             </div>
                                         </div>

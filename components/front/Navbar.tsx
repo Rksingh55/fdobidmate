@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useTranslation } from 'react-i18next';
 import Language from '@/components/language/language';
 import { useEffect, useState } from "react";
-import { MdOutlineClose } from "react-icons/md";
+import { MdArrowDropDown, MdOutlineClose } from "react-icons/md";
 import { CiHome, CiUser } from "react-icons/ci";
 import { TbAlignRight } from "react-icons/tb";
 import SearchPopup from '../front/searchpopup';
@@ -11,6 +11,7 @@ import { RiAuctionFill } from "react-icons/ri";
 import { IoDocumentSharp } from "react-icons/io5";
 import { AiFillHome } from "react-icons/ai";
 import { SiInformatica } from "react-icons/si";
+import Dropdown from "../Dropdown";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -30,10 +31,10 @@ const Navbar = () => {
     return (
         <>
 
-            <header className="myheader ">
-                <nav className="navbar navbar-expand-sm  w-[90%] m-auto j ">
-                    <Link className="navbar-brand" href="/">
-                        <img src="/assets/images/FDO_Logo1.svg" alt="Logo" className=" w-[50px]" />
+            <header className="myheader shadow-sm ">
+                <nav className="navbar navbar-expand-sm  w-[95%] m-auto ">
+                    <Link className="navbar-brand" href="/"> 
+                        <img src="/assets/images/fdoIcon_black.png" alt="Logo" className=" md:w-[280px] w-[200px]" />
                     </Link>
                     <TbAlignRight className="text-gray-500 text-4xl md:hidden" onClick={() => setIsOpen(true)} />
 
@@ -53,7 +54,7 @@ const Navbar = () => {
                                         <Link href="/" onClick={togglePopup}><li className=" hover:bg-gray-100 rounded-xl px-2 py-2 flex gap-2"><AiFillHome className="mt-[2px] text-gray-400" /> Home</li></Link>
 
                                         <Link href="/tender-list" onClick={togglePopup}> <li className=" hover:bg-gray-100 rounded-xl px-2 py-2 flex gap-2"><IoDocumentSharp className="mt-[2px] text-gray-400" />Tenders</li></Link>
-                                        
+
                                         <Link href="/rfi" onClick={togglePopup}> <li className=" hover:bg-gray-100 rounded-xl px-2 py-2 flex gap-2"><SiInformatica className="mt-[2px] text-gray-400" />RFI</li></Link>
                                         <Link href="/auction" onClick={togglePopup}> <li className=" hover:bg-gray-100 rounded-xl px-2 py-2 flex gap-2"><RiAuctionFill className="mt-[2px] text-gray-400" />Auction</li></Link>
                                     </ul>
@@ -77,9 +78,8 @@ const Navbar = () => {
 
                     <div className="navbar-collapse max-sm:hidden" id="collapsibleNavId">
                         <ul className="navbar-nav mx-auto mt-2 mt-lg-0">
-
                         </ul>
-                        <div className="d-flex gap-3" style={{ alignItems: "center" }} >
+                        <div className="flex gap-3 items-center"  >
                             <ul className="navbar-nav mt-2 mt-lg-0 flex gap-4">
                                 <li className="nav-item border-b-2 border-transparent hover:border-[#00A9E2] transition duration-300">
                                     <Link
@@ -107,7 +107,6 @@ const Navbar = () => {
                                 </li>
                             </ul>
 
-
                             <div className="input-wrapper ">
                                 <button className="icon" >
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="15px" width="15px">
@@ -119,36 +118,57 @@ const Navbar = () => {
                             </div>
 
                             <div className="ml-2"> <Language /></div>
-                            <div className="bg-white ">
-                                <div className="bg-white flex justify-between py-3  m-auto font-semibold ">
-                                    <div className="">
-                                        <div className="  text-black flex  gap-2  ">
-                                            {name !== "" ? (
-                                                <Link href="/dashboard/tender">
-                                                    <button className="bg-[#00A9E2] px-6 py-2 text-white rounded-full">
-                                                        {t("Access Bidmate")}
-                                                    </button>
-                                                </Link>
-                                            ) : (
-                                                <Link href="/auth/login">
-                                                    <button className=" bg-[#00A9E2] px-6 py-2 text-white rounded-full ">
-                                                        {t('Login')}
-                                                    </button>
-                                                </Link>
-                                            )}
 
-                                        </div>
+                            <div className="bg-white flex justify-between py-3  m-auto font-semibold ">
+                                <div className="">
+                                    <div className="  text-black flex  gap-2  ">
+
+                                        <>
+                                            <Dropdown
+                                                offset={[0, 8]}
+                                                btnClassName="flex items-center gap-1 text-black  text-white-dark hover:border-primary hover:text-primary dark:bg-black"
+                                                button={
+                                                    <>
+                                                        <div className="bg-[#00A9E2] hover:bg-[#1d7897] px-6 py-2 text-white rounded-full w-full flex items-center gap-1">
+                                                            <div className="text-base font-bold ">Login</div>
+                                                            <span className="shrink-0">
+                                                                <MdArrowDropDown />
+                                                            </span>
+                                                        </div>
+                                                    </>
+                                                }
+                                            >
+                                                <ul className=" flex flex-col bg-white border-2 rounded-md gap-1 p-2  shadow-sm">
+                                                    {name !== "" ? (
+                                                        <Link href="/dashboard/tender">
+                                                            <button className="bg-[#00A9E2] px-6 py-2 text-white rounded-full">
+                                                                {t("Access Bidmate")}
+                                                            </button>
+                                                        </Link>
+                                                    ) : (
+                                                        <Link href="/auth/login">
+                                                            <button className=" bg-[#00A9E2] hover:bg-[#1d7897] px-6 py-2 text-white rounded-full w-full ">
+                                                                {t('Vendor')}
+                                                            </button>
+                                                        </Link>
+                                                    )}
+                                                    <Link href="/auth/login">
+                                                        <button className=" bg-[#00A9E2] hover:bg-[#1d7897] px-6 py-2 text-white rounded-full w-full ">
+                                                            {t('Employee')}
+                                                        </button>
+                                                    </Link>
+
+                                                </ul>
+                                            </Dropdown>
+
+
+                                        </>
+
+
+
                                     </div>
-
                                 </div>
                             </div>
-                            {/* {isSearchOpen && <SearchPopup onClose={() => setIsSearchOpen(false)} isSearchOpen={isSearchOpen} />}
-                            <div onClick={() => setIsSearchOpen(true)} className=" cursor-pointer bg-[#E0F4FB] p-[12px] rounded-full">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="15px" width="15px">
-                                    <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="black" d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"></path>
-                                    <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="black" d="M22 22L20 20"></path>
-                                </svg>
-                            </div> */}
                         </div>
                     </div>
                 </nav>

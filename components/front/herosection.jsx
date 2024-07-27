@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Frontheader from './Navbar';
 import Footer from '../Layouts/Footer';
 import { useEffect, useState } from 'react';
-import Herosectionleftimage from "../../public/assets/images/herosection_left_image.png";
+import Herosectionleftimage from "../../public/assets/images/herosection_mainIcon.png";
 import Fdomainlogo from "../../public/assets/images/fdo_main_logo.png";
 import Image from 'next/image'
 import { ToastContainer, toast } from 'react-toastify';
@@ -22,50 +22,43 @@ export default function Home() {
     return (
         <>
             <Frontheader />
-            {/* ----hersection----- */}
-            <div className='' style={{
-                backgroundImage: "url('/assets/images/herosection_bg.png')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-               
-            }}>
-                <ToastContainer />
-                <div className="  text-black min-h-[88vh]  flex flex-col gap-5 md:flex-row  items-center  ">
-                    <div className='basis-[60%] flex flex-col  items-center  '>
-                        <div className=''>
+            <ToastContainer />
+            <div className="  text-black   h-screen flex flex-col gap-5 md:flex-row  items-center  ">
+                <div className='basis-[60%] flex flex-col  items-center justify-end  '>
+                    <div className='relative md:w-[50vw] md:h-[90vh] md:rounded-md' style={{
+                        backgroundImage: "url('/assets/images/herosection-leftImg.jpg')",
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        backgroundRepeat: "no-repeat",
+                        paddingBottom: "56.25%",
+                    }}>
+                        <div className='absolute top-0 left-0 w-full h-full' />
+                        <div className='justify-center flex items-center' >
                             <Image
-                                src={Fdomainlogo}
-                                width={300}
+                                src={Herosectionleftimage}
+                                width={500}
                                 height={500}
                                 alt="herosection_left_image"
                             />
                         </div>
-                        <div className='flex justify-center items-center mt-10'>
-                            <Image
-                                src={Herosectionleftimage}
-                                width={670}
-                                height={670}
-                                alt="herosection_left_image"
-                            />
-                        </div>
-                    </div>
-                    <div className="  p-4 basis-[40%]     text-center herosectionbg max-sm:mt-[-50px]"  >
-                        <p className='md:py-2  md:text-[18px] text-[12px]'>{t('Welcome To FDO Bidmate Auction House')}</p>
-                        <h1 className="md:text-[30px] text-[25px] font-bold md:mb-4 py-2 text-[#20427F]">
-                            {t('Build, Sell & Collect Digital items')}
-                        </h1>
-                        <p className="mb-6  md:text-[18px] leading-6">
-                            {t('The services will provide safe, efficient, economically andenvironmentally sustainable services in innovative ways to Conserve the Environment of Our Beautiful Oman for Future Generations')}
-                        </p>
-                        <Link href="https://fdo.om/" type='blank'>
-                            <button className="bg-[#00A9E2]  text-white font-semibold py-[12px] px-10 rounded-full mb-6">
-                                {t('Start Exploring')}
-                            </button>
-                        </Link>
-                    </div>
 
+                    </div>
                 </div>
+                <div className="  p-4 basis-[40%]    text-center herosectionbg max-sm:mt-[-50px]"  >
+                    <p className='md:py-2  md:text-[18px] text-[12px]'>{t('Welcome To FDO Bidmate Auction House')}</p>
+                    <h1 className="md:text-[30px] text-[25px] font-bold md:mb-4 py-2 text-[#00A9E2]">
+                        {t('Build, Sell & Collect Digital items')}
+                    </h1>
+                    <p className="mb-6  md:text-[18px] leading-6">
+                        {t('The services will provide safe, efficient, economically andenvironmentally sustainable services in innovative ways to Conserve the Environment of Our Beautiful Oman for Future Generations')}
+                    </p>
+                    <Link href="https://fdo.om/" type='blank'>
+                        <button className="bg-[#192B56]  text-white font-semibold py-[12px] px-12 rounded-full mb-6">
+                            {t('Explore Now ')}
+                        </button>
+                    </Link>
+                </div>
+
             </div>
             <Footer />
         </>

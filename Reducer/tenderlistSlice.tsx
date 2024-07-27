@@ -2,8 +2,6 @@ import { API_BASE_URL, TENDERLIST_API_URL } from '../api.config';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-import { getToken } from '../localStorageUtil';
-
 interface TenderListState {
   list: any[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -20,19 +18,13 @@ export const fetchTenderList = createAsyncThunk(
   'tender/fetchTenderList',
   async (_, { getState }) => {
     const state: any = getState();
-    const token = getToken();
-    if (!token) {
-      console.error('No token found in local storage');
-      return;
-    }
     const response = await axios.get(`${API_BASE_URL}${TENDERLIST_API_URL}`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
-
-    return response?.data?.data?.data;
+    console.log("sss", response?.data)
+    return response?.data?.data?.data || [];
   }
 );
 
