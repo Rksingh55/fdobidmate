@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchTenderList } from '../../../../Reducer/tenderlistSlice';
 import Dashboardbredcrumb from "@/components/dashboardbredcrumb"
 import { FcOk } from 'react-icons/fc';
-import Creditcard from "../../../../components/cards/creditcard"
 import { FaCloudUploadAlt } from 'react-icons/fa';
 
 const Tenderdetails = () => {
