@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchTenderList } from '../../../../Reducer/tenderlistSlice';
 import Dashboardbredcrumb from "@/components/dashboardbredcrumb"
 import { FcOk } from 'react-icons/fc';
-import Creditcard from "../../../../components/cards/creditcard"
+// import Creditcard from "../../../../components/cards/creditcard"
 import { FaEdit, FaEye, FaFileDownload } from 'react-icons/fa';
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { AiOutlineDelete } from 'react-icons/ai';
@@ -230,7 +230,7 @@ const Tenderdetails = () => {
                         </div>
                         <div className='mt-12'>
                             <h3 className="text-xl font-semibold mb-2 text-[#00A9E2] flex gap-2"> <PayemnentIcon />Payment</h3>
-                            <Creditcard />
+                            {/* <Creditcard /> */}
                         </div>
                         <div className='flex justify-between  items-center mt-5'>
                             <div>
