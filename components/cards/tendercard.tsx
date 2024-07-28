@@ -1,12 +1,7 @@
 import React from 'react';
-import { MdKeyboardArrowRight, MdOutlineDateRange } from 'react-icons/md';
-import { HiLocationMarker } from "react-icons/hi";
-import { BiSolidPurchaseTag } from 'react-icons/bi';
-import { GiDatabase } from "react-icons/gi";
-import { PiBuildingOfficeDuotone } from 'react-icons/pi';
-import { OMRIcon, OMRicon, StartdateIcon, Tenderdepartmenticon, TenderDepartmentIcon, TenderEntityIcon, TenderfeesIcon, TenderidIcon } from '../../public/icons';
+import { MdKeyboardArrowRight, } from 'react-icons/md';
+import { OMRIcon, StartdateIcon, TenderDepartmentIcon, TenderEntityIcon, TenderfeesIcon, TenderidIcon } from '../../public/icons';
 import Link from 'next/link';
-import { HiMiniQueueList } from "react-icons/hi2";
 interface TenderCardProps {
     tender: {
         encrypt_id: string;
@@ -41,7 +36,7 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, view }) => {
                                 </span>
                                 <div className='flex    flex-col '>
                                     <label className='font-bold'>Start Date  </label>
-                                    {tender.publish_date}
+                                    {new Date(tender?.publish_date).toISOString().split('T')[0]}
                                 </div>
                             </p>
                         </div>
@@ -53,7 +48,7 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, view }) => {
 
                                 <div className='flex    flex-col'>
                                     <label className='font-bold'>Close Date  </label>
-                                    {tender.close_date}
+                                    {new Date(tender?.close_date).toISOString().split('T')[0]}
                                 </div>
                             </p>
 

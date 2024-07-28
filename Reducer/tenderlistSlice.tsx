@@ -23,7 +23,6 @@ export const fetchTenderList = createAsyncThunk(
         'Content-Type': 'application/json',
       },
     });
-    console.log("sss", response?.data)
     return response?.data?.data?.data || [];
   }
 );

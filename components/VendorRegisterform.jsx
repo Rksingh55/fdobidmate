@@ -45,21 +45,24 @@ function Index() {
             });
             if (response.ok) {
                 const responseData = await response.json();
-                // toast.success(responseData.message.success);
-             alert(responseData.message.success);
+                // toast?.success(responseData?.message?.success);
+               alert(responseData?.message?.success);
 
+                
                 return true;
             } else {
                 const errorData = await response.json();
-                // toast.error(errorData.message.error)
-             alert(errorData.message.error)
+                // toast?.error(errorData?.message?.error)
+               alert(errorData?.message?.error)
 
-
+                
                 return false;
             }
         } catch (error) {
-            // toast.error(error.message.error)
-           alert(error.message.error)
+            // toast?.error(error?.message?.error)
+           alert(error?.message?.error)
+
+            
             return false;
 
         }
@@ -143,10 +146,10 @@ function Index() {
     ];
     return (
         <>
-            <ToastContainer />
             <div className="">
                 <ReviewPopup isOpen={isPopupOpen} onClose={handleClosePopup} message={message} />
             </div>
+            <ToastContainer />
             <div className='animate__animated'>
                 <div className='panel'>
                     <div className="">

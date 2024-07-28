@@ -36,22 +36,24 @@ const ReviewPopup: React.FC<ReviewPopupProps> = ({ isOpen, onClose, message }) =
                 body: JSON.stringify(payload),
             });
             if (response.ok) {
-                const responseData = await response.json();
-                // toast.success(responseData.message.success);
-                alert(responseData.message.success);
+                const responseData = await response?.json();
+                // toast?.success(responseData?.message?.success);
+                alert(responseData?.message?.success);
 
                 setTimeout(() => {
                     router.push("/dashboard/tender")
                 }, 2000)
             } else {
                 const errorData = await response.json();
-                // toast.error(errorData.message.error)
-                alert(errorData.message.error)
+                // toast?.error(errorData?.message?.error)
+                alert(errorData?.message?.error)
+
 
             }
         } catch (error) {
-            // toast.error('something went wrong, please try after some time.')
+            // toast?.error('something went wrong, please try after some time.')
             alert('something went wrong, please try after some time.')
+
 
         }
     };
@@ -60,7 +62,7 @@ const ReviewPopup: React.FC<ReviewPopupProps> = ({ isOpen, onClose, message }) =
     return (
         <>
             <ToastContainer />
-            <div className="fixed h-full w-full inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+            <div className="fixed h-full  inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
                 <div className="bg-white p-6 rounded-lg shadow-lg ">
                     <div className='flex justify-between'>
                         <div>
@@ -75,7 +77,7 @@ const ReviewPopup: React.FC<ReviewPopupProps> = ({ isOpen, onClose, message }) =
                             </button>
                         </div>
                     </div>
-                    <div className='h-[75vh] w-[90vw] overflow-y-scroll'>
+                    <div className='md:h-[72vh] w-full h-full md:w-[80vw] overflow-y-scroll'>
                         <Profile_Preview />
                     </div>
                     {/* <p className="mb-4">{message}</p> */}

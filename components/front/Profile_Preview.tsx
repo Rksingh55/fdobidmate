@@ -23,7 +23,7 @@ function Profile_Preview() {
     const Img = profileImg;
 
     return (
-        <div>
+        <div className=''>
             <div className='flex gap-2 flex-col md:flex-row '>
                 <div className='md:basis-[40%] w-full bg-white  rounded-md py-2 px-4 border-2'>
                     <div className='flex   gap-4'>

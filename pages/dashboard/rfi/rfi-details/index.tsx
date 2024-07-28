@@ -199,7 +199,7 @@ const Tenderdetails = () => {
                                     <th className='p-2 bg-[#00A9E2] text-white'>Description</th>
                                     <th className='p-2 bg-[#00A9E2] text-white'>Quanity</th>
                                     <th className='p-2 bg-[#00A9E2] text-white'>UOM</th>
-                                    <th className='p-2 bg-[#00A9E2] text-white'>Quantity</th>
+                                    <th className='p-2 bg-[#00A9E2] text-white'>Unit</th>
                                     <th className='p-2 bg-[#00A9E2] text-white'>Bidding Price</th>
                                 </tr>
                             </thead>

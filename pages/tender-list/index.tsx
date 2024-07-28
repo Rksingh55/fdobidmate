@@ -89,7 +89,7 @@ const TenderListPage = () => {
   return (
     <>
       <Frontheader />
-      <Header heading="Tender Preview" />
+      <Header heading="Tender List" />
       <div className='w-[90%] m-auto py-3 h-auto'>
         <div className="flex justify-between md:flex-row flex-col gap-2 items-center mb-4 bg-white p-3 rounded-md shadow-md">
           <input
