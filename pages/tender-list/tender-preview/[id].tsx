@@ -21,7 +21,6 @@ const TenderPreview = () => {
     const [data, setData] = useState<any>([]);
     const [daysToGo, setDaysToGo] = useState<number | null>(null);
     const tenderlist = useSelector((state: RootState) => state.Tenderlist.list || []);
-
     useEffect(() => {
         dispatch(fetchTenderList());
     }, [dispatch]);
@@ -30,14 +29,14 @@ const TenderPreview = () => {
         if (data[0]?.close_date) {
             const calculateDaysRemaining = () => {
                 const today = new Date();
-                const closeDate = new Date(data[0].close_date);
+                const closeDate = new Date(data[0]?.close_date);
                 const timeDiff = closeDate.getTime() - today.getTime();
                 const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 return dayDiff;
             };
             setDaysToGo(calculateDaysRemaining());
         }
-    }, [data?.close_date]);
+    }, [data[0]?.close_date]);
 
     const { id } = router.query;
     const [loading, setLoading] = useState<boolean>(true);
@@ -92,7 +91,7 @@ const TenderPreview = () => {
             <Header heading="Tender Preview" />
             <div className='w-[90%] m-auto'>
                 <div className='flex gap-2 mt-3 md:flex-row flex-col'>
-                    <div className='basis-[70%] p-2 bg-white rounded-md'>
+                    <div className='basis-[70%] md:p-2 bg-white rounded-md'>
                         {loading ? (
                             <Skelotonfull />
 
@@ -346,7 +345,6 @@ const TenderPreview = () => {
 
                 </div>
             </div>
-            {/* <Footer /> */}
         </>
     )
 }

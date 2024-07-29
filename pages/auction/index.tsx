@@ -16,7 +16,6 @@ const AuctionCard = () => {
       <div className='w-[90%] m-auto '>
         <Auctioncards />
       </div>
-      <Footer />
 
 
     </>

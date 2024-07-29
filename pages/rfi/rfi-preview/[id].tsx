@@ -85,12 +85,12 @@ const RfiPreview = () => {
             <Frontheader />
             <Header heading="RFI Preview" />
             <div className='w-[90%] m-auto'>
-                    <div className=' p-2 bg-white rounded-md'>
-                        {loading ? (
-                            <Skelotonfull />
+                <div className=' md:p-2 bg-white rounded-md'>
+                    {loading ? (
+                        <Skelotonfull />
 
-                        ) : (
-                            <div className='  bg-white rounded-md mt-4'>
+                    ) : (
+                        <div className='  bg-white rounded-md mt-4'>
                             <div className=" md:p-3 p-1">
                                 <div className='border-2 border-[#00A9E2]  rounded-md  hover:border-[#FC8404] p-2'>
                                     <div className='flex justify-between py-2'>
@@ -98,7 +98,7 @@ const RfiPreview = () => {
                                     </div>
                                     <div className='flex md:flex-row justify-between gap-2  max-sm:flex-wrap'>
                                         <div className="py-2 flex  gap-2">
-            
+
                                             <CompanycodeIcon />
                                             <div className='flex    flex-col '>
                                                 <label className='font-bold '> Code  </label>
@@ -110,7 +110,7 @@ const RfiPreview = () => {
                                             <div className='flex    flex-col'>
                                                 <label className='font-bold'>Project Id  </label>
                                                 12 /02/2023
-            
+
                                             </div>
                                         </div>
                                         <div className="py-2 flex gap-2">
@@ -120,17 +120,17 @@ const RfiPreview = () => {
                                                 OMR100
                                             </div>
                                         </div>
-            
+
                                         <div className="py-2 flex gap-2">
                                             <OMRIcon />
                                             <div className='flex    flex-col'>
                                                 <label className='font-bold'>Currency  </label>
                                                 AOH
                                             </div>
-            
+
                                         </div>
-            
-            
+
+
                                     </div>
                                 </div>
                                 <div className='mt-4'>
@@ -155,8 +155,8 @@ const RfiPreview = () => {
                                                 <th className='p-2  '>Clarification End Date</th>
                                                 <th className='p-2  '>Submission  Date</th>
                                                 <th className='p-2  '>Close  Date</th>
-            
-            
+
+
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -164,13 +164,13 @@ const RfiPreview = () => {
                                                 <td className='p-2'>24/07/2024</td>
                                                 <td className='p-2'>24/07/2024</td>
                                                 <td className='p-2 flex gap-2'>24/07/2024</td>
-            
+
                                             </tr>
                                             <tr>
                                                 <td className='p-2'>24/07/2024</td>
                                                 <td className='p-2'>24/07/2024</td>
                                                 <td className='p-2 '>24/07/2024</td>
-            
+
                                             </tr>
                                         </tbody>
                                     </table>
@@ -193,7 +193,7 @@ const RfiPreview = () => {
                                         </thead>
                                         <tbody>
                                             <tr>
-            
+
                                                 <td className='p-2'>1.</td>
                                                 <td className='p-2'>document1</td>
                                                 <td className='p-2 flex gap-2 items-center cursor-pointer'><FaCloudUploadAlt />Document</td>
@@ -202,10 +202,10 @@ const RfiPreview = () => {
                                         </tbody>
                                     </table>
                                 </div>
-                                    <div>
-                                        <h1 className='text-2xl font-semibold text-[#00A9E2] flex gap-2'> <ItemlistIcon />Item List</h1>
-                                    </div>
-                                   
+                                <div>
+                                    <h1 className='text-2xl font-semibold text-[#00A9E2] flex gap-2'> <ItemlistIcon />Item List</h1>
+                                </div>
+
                                 <div className='max-sm:overflow-scroll' >
                                     <table className='rounded-md bg-white mt-3 border-[4px] border-[#00A9E2] '>
                                         <thead>
@@ -224,7 +224,7 @@ const RfiPreview = () => {
                                                 <td className='p-2'>Lab Supply Agreement</td>
                                                 <td className='p-2'>PCS</td>
                                                 <td className='p-2'>20324</td>
-                                              
+
                                             </tr>
                                             <tr>
                                                 <td className='p-2'>2.</td>
@@ -232,12 +232,13 @@ const RfiPreview = () => {
                                                 <td className='p-2'>Mouse</td>
                                                 <td className='p-2'>DOJEN</td>
                                                 <td className='p-2'>20324</td>
-                                                
+
                                             </tr>
-            
+
                                         </tbody>
-            
+
                                     </table>
+                                </div>
                                     <div className='flex justify-end'>
                                         <button
                                             type="submit"
@@ -246,16 +247,15 @@ const RfiPreview = () => {
                                             Apply Now
                                         </button>
                                     </div>
-                                </div>
-            
+
                             </div>
                         </div>
 
-                        )}
-
-                    </div>
+                    )}
 
                 </div>
+
+            </div>
         </>
     )
 }

@@ -47,10 +47,10 @@ const Language = () => {
                         btnClassName="flex items-center gap-1 text-black  px-2 py-1.5 text-white-dark hover:border-primary hover:text-primary dark:bg-black"
                         button={
                             <>
-                            
+
                                 <div className="text-base font-bold uppercase">{flag}</div>
                                 <span className="shrink-0">
-                                    <MdArrowDropDown  />
+                                    <MdArrowDropDown />
                                 </span>
                             </>
                         }
@@ -61,7 +61,7 @@ const Language = () => {
                                     <li key={item.code}>
                                         <button
                                             type="button"
-                                            className={` w-full  rounded-lg hover:text-primary ${i18n.language === item.code ? 'bg-primary/10 text-primary' : ''}`}
+                                            className={` w-full  rounded-md bg-[#C1E9FF] ${i18n.language === item.code ? 'bg-[#C1E9FF] ' : ''}`}
                                             onClick={() => {
                                                 dispatch(toggleLocale(item.code));
                                                 i18n.changeLanguage(item.code);

@@ -50,7 +50,7 @@ const Login = () => {
     };
 
     return (
-        <div className=''>
+        <div className='max-sm:mt-[10%]'>
             <ToastContainer />
             {showLoader && (
                 <Loader />
@@ -67,12 +67,12 @@ const Login = () => {
                         }}>
                             <div className='absolute top-0 left-0 w-full h-full' />
                             <div className='flex flex-col items-center justify-center min-h-screen'>
-                                    <h1 className="text-xl font-bold !leading-snug text-white md:text-4xl text-center">
-                                        Welcome to FDO
-                                    </h1>
-                                    <p className="text-md  font-semibold leading-normal text-white py-2 p-3 text-center">
-                                        Leading Oman's sustainable fishing and aquaculture, Fisheries Development Oman (FDO) innovates with seven specialized companies. From European seabream to shrimp cultivation, FDO drives marine industry revitalization with large-scale, cutting-edge projects.
-                                    </p>
+                                <h1 className="text-xl font-bold !leading-snug text-white md:text-4xl text-center">
+                                    Welcome to FDO
+                                </h1>
+                                <p className="text-md  font-semibold leading-normal text-white py-2 p-3 text-center">
+                                    Leading Oman's sustainable fishing and aquaculture, Fisheries Development Oman (FDO) innovates with seven specialized companies. From European seabream to shrimp cultivation, FDO drives marine industry revitalization with large-scale, cutting-edge projects.
+                                </p>
                             </div>
 
                         </div>
@@ -135,15 +135,6 @@ const Login = () => {
                         </div>
                     </div>
 
-                </div>
-                <div className='  font-bold  text-center'>
-                    <footer className="p-2 md:w-[90%]  m-auto">
-                        <div className="container mx-auto ">
-                            <div className="text-center ">
-                                <p className="text-black">© 2024 FDO {("All rights reserved")} Powered by Amysoftech.com</p>
-                            </div>
-                        </div>
-                    </footer>
                 </div>
             </div>
 

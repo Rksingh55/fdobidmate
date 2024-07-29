@@ -21,30 +21,18 @@ export default function Home() {
 
     return (
         <>
-            <Frontheader />
             <ToastContainer />
-            <div className="  text-black  md:p-3 flex flex-col gap-5 md:flex-row  items-center  ">
-                <div className='md:basis-[60%] flex flex-col  items-center md:justify-end  '>
-                    <div className='relative md:w-[50vw] md:h-[90vh] md:rounded-md' style={{
-                        backgroundImage: "url('/assets/images/herosection-leftImg.jpg')",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        backgroundRepeat: "no-repeat",
-                        paddingBottom: "56.25%",
-                    }}>
-                        <div className='absolute top-0 left-0 w-full h-full' />
-                        <div className='justify-center flex items-center' >
-                            <Image
-                                src={Herosectionleftimage}
-                                width={500}
-                                height={500}
-                                alt="herosection_left_image"
-                            />
-                        </div>
+            <Frontheader />
+            <div className="  text-black  md:p-3 flex flex-col gap-5 md:flex-row  items-center z-[100] " style={{
+                backgroundImage: "url('/assets/images/homepagebg.svg')",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+            }} >
 
-                    </div>
+                <div className='md:basis-[60%] flex flex-col  items-center md:justify-end  '>
+                    <img src='/assets/images/herosection-leftImg.jpg' className='md:h-[90vh] md:w-[50vw] md:py-8 p-2' />
                 </div>
-                <div className="  p-4 md:basis-[40%]    text-center herosectionbg "  >
+                <div className="  md:p-4 md:basis-[40%]    text-center herosectionbg "  >
                     <p className='md:py-2  md:text-[18px] text-[12px]'>{t('Welcome To FDO Bidmate Auction House')}</p>
                     <h1 className="md:text-[30px] text-[25px] font-bold md:mb-4 py-2 text-[#00A9E2]">
                         {t('Build, Sell & Collect Digital items')}
@@ -60,7 +48,6 @@ export default function Home() {
                 </div>
 
             </div>
-            <Footer />
         </>
     )
 }

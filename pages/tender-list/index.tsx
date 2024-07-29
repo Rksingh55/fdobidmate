@@ -100,7 +100,7 @@ const TenderListPage = () => {
             onChange={handleSearchChange}
           />
           <div className="flex items-center space-x-4">
-            <button onClick={() => setFilters({})} className="text-[#00A9E2] gap-2 font-bold flex justify-end">Reset Filter <GrPowerReset className='mt-[2px]' /></button>
+            <button onClick={() => setFilters({})} className="text-[#00A9E2] gap-2 font-bold flex justify-end max-sm:text-[12px]">Reset Filter <GrPowerReset className='mt-[2px]' /></button>
             <button
               onClick={() => setShowFilter(!showFilter)}
               className={`p-2 ${showFilter ? 'bg-[#00A9E2] rounded-md flex gap-2 font-bold text-white' : 'border rounded-md flex gap-2 font-bold'}`}
@@ -146,7 +146,6 @@ const TenderListPage = () => {
           </div>
         )}
       </div>
-      {/* <Footer /> */}
     </>
   );
 };

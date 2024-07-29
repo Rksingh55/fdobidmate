@@ -14,6 +14,7 @@ import Loader from '@/components/front/loader';
 import { FcApproval, FcOk } from 'react-icons/fc';
 import { TiHome } from 'react-icons/ti';
 import { SuccessIcon } from '@/public/icons';
+import Footer from '@/components/Layouts/Footer';
 
 const Login = () => {
     const router = useRouter()
@@ -39,7 +40,7 @@ const Login = () => {
 
 
     return (
-        <div className=''>
+        <div className='max-sm:mt-[20%]'>
             <ToastContainer />
             {showLoader && (
                 <Loader />
@@ -103,15 +104,6 @@ const Login = () => {
                         </div>
                     </div>
 
-                </div>
-                <div className='  font-bold  text-center'>
-                    <footer className="p-2 md:w-[90%]  m-auto">
-                        <div className="container mx-auto ">
-                            <div className="text-center ">
-                                <p className="text-black">© 2024 FDO {t("All rights reserved")} Powered by Amysoftech.com</p>
-                            </div>
-                        </div>
-                    </footer>
                 </div>
             </div>
 

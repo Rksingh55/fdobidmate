@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import Loader from '@/components/front/loader';
 import { TiHome } from 'react-icons/ti';
 import { PaswordIcon } from '@/public/icons';
+import Footer from '@/components/Layouts/Footer';
 
 const Login = () => {
     const router = useRouter()
@@ -38,7 +39,7 @@ const Login = () => {
         setconfirmpassword("")
     }
     return (
-        <div className=' '>
+        <div className=' max-sm:mt-[10%]'>
             <ToastContainer />
             {showLoader && (
                 <Loader />
@@ -132,15 +133,6 @@ const Login = () => {
                         </div>
                     </div>
 
-                </div>
-                <div className='  font-bold  text-center'>
-                    <footer className="p-2 md:w-[90%]  m-auto">
-                        <div className="container mx-auto ">
-                            <div className="text-center ">
-                                <p className="text-black">© 2024 FDO {t("All rights reserved")} Powered by Amysoftech.com</p>
-                            </div>
-                        </div>
-                    </footer>
                 </div>
             </div>
 

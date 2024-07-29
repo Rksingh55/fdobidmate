@@ -367,7 +367,6 @@ function aucktion() {
           <p className=' text-justify'>Amet consectetur adipisicing elit. Maxime reprehenderit quaerat, velit rem atque vel impedit! Expensive Design.</p>
         </div>
       </div>
-      <Footer />
 
     </>
   )

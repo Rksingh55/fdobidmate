@@ -19,6 +19,7 @@ import OtpModal from "@/components/front/OtpModal"
 import { TiHome } from 'react-icons/ti';
 import { API_BASE_URL, COMPANYLIST_API_URL, OTPVALIDATE_API_URL, REGISTER_API_URL } from '@/api.config';
 import { AddressIcon, CompanyNameIcon, ConatctNumberIcon, CrNumberIcon, EmailsIcon, FullNameIcon, LoginbuttonIcon, OrganiszationIcon, RegisterbuttonIcon } from '@/public/icons';
+import Footer from '@/components/Layouts/Footer';
 
 const RegisterCover = () => {
     const router = useRouter();
@@ -253,8 +254,8 @@ const RegisterCover = () => {
                     <Loader />
                 )}
                 <div className='  bg-[#FFFEFC] p-4  '>
-                    <div className="  text-black  flex flex-col gap-5 md:flex-row  items-center  ">
-                        <div className='md:basis-[60%] flex flex-col  items-center justify-end  max-sm:hidden'>
+                    <div className="  text-black  flex flex-col gap-5 md:flex-row    ">
+                        <div className='md:basis-[60%] flex flex-col  items-center  max-sm:hidden'>
                             <div className='relative md:w-[50vw] md:h-[90vh] md:rounded-lg' style={{
                                 backgroundImage: "url('/assets/images/Authenticationimg.png')",
                                 backgroundSize: "cover",
@@ -264,14 +265,12 @@ const RegisterCover = () => {
                             }}>
                                 <div className='absolute top-0 left-0 w-full h-full' />
                                 <div className='flex flex-col items-center justify-center min-h-screen'>
-                                <div className='flex flex-col items-center justify-center min-h-screen'>
                                     <h1 className="text-xl font-bold !leading-snug text-white md:text-4xl text-center">
                                         Welcome to FDO
                                     </h1>
                                     <p className="text-md  font-semibold leading-normal text-white py-2 p-3 text-center">
                                         Leading Oman's sustainable fishing and aquaculture, Fisheries Development Oman (FDO) innovates with seven specialized companies. From European seabream to shrimp cultivation, FDO drives marine industry revitalization with large-scale, cutting-edge projects.
                                     </p>
-                            </div>
                                 </div>
 
                             </div>
@@ -286,15 +285,15 @@ const RegisterCover = () => {
                                 />
                             </div>
                             <div className='flex items-center gap-2'>
-                            <div className='bg-[#00A9E2] md:w-[60%] w-full m-auto flex gap-2 justify-center p-2 rounded-full '>
-                                <Link href="/auth/login">
-                                    <button className=' hover:bg-[#20427F]  px-8 py-2 rounded-full text-white font-bold flex gap-2'><LoginbuttonIcon />Login</button>
-                                </Link>
-                                <Link href="/auth/register">
-                                    <button className='px-8 py-2 bg-[#20427F] rounded-full text-white font-bold flex gap-2'>
-                                        <RegisterbuttonIcon />Register</button>
-                                </Link>
-                            </div>
+                                <div className='bg-[#00A9E2] md:w-[60%] w-full m-auto flex gap-2 justify-center p-2 rounded-full '>
+                                    <Link href="/auth/login">
+                                        <button className=' hover:bg-[#20427F]  px-8 py-2 rounded-full text-white font-bold flex gap-2'><LoginbuttonIcon />Login</button>
+                                    </Link>
+                                    <Link href="/auth/register">
+                                        <button className='px-8 py-2 bg-[#20427F] rounded-full text-white font-bold flex gap-2'>
+                                            <RegisterbuttonIcon />Register</button>
+                                    </Link>
+                                </div>
                                 <div>
                                     <Link href="/">
                                         <div className='flex justify-end   md:px-4 max-sm:py-3'>
@@ -302,7 +301,7 @@ const RegisterCover = () => {
                                         </div></Link>
                                 </div>
                             </div>
-                            <div className="relative flex w-full flex-col items-center justify-center gap-6 md:px-4 pb-16  sm:px-6 lg:max-w-[667px]">
+                            <div className="relative flex w-full flex-col items-center justify-center gap-6 md:px-4   sm:px-6 lg:max-w-[667px]">
                                 <div className="w-full max-w-[440px] ">
                                     <div className='text-center py-2'>
                                         {message && <p className='text-red-500 font-bold'>{message}*</p>}
@@ -390,7 +389,7 @@ const RegisterCover = () => {
                                                             }
                                                         />
                                                         <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                                                            <CompanyNameIcon/>
+                                                            <CompanyNameIcon />
                                                         </span>
                                                         <span>
                                                             <MdArrowDropDown className="text-xl" />
@@ -482,8 +481,6 @@ const RegisterCover = () => {
                                             </>
 
                                         )}
-
-
                                         <div className="flex gap-2">
                                             <input type="checkbox" />
                                             <p>
@@ -491,14 +488,11 @@ const RegisterCover = () => {
                                                 <span className="underline hover:text-blue-500 cursor-pointer">terms and conditions</span>.
                                             </p>
                                         </div>
-
                                         <OtpModal
                                             isOpen={isOpenModal}
                                             onClose={() => setIsOpenModal(false)}
                                             onOtpSubmit={handleOtpSubmit}
                                         />
-
-
                                         <button
                                             type="submit"
                                             className={` rounded-full mt-3  w-full border-2    font-bold py-3 ${!isFormValid ? 'bg-transparent  text-gray-500 py-3 shadow-none cursor-not-allowed border-gray-500' : '  bg-[#20427F]  text-white'}`}
@@ -506,20 +500,12 @@ const RegisterCover = () => {
                                         >
                                             Submit
                                         </button>
-
                                         <p className='text-black font-bold text-center'>Already Have Account ?  <Link href="/auth/login">
-                                        <span className='text-[#00A9E2]'>Login</span></Link></p>
+                                            <span className='text-[#00A9E2]'>Login</span></Link></p>
                                     </form>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className='  font-bold  text-center'>
-                        <footer className=" md:w-[90%]  m-auto">
-                            <div className="text-center ">
-                                <p className="text-black">© 2024 FDO {t("All rights reserved")} Powered by Amysoftech.com</p>
-                            </div>
-                        </footer>
                     </div>
                 </div>
             </div>

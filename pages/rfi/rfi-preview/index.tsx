@@ -359,7 +359,6 @@ function Rfipreview() {
                     )}
                 </div>
             </div>
-            <Footer />
         </>
     )
 }

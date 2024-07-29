@@ -55,7 +55,7 @@ module.exports = {
                 },
             },
             fontFamily: {
-                nunito: ['Nunito', 'sans-serif'],
+                cairo: ['Cairo', 'sans-serif'],
             },
             spacing: {
                 4.5: '18px',

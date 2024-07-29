@@ -1,5 +1,5 @@
 import type { AppProps } from 'next/app';
-import { ReactElement, ReactNode, Suspense, useEffect } from 'react';
+import { ReactElement, ReactNode, useEffect } from 'react';
 import DefaultLayout from '../components/Layouts/DefaultLayout';
 import { Provider } from 'react-redux';
 import store from '../store/index';
@@ -22,10 +22,9 @@ import "@/styles/layout.css"
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor } from '../store/index';
 import { useRouter } from 'next/router';
-import { getToken } from '@/localStorageUtil';
 import '@mantine/core/styles.css';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-
+import "../styles/globals.css"
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
     getLayout?: (page: ReactElement) => ReactNode;
 };

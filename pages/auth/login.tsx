@@ -14,6 +14,7 @@ import { TiHome } from "react-icons/ti";
 import { API_BASE_URL, LOGIN_API_URL } from '@/api.config';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { EmailIcon, LoginbuttonIcon, PaswordIcon, RegisterbuttonIcon } from '@/public/icons';
+import Footer from '@/components/Layouts/Footer';
 
 const Login = () => {
     const router = useRouter()
@@ -70,7 +71,6 @@ const Login = () => {
                 console.error("Error:", error);
             });
     };
-
     const { t } = useTranslation();
     const handleChange = (e: any) => {
         if (e.target.name == "email") {
@@ -79,18 +79,17 @@ const Login = () => {
             setpassword(e.target.value);
         }
     };
-
     const isFormValid = email !== '' && password !== '';
 
 
     return (
-        <div className=''>
+        <div className='max-sm:mt-[10%]'>
             <ToastContainer />
             {showLoader && (
                 <Loader />
             )}
             <div className='bg-[#FFFEFC] p-4 '>
-                <div className="  text-black  flex flex-col gap-5 md:flex-row  items-center  ">
+                <div className="  text-black  w-d flex flex-col gap-5 md:flex-row  items-center  ">
                     <div className='md:basis-[60%] flex flex-col  items-center justify-end  max-sm:hidden'>
                         <div className='relative md:w-[50vw] md:h-[90vh] md:rounded-lg' style={{
                             backgroundImage: "url('/assets/images/Authenticationimg.png')",
@@ -111,8 +110,8 @@ const Login = () => {
 
                         </div>
                     </div>
-                    <div className=" basis-[40%]  w-full    text-center "  >
-                        <div className='justify-center flex ' >
+                    <div className=" md:basis-[40%]  w-full    text-center "  >
+                        <div className='flex justify-center ' >
                             <Image
                                 src={Herosectionleftimage}
                                 width={400}
@@ -190,8 +189,6 @@ const Login = () => {
                                             Forgot Password?
                                         </Link>
                                     </div>
-
-
                                     <button
                                         type="submit"
                                         className={` rounded-full mt-3  w-full border-2    font-bold py-3 ${!isFormValid ? 'bg-transparent  border-gray-500  py-3 text-gray-500   shadow-none cursor-not-allowed' : '  bg-[#20427F]  text-white'}`}
@@ -200,25 +197,11 @@ const Login = () => {
                                         Login
                                     </button>
                                 </form>
-
-
                             </div>
                         </div>
                     </div>
-
-                </div>
-                <div className='  font-bold  text-center'>
-                    <footer className="p-2 md:w-[90%]  m-auto">
-                        <div className="container mx-auto ">
-                            <div className="text-center ">
-                                <p className="text-black">© 2024 FDO {t("All rights reserved")} Powered by Amysoftech.com</p>
-                            </div>
-                        </div>
-                    </footer>
                 </div>
             </div>
-
-
         </div>
     );
 };
