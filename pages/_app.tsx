@@ -24,7 +24,7 @@ import { persistor } from '../store/index';
 import { useRouter } from 'next/router';
 import '@mantine/core/styles.css';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import "../styles/globals.css"
+
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
     getLayout?: (page: ReactElement) => ReactNode;
 };

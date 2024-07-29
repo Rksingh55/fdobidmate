@@ -1,13 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
-
 .herosectionbg p,
 h1 {
-  font-family: Cairo;
   font-weight: 400;
 }
 
 .navbar-nav li {
-  font-family: Cairo;
   font-weight: 400;
 }
 
@@ -16,6 +12,7 @@ h1 {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  /* height: 100vh; */
 }
 
 .card {
