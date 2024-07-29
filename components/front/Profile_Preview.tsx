@@ -55,7 +55,7 @@ function Profile_Preview() {
                 <div className='md:basis-[60%] w-full  bg-white  rounded-md '>
                     <h1 className='font-semibold text-xl text-[#00A9E2] flex items-center gap-2'><DepartmentIcon />Company Details</h1>
                     <div className='py-2'>
-                        <div className=' w-full border-2 bg-white  rounded-md p-3 flex justify-between'>
+                        <div className=' w-full border-2 bg-white  rounded-md p-3 flex md:flex-row flex-col gap-3  justify-between'>
                             <div className='flex flex-col gap-3'>
                                 <p className='flex justify-between gap-10   '><span className='font-bold flex items-center gap-1'><CalenderIcon /> Company Founding year</span> 1997</p>
                                 <p className='flex justify-between gap-10'> <span className='font-bold flex items-center gap-1'><CrnumberIcon /> CR Number </span> 25</p>
@@ -71,7 +71,7 @@ function Profile_Preview() {
                     <div className='mt-3'>
                         <h1 className='font-semibold text-xl py-2 text-[#00A9E2] flex items-center gap-2'><AccountInformationIcon />Account Information</h1>
                         {data?.vendor_bank_details?.map((item: any) => (
-                            <div className=' w-full border-2 bg-white  rounded-md p-3 flex justify-between'>
+                            <div className=' w-full border-2 bg-white  rounded-md p-3 flex md:flex-row flex-col gap-3 justify-between'>
                                 <div className='flex flex-col gap-3'>
                                     <p className='flex justify-between gap-10 '><span className='font-bold flex items-center gap-1'><AccountNumberIcon />  Account Number</span> {item?.account_no || "N/A"}</p>
                                     <p className='flex justify-between gap-10'> <span className='font-bold flex items-center gap-1'><SwiftCodeIcon /> Swift Code</span> {item?.swift_code || "N/A"}</p>

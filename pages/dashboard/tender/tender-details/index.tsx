@@ -15,6 +15,7 @@ import { FcOk } from 'react-icons/fc';
 import { FaEdit, FaEye, FaFileDownload } from 'react-icons/fa';
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { AiOutlineDelete } from 'react-icons/ai';
+import Creditcard from "../../../../components/cards/Creditcard"
 import { RiExternalLinkLine } from 'react-icons/ri';
 const Tenderdetails = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -229,8 +230,8 @@ const Tenderdetails = () => {
                             </table>
                         </div>
                         <div className='mt-12'>
-                            <h3 className="text-xl font-semibold mb-2 text-[#00A9E2] flex gap-2"> <PayemnentIcon />Payment</h3>
-                            {/* <Creditcard /> */}
+                            <h3 className="text-xl font-semibold mb-2 text-[#00A9E2] flex gap-2 pb-2"> <PayemnentIcon />Payment</h3>
+                            <Creditcard />
                         </div>
                         <div className='flex justify-between  items-center mt-5'>
                             <div>
@@ -282,6 +283,7 @@ const Tenderdetails = () => {
                                 </tbody>
 
                             </table>
+                        </div>
                             <div className='flex justify-end'>
                                 <button
                                     type="submit"
@@ -290,7 +292,6 @@ const Tenderdetails = () => {
                                     Submit
                                 </button>
                             </div>
-                        </div>
 
                     </div>
                 </div>

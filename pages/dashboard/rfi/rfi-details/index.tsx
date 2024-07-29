@@ -228,6 +228,7 @@ const Tenderdetails = () => {
                             </tbody>
 
                         </table>
+                    </div>
                         <div className='flex justify-end'>
                             <button
                                 type="submit"
@@ -236,7 +237,6 @@ const Tenderdetails = () => {
                                 Submit
                             </button>
                         </div>
-                    </div>
 
                 </div>
             </div>
