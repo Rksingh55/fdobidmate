@@ -25,10 +25,13 @@ const Tenderdetails = () => {
     const tenderlist = useSelector((state: RootState) => state.Tenderlist.list || []);
     console.log("tender-tenderlist", tenderlist);
 
-    useEffect(() => {
-        dispatch(fetchTenderList());
-    }, [dispatch]);
+    const fetchTenderData = (page: number) => {
+        dispatch(fetchTenderList(page));
+    };
 
+    useEffect(() => {
+        fetchTenderData(1);
+    }, [dispatch]);
     useEffect(() => {
         if (data?.close_date) {
             const calculateDaysRemaining = () => {
@@ -284,14 +287,14 @@ const Tenderdetails = () => {
 
                             </table>
                         </div>
-                            <div className='flex justify-end'>
-                                <button
-                                    type="submit"
-                                    className="mt-2 px-12 py-2 bg-[#FC8404] text-white font-semibold rounded-md  hover:bg-[#e1a05a]"
-                                >
-                                    Submit
-                                </button>
-                            </div>
+                        <div className='flex justify-end'>
+                            <button
+                                type="submit"
+                                className="mt-2 px-12 py-2 bg-[#FC8404] text-white font-semibold rounded-md  hover:bg-[#e1a05a]"
+                            >
+                                Submit
+                            </button>
+                        </div>
 
                     </div>
                 </div>
