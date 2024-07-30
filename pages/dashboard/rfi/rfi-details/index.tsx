@@ -21,9 +21,7 @@ const Tenderdetails = () => {
     const tenderlist = useSelector((state: RootState) => state.Tenderlist.list || []);
     console.log("tender-tenderlist", tenderlist);
 
-    useEffect(() => {
-        dispatch(fetchTenderList());
-    }, [dispatch]);
+  
 
     useEffect(() => {
         if (data?.close_date) {
