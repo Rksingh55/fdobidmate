@@ -13,6 +13,8 @@ import { API_BASE_URL, GENERAL_INFORMATION_FORM_API_URL } from '@/api.config';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import FormSkeltonloader from "../cards/FormSkeletonloader"
+import Swal from 'sweetalert2';
+
 interface User {
     suppliertype_id: string;
     vendor_request_id: string;
@@ -175,8 +177,12 @@ const GeneralInformation: React.FC = () => {
             if (response.ok) {
                 const responseData = await response.json();
                 localStorage.setItem("vendorId", responseData.data)
-                setMessage('General data submitted successful!');
-                setShowPopup(true);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: responseData?.message?.success || 'General data submitted successful!',
+                    customClass: 'sweet-alerts',
+                });
             } else {
                 const errorData = await response.json();
                 if (errorData && errorData.errors) {
@@ -184,7 +190,6 @@ const GeneralInformation: React.FC = () => {
                         const errorMessage = errorData.errors[field][0];
                         toast.error(`${errorMessage}`);
                     });
-
                 }
             }
         } catch (error) {

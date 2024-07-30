@@ -12,6 +12,7 @@ import { API_BASE_URL, COMPANYDETAIL_API_URL } from '@/api.config';
 import Select from 'react-select';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2';
 
 
 interface User {
@@ -89,18 +90,7 @@ const Companydetails: React.FC = () => {
         label: item.name
     }));
 
-    // Function to handle category changes
-    // const handleCategoryChange = (selectedOptions: any) => {
-    //     const selectedCategories = selectedOptions.map((option: any) => ({
-    //         id: option.value,
-    //         name: option.label,
-    //     }));
 
-    //     setUser({
-    //         ...user,
-    //         category: selectedCategories,
-    //     });
-    // };
     const handleCategoryChange = (selectedOptions: any) => {
         const selectedCategoryIds = selectedOptions.map((option: any) => option.value);
         setUser({
@@ -150,8 +140,12 @@ const Companydetails: React.FC = () => {
 
                 if (response.ok) {
                     const responseData = await response.json();
-                    setMessage(responseData.message.success);
-                    setShowPopup(true);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: responseData?.message?.success || 'Company data submitted successful!',
+                        customClass: 'sweet-alerts',
+                    });
                 } else {
                     const errorData = await response.json();
                     if (errorData && errorData.errors) {
@@ -245,8 +239,8 @@ const Companydetails: React.FC = () => {
                                     value={user.cr_number}
                                     maxLength={20}
                                 />
-                                {errors.cr_number && (
-                                    <p className="text-red-500 text-sm">{errors.cr_number}</p>
+                                {errors?.cr_number && (
+                                    <p className="text-red-500 text-sm">{errors?.cr_number}</p>
                                 )}
                             </div>
                         </div>

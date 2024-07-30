@@ -1,26 +1,31 @@
 import { useState, useEffect } from 'react';
 import TenderCard from '@/components/cards/tendercard';
-import Filter from '@/components/cards/filtercard';
+import Filter from '@/components/cards/tender_card';
 import BlankLayout from '@/components/Layouts/BlankLayout';
 import Frontheader from '@/components/front/Navbar';
 import Header from '@/components/front/Pageheader';
-import { BiSliderAlt, BiSolidServer } from 'react-icons/bi';
-import { IoGridSharp } from 'react-icons/io5';
-import Footer from '@/components/Layouts/Footer';
+import { BiSliderAlt } from 'react-icons/bi';
 import { fetchTenderList } from '../../Reducer/tenderlistSlice';
 import { RootState, AppDispatch } from '@/store';
 import { useSelector, useDispatch } from 'react-redux';
 import SkeletonCard from '@/components/cards/SkeletonCard';
 import { GrPowerReset } from 'react-icons/gr';
 import { GridIcon, ListIcon } from '@/public/icons';
+import { MdNavigateNext } from 'react-icons/md';
+import { IoChevronBackSharp } from 'react-icons/io5';
 
 const TenderListPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const tenderlist = useSelector((state: RootState) => state.Tenderlist.list);
   const status = useSelector((state: RootState) => state.Tenderlist.status);
   const error = useSelector((state: RootState) => state.Tenderlist.error);
+  const pagination = useSelector((state: RootState) => state.Tenderlist.pagination);
+  const fetchTenderData = (page: number) => {
+    dispatch(fetchTenderList(page));
+  };
+
   useEffect(() => {
-    dispatch(fetchTenderList());
+    fetchTenderData(1);
   }, [dispatch]);
 
   const [view, setView] = useState<'list' | 'grid'>('list');
@@ -47,9 +52,7 @@ const TenderListPage = () => {
       return;
     }
     let tempTenders = [...tenderlist];
-    if (filters?.encrypt_id) {
-      tempTenders = tempTenders.filter(tender => tender.encrypt_id.includes(filters.encrypt_id));
-    }
+
     if (filters?.code) {
       tempTenders = tempTenders.filter(tender => tender.code.includes(filters.code));
     }
@@ -68,24 +71,33 @@ const TenderListPage = () => {
     if (sortBy === 'mostRecent') {
       tempTenders.sort((a, b) => new Date(b.publish_date).getTime() - new Date(a.publish_date).getTime());
     }
-
     setFilteredTenders(tempTenders);
   }, [filters, sortBy, tenderlist]);
 
   useEffect(() => {
-    let searchFilteredTenders = [...filteredTenders];
-    searchFilteredTenders = searchFilteredTenders.filter(tender => {
-      return `${tender.code} ${tender.encrypt_id} ${tender.title} ${tender.publish_date} ${tender.curr_code} ${tender.tenderfeeamount} ${tender.company} ${tender.department}`
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+    if (!searchQuery) {
+      setFilteredTenders(tenderlist);
+      return;
+    }
+
+    const searchFilteredTenders = tenderlist.filter(tender => {
+      const combinedText = `${tender.code} ${tender.encrypt_id} ${tender.title} ${tender.publish_date} ${tender.curr_code} ${tender.tenderfeeamount} ${tender.company} ${tender.department}`;
+      return combinedText.toLowerCase().includes(searchQuery.toLowerCase());
     });
+
     setFilteredTenders(searchFilteredTenders);
-  }, [searchQuery]);
+  }, [searchQuery, tenderlist]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
+  const handlePageChange = (page: number) => {
+    fetchTenderData(page);
+  };
+  const { currentPage, lastPage } = pagination;
 
+  // Generate an array of page numbers
+  const pages = Array.from({ length: lastPage }, (_, i) => i + 1);
   return (
     <>
       <Frontheader />
@@ -94,7 +106,7 @@ const TenderListPage = () => {
         <div className="flex justify-between md:flex-row flex-col gap-2 items-center mb-4 bg-white p-3 rounded-md shadow-md">
           <input
             type="text"
-            placeholder="Search by (Tender Id, Tender Title, Tender Type)"
+            placeholder="Search by (Tender Id, Tender Title, Tender Currency, Tender Fees, Tender Department, Tender Entity )"
             className="p-2 w-2/3 outline-none"
             value={searchQuery}
             onChange={handleSearchChange}
@@ -117,7 +129,7 @@ const TenderListPage = () => {
         </div>
         {status === 'loading' && (
           <div className="flex flex-wrap gap-4">
-            {Array.from({ length: 6 }).map((_, index) => (
+            {Array.from({ length: 10 }).map((_, index) => (
               <SkeletonCard key={index} />
             ))}
           </div>
@@ -143,6 +155,41 @@ const TenderListPage = () => {
                 <Filter filters={filters} setFilters={setFilters} />
               </div>
             )}
+          </div>
+        )}
+        {status === 'succeeded' && (
+          <div className="mt-4 flex justify-end">
+            <div className="flex gap-2">
+              <button
+                disabled={pagination.currentPage === 1}
+                onClick={() => handlePageChange(pagination.currentPage - 1)}
+                className="px-3 py-2 border rounded-md bg-gray-200 hover:bg-[#FC8404] hover:text-white"
+              >
+                <IoChevronBackSharp />
+              </button>
+
+              <div className="flex gap-2 flex-wrap">
+                {pages.map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`px-2 py-1 border rounded-md ${page === currentPage
+                        ? 'bg-[#FC8404] text-white'
+                        : 'bg-gray-200 hover:bg-[#FC8404] hover:text-white'
+                      }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+              </div>
+              <button
+                disabled={pagination.currentPage === pagination.lastPage}
+                onClick={() => handlePageChange(pagination.currentPage + 1)}
+                className="px-3 py-2 border rounded-md bg-gray-200 hover:bg-[#FC8404] hover:text-white"
+              >
+                <MdNavigateNext className='text-xl' />
+              </button>
+            </div>
           </div>
         )}
       </div>

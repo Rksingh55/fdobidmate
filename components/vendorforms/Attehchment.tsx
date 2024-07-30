@@ -7,6 +7,7 @@ import { FaCloudUploadAlt } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SuccessPopup from '../front/SuccessPopup';
+import Swal from 'sweetalert2';
 interface Document {
     type: string;
     files: File[];
@@ -77,8 +78,12 @@ const HomePage: React.FC = () => {
             });
             if (response.ok) {
                 const Data = await response.json();
-                setMessage(Data.message.success);
-                setShowPopup(true);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: Data?.message?.success || 'Attachment submitted successful',
+                    customClass: 'sweet-alerts',
+                });
                 setDocuments((prevDocuments) => {
                     const existingDocument = prevDocuments.find(doc => doc.type === type);
                     if (existingDocument) {
@@ -90,10 +95,23 @@ const HomePage: React.FC = () => {
                 });
             } else {
                 const errorData = await response.json();
-                toast.error(errorData.message.error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: errorData?.message?.error || 'An error occurred. Please try again.',
+                    padding: '2em',
+                    customClass: 'sweet-alerts',
+                });
             }
         } catch (error) {
-            toast.error('Error uploading documents')
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Error uploading documents',
+                padding: '2em',
+                customClass: 'sweet-alerts',
+            });
+
 
         }
     };
@@ -155,7 +173,7 @@ const HomePage: React.FC = () => {
                                     </button>
                                 </td>
                                 <td className=" text-gray-800 text-center">
-                                    Static data -  ( 2 )
+                                    --
                                 </td>
                             </tr>
                         ))}

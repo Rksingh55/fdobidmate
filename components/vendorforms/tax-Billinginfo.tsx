@@ -14,6 +14,7 @@ import { API_BASE_URL, TAXBILLING_API_URL } from '@/api.config';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import FormSkeltonloader from "../cards/FormSkeletonloader"
+import Swal from 'sweetalert2';
 
 function TaxBillinginfo() {
     const { t, i18n } = useTranslation();
@@ -104,15 +105,30 @@ function TaxBillinginfo() {
                 });
                 if (response.ok) {
                     const responseData = await response.json();
-                    setMessage('Tax & Billing details data submitted');
-                    setShowPopup(true);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: responseData?.message?.success || 'Tax & Billing details data submitted',
+                        customClass: 'sweet-alerts',
+                    });
                 } else {
                     const errorData = await response.json();
-                    toast.error(errorData.message.success);
-
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: errorData?.message?.error || 'An error occurred. Please try again.',
+                        padding: '2em',
+                        customClass: 'sweet-alerts',
+                    });
                 }
             } catch (error) {
-                toast.error('Error submitting form');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Error submitting form',
+                    padding: '2em',
+                    customClass: 'sweet-alerts',
+                });
             }
         }
     };

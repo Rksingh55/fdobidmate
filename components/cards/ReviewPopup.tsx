@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { API_BASE_URL, VENDOR_APPROVAL_API_URL } from '@/api.config';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2';
 
 interface ReviewPopupProps {
     isOpen: boolean;
@@ -37,28 +38,36 @@ const ReviewPopup: React.FC<ReviewPopupProps> = ({ isOpen, onClose, message }) =
             });
             if (response.ok) {
                 const responseData = await response?.json();
-                // toast?.success(responseData?.message?.success);
-                alert(responseData?.message?.success);
-
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: responseData?.message?.success || 'Vendor has Completed his Profile.',
+                    padding: '2em',
+                    customClass: 'sweet-alerts',
+                });
                 setTimeout(() => {
                     router.push("/dashboard/tender")
                 }, 2000)
             } else {
                 const errorData = await response.json();
-                // toast?.error(errorData?.message?.error)
-                alert(errorData?.message?.error)
-
-
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: errorData?.message?.error || 'An error occurred. Please try again.',
+                    padding: '2em',
+                    customClass: 'sweet-alerts',
+                });
             }
         } catch (error) {
-            // toast?.error('something went wrong, please try after some time.')
-            alert('something went wrong, please try after some time.')
-
-
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'An error occurred. Please try again.',
+                padding: '2em',
+                customClass: 'sweet-alerts',
+            });
         }
     };
-
-
     return (
         <>
             <ToastContainer />
@@ -80,7 +89,6 @@ const ReviewPopup: React.FC<ReviewPopupProps> = ({ isOpen, onClose, message }) =
                     <div className='md:h-[72vh] w-full h-full md:w-[80vw] overflow-y-scroll'>
                         <Profile_Preview />
                     </div>
-                    {/* <p className="mb-4">{message}</p> */}
                     <div className=' flex justify-end py-2'>
                         <div className='flex gap-2'>
                             <button onClick={onClose} className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4  ltr:ml-auto rtl:mr-auto'>

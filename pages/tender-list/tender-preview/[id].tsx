@@ -21,8 +21,12 @@ const TenderPreview = () => {
     const [data, setData] = useState<any>([]);
     const [daysToGo, setDaysToGo] = useState<number | null>(null);
     const tenderlist = useSelector((state: RootState) => state.Tenderlist.list || []);
+    const fetchTenderData = (page: number) => {
+        dispatch(fetchTenderList(page));
+    };
+
     useEffect(() => {
-        dispatch(fetchTenderList());
+        fetchTenderData(1);
     }, [dispatch]);
 
     useEffect(() => {

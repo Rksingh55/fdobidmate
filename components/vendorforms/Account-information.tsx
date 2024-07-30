@@ -10,6 +10,7 @@ import { RiDeleteBin5Fill } from 'react-icons/ri';
 import { MdAddBox } from 'react-icons/md';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2';
 interface BankAccount {
     bank_name: string;
     account_holder_name: string;
@@ -151,18 +152,34 @@ function AccountInformation() {
                 },
                 body: JSON.stringify(payload),
             });
-
             if (response.ok) {
                 const responseData = await response.json();
                 localStorage.setItem("vendorId", responseData.data);
-                setMessage('Account Information submitted successfully!');
-                setShowPopup(true);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: responseData?.message?.success || 'Account Information submitted successfully!',
+                    customClass: 'sweet-alerts',
+                });
             } else {
                 const errorData = await response.json();
-                toast.error(errorData.message.error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: errorData?.message?.error || 'An error occurred. Please try again.',
+                    padding: '2em',
+                    customClass: 'sweet-alerts',
+                });
             }
         } catch (error) {
             console.error('Error submitting form:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Error submitting form',
+                padding: '2em',
+                customClass: 'sweet-alerts',
+            });
         }
     };
 
@@ -172,14 +189,14 @@ function AccountInformation() {
 
     return (
         <div>
-                        <ToastContainer />
+            <ToastContainer />
 
             <SuccessPopup
                 message={message}
                 show={showPopup}
                 onClose={handleClosePopup}
             />
-         
+
             <form className="space-y-3 dark:text-white">
                 <div className='border-1 p-2 rounded-md flex flex-col gap-2'>
                     <div className="row">

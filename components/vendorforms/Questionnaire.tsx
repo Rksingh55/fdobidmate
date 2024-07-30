@@ -9,6 +9,7 @@ import SuccessPopup from '../front/SuccessPopup';
 import { API_BASE_URL, QUESTIONAIRE_API_URL } from '@/api.config';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2';
 interface Answer {
     [key: string]: string;
 }
@@ -35,7 +36,7 @@ function Questionnaire() {
 
     useEffect(() => {
         setVendorlist(vendorInformationList);
-        if ( vendorlist?.vendor_questionnaire) {
+        if (vendorlist?.vendor_questionnaire) {
             setUser(prevUser => ({
                 ...prevUser,
                 answer: vendorlist?.vendor_questionnaire.answer || "",
@@ -56,7 +57,7 @@ function Questionnaire() {
         }));
     };
 
-   
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         const token = getToken();
@@ -77,14 +78,31 @@ function Questionnaire() {
 
             if (response.ok) {
                 const responseData = await response.json();
-                setMessage(responseData.message.success);
-                setShowPopup(true);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: responseData?.message?.success || 'Questionnaire data submit successfull.',
+                    customClass: 'sweet-alerts',
+                });
             } else {
                 const errorData = await response.json();
-               toast.error(errorData.message.error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: errorData?.message?.error || 'An error occurred. Please try again.',
+                    padding: '2em',
+                    customClass: 'sweet-alerts',
+                });
             }
         } catch (error) {
             console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Error to submit form. Please try again.',
+                padding: '2em',
+                customClass: 'sweet-alerts',
+            });
         }
     };
 
@@ -98,7 +116,7 @@ function Questionnaire() {
                 onClose={handleClosePopup}
             />
             <form className="space-y-3 dark:text-white" onSubmit={handleSubmit}>
-                
+
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="mb-3">
@@ -137,7 +155,7 @@ function Questionnaire() {
                                                             name={`question_${item.id}`}
                                                             value="no"
                                                             onChange={() => handleAnswerChange(item.id, 'no')}
-                                                            
+
                                                             required
                                                         />
                                                     </div>

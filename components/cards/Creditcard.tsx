@@ -54,13 +54,13 @@ function Creditcard() {
                 </div>
             </div>
             <div className='flex justify-end'>
-                                <button
-                                    type="submit"
-                                    className="mt-2 px-12 py-2 bg-[#FC8404] text-white font-semibold rounded-md  hover:bg-[#e1a05a]"
-                                >
-                                   Pay
-                                </button>
-                            </div>
+                <button
+                    type="submit"
+                    className="mt-2 px-12 py-2 bg-[#FC8404] text-white font-semibold rounded-md  hover:bg-[#e1a05a]"
+                >
+                    Pay
+                </button>
+            </div>
         </>
     )
 }

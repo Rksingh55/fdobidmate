@@ -17,6 +17,7 @@ import ReviewPopup from "../components/cards/ReviewPopup"
 import { API_BASE_URL, VERIFY_VENDORDATA_API_URL } from '../api.config';
 import { useRouter } from 'next/router';
 import { getToken } from '../localStorageUtil';
+import Swal from 'sweetalert2';
 
 function Index() {
     const router = useRouter()
@@ -45,24 +46,33 @@ function Index() {
             });
             if (response.ok) {
                 const responseData = await response.json();
-                // toast?.success(responseData?.message?.success);
-               alert(responseData?.message?.success);
-
-                
+                Swal.fire({
+                    icon: 'success',
+                    title: responseData?.message?.success || 'Vendor has Completed his Profile.',
+                    text: 'Please Review Your Information.',
+                    customClass: 'sweet-alerts',
+                });
                 return true;
             } else {
                 const errorData = await response.json();
-                // toast?.error(errorData?.message?.error)
-               alert(errorData?.message?.error)
-
-                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: errorData?.message?.error || 'An error occurred. Please try again.',
+                    padding: '2em',
+                    customClass: 'sweet-alerts',
+                });
                 return false;
             }
-        } catch (error) {
-            // toast?.error(error?.message?.error)
-           alert(error?.message?.error)
 
-            
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: errorData?.message?.error || 'An error occurred. Please try again.',
+                padding: '2em',
+                customClass: 'sweet-alerts',
+            });
             return false;
 
         }
