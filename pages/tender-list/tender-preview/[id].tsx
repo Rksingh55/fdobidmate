@@ -113,7 +113,7 @@ const TenderPreview = () => {
                                         <StartdateIcon />
                                         <div className='flex    flex-col '>
                                             <label className='font-bold'>Start Date  </label>
-                                            {new Date(data[0]?.publish_date).toISOString().split('T')[0]}
+                                            {new Date(data[0]?.publish_date)?.toISOString().split('T')[0]}
                                         </div>
                                     </div>
                                     <div className="py-2 flex gap-2">
@@ -163,8 +163,8 @@ const TenderPreview = () => {
                                     <table className='rounded-md bg-white mt-3 border-[4px] border-[#192B56] '>
                                         <thead className=''>
                                             <tr className=''>
+                                                <th className='p-2 bg-[#192B56] text-white'>Title</th>
                                                 <th className='p-2 bg-[#192B56] text-white'>Date</th>
-                                                <th className='p-2 bg-[#192B56] text-white'>Type</th>
                                             </tr>
                                         </thead>
                                         <tbody className=''>
@@ -235,7 +235,7 @@ const TenderPreview = () => {
                                                 <th className='p-2 bg-[#192B56] text-white'>Sr. No</th>
                                                 <th className='p-2 bg-[#192B56] text-white'>File Name</th>
                                                 <th className='p-2 bg-[#192B56] text-white'>Type</th>
-                                                <th className='p-2 bg-[#192B56] text-white'>Size</th>
+                                                <th className='p-2 bg-[#192B56] text-white'>Status</th>
                                                 <th className='p-2 bg-[#192B56] text-white md:flex md:justify-center'>Download</th>
 
                                             </tr>
@@ -247,7 +247,7 @@ const TenderPreview = () => {
                                                         <td className='p-2'>{index + 1}</td>
                                                         <td className='p-2'>{item.name?.toString() || 'N/A'}</td>
                                                         <td className='p-2'>{item.type?.toString() || 'N/A'}</td>
-                                                        <td className='p-2'>Kb</td>
+                                                        <td className='p-2'>{item.status?.toString() || 'N/A'}</td>
                                                         <td className='p-2 flex justify-center'><MdCloudDownload className='text-[#00A9E2] text-xl cursor-pointer' /></td>
                                                     </tr>
                                                 ))

@@ -188,12 +188,24 @@ const GeneralInformation: React.FC = () => {
                 if (errorData && errorData.errors) {
                     Object.keys(errorData.errors).forEach(field => {
                         const errorMessage = errorData.errors[field][0];
-                        toast.error(`${errorMessage}`);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: errorMessage || 'An error occurred. Please try again.',
+                            padding: '2em',
+                            customClass: 'sweet-alerts',
+                        });
                     });
                 }
             }
         } catch (error) {
-            toast.error('Failed to submit form. Please try again later.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Failed to submit form. Please try again later.',
+                padding: '2em',
+                customClass: 'sweet-alerts',
+            });
         }
 
     };

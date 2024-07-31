@@ -22,7 +22,6 @@ import Swal from 'sweetalert2';
 function Index() {
     const router = useRouter()
     const [activeTab, setActiveTab] = useState(1);
-    const [error, seterror] = useState('')
     const [completedTabs, setCompletedTabs] = useState([]);
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [message, setMessage] = useState('Please Verify or recheck all the Information before submit the form');

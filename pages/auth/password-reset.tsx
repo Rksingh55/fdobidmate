@@ -13,6 +13,8 @@ import Loader from '@/components/front/loader';
 import { TiHome } from 'react-icons/ti';
 import { PaswordIcon } from '@/public/icons';
 import Footer from '@/components/Layouts/Footer';
+import Swal from 'sweetalert2';
+import { API_BASE_URL, UPDATE_PASSWORD_API_URL } from '@/api.config';
 
 const Login = () => {
     const router = useRouter()
@@ -20,7 +22,33 @@ const Login = () => {
     const [showLoader, setShowLoader] = useState(false);
     const [password, setpassword] = useState("");
     const [error, seterror] = useState("");
-    const handleSubmit = (e: any) => {
+    const [user, setuser] = useState({})
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+        const payload = {
+            ...user,
+            email: "muskan@gmail.com",
+            password: password,
+            confirmpassword: confirmpassword
+        };
+        try {
+            const response = await fetch(`${API_BASE_URL}${UPDATE_PASSWORD_API_URL}`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                router.push("/auth/password-updated")
+            } else {
+                seterror(data.message.error);
+
+            }
+        } catch (error) {
+            seterror("something went wrong ! please try after some time");
+        }
 
     };
     const { t, i18n } = useTranslation();
@@ -56,12 +84,12 @@ const Login = () => {
                         }}>
                             <div className='absolute top-0 left-0 w-full h-full' />
                             <div className='flex flex-col items-center justify-center min-h-screen'>
-                                    <h1 className="text-xl font-bold !leading-snug text-white md:text-4xl text-center">
-                                        Welcome to FDO
-                                    </h1>
-                                    <p className="text-md  font-semibold leading-normal text-white py-2 p-3 text-center">
-                                        Leading Oman's sustainable fishing and aquaculture, Fisheries Development Oman (FDO) innovates with seven specialized companies. From European seabream to shrimp cultivation, FDO drives marine industry revitalization with large-scale, cutting-edge projects.
-                                    </p>
+                                <h1 className="text-xl font-bold !leading-snug text-white md:text-4xl text-center">
+                                    Welcome to FDO
+                                </h1>
+                                <p className="text-md  font-semibold leading-normal text-white py-2 p-3 text-center">
+                                    Leading Oman's sustainable fishing and aquaculture, Fisheries Development Oman (FDO) innovates with seven specialized companies. From European seabream to shrimp cultivation, FDO drives marine industry revitalization with large-scale, cutting-edge projects.
+                                </p>
                             </div>
 
                         </div>
@@ -94,7 +122,7 @@ const Login = () => {
                                                 onChange={handleChange}
                                                 id="Password" />
                                             <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                                            <PaswordIcon />
+                                                <PaswordIcon />
                                             </span>
                                         </div>
                                     </div>
@@ -105,28 +133,25 @@ const Login = () => {
                                                 onChange={handleChange}
                                                 id="confirmpassword" />
                                             <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                                            <PaswordIcon />
+                                                <PaswordIcon />
                                             </span>
                                         </div>
                                     </div>
-
-                                    <Link href="/auth/password-updated">
-                                        <button
-                                            type="submit"
-                                            className={` rounded-full mt-4  w-full border-2   py-3 font-bold ${!isFormValid ? 'bg-transparent  py-3 border-gray-400  text-gray-500  shadow-none cursor-not-allowed' : '  bg-[#20427F]  text-white'}`}
-                                            disabled={!isFormValid}
-                                        >
-                                            Update Password
-                                        </button>
-
-                                    </Link>
-                                </form>
                                     <button
-                                        className={"rounded-full mt-3  w-full border-2    font-bold py-3  cursor-pointer hover:bg-[#20427F] border-[#00A9E2] text-[#00A9E2] shadow-none  hover:text-white"}
-                                        onClick={cancel}
+                                        type="submit"
+                                        onSubmit={handleSubmit}
+                                        className={` rounded-full mt-4  w-full border-2   py-3 font-bold ${!isFormValid ? 'bg-transparent  py-3 border-gray-400  text-gray-500  shadow-none cursor-not-allowed' : '  bg-[#20427F]  text-white'}`}
+                                        disabled={!isFormValid}
                                     >
-                                        Cancel
+                                        Update Password
                                     </button>
+                                </form>
+                                <button
+                                    className={"rounded-full mt-3  w-full border-2    font-bold py-3  cursor-pointer hover:bg-[#20427F] border-[#00A9E2] text-[#00A9E2] shadow-none  hover:text-white"}
+                                    onClick={cancel}
+                                >
+                                    Cancel
+                                </button>
 
 
                             </div>

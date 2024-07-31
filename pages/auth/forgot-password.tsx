@@ -15,14 +15,15 @@ import { AiTwotoneMail } from 'react-icons/ai';
 import { TiHome } from 'react-icons/ti';
 import { EmailIcon } from '@/public/icons';
 import Footer from '@/components/Layouts/Footer';
+import { API_BASE_URL, FORGOT_PASSWORD_API_URL, LOGIN_API_URL, RESEND_API_URL } from '@/api.config';
+import Swal from 'sweetalert2';
 
 const Login = () => {
     const router = useRouter()
     const [email, setemail] = useState("");
     const [showLoader, setShowLoader] = useState(false);
     const [error, seterror] = useState("");
-    const handleSubmit = (e: any) => {
-    };
+
     const { t, i18n } = useTranslation();
 
     const handleInputChange = (e: any) => {
@@ -33,10 +34,35 @@ const Login = () => {
         const isEmailValid = /^[A-Za-z0-9._-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email);
         return isEmailValid;
     };
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+        try {
+            const response = await fetch(`${API_BASE_URL}${FORGOT_PASSWORD_API_URL}`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email: email }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: data.message.success || 'Reset link sent on registered email successfully!',
+                    customClass: 'sweet-alerts',
+                });
+            } else {
+                seterror(data.message.error);
+            }
+        } catch (error) {
+            seterror("something went wrong ! please try after some time");
+        }
+
+    };
 
     const FormValididate =
         validateEmail(email);
-
     const isFormValid = email !== '';
     const cancel = () => {
         setemail("")
@@ -118,15 +144,15 @@ const Login = () => {
                                                 </p>
                                             )}
                                         </div>
-                                        <Link href="/auth/verify-otp">
-                                            <button
-                                                type="submit"
-                                                className={` rounded-full mt-3  w-full border-2    font-bold py-3 ${!isFormValid ? 'bg-transparent  text-gray-500  py-3 border-gray-500  shadow-none cursor-not-allowed' : '  bg-[#20427F]  text-white'}`}
-                                                disabled={!isFormValid}
-                                            >
-                                                Reset Password
-                                            </button>
-                                        </Link>
+                                        <button
+                                            type="submit"
+                                            onSubmit={handleSubmit}
+                                            className={` rounded-full mt-3  w-full border-2    font-bold py-3 ${!isFormValid ? 'bg-transparent  text-gray-500  py-3 border-gray-500  shadow-none cursor-not-allowed' : '  bg-[#20427F]  text-white'}`}
+                                            disabled={!isFormValid}
+                                        >
+                                            Reset Password
+                                        </button>
+
                                     </form>
                                     <button
                                         className={"rounded-full mt-3  w-full border-2    font-bold py-3  cursor-pointer hover:bg-[#20427F] border-[#00A9E2] text-[#00A9E2] shadow-none  hover:text-white"}

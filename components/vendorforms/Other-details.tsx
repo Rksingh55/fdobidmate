@@ -125,7 +125,7 @@ function OtherDetails() {
             Swal.fire({
                 icon: 'error',
                 title: 'Error!',
-                text:'Error submitting form',
+                text: 'Error submitting form',
                 padding: '2em',
                 customClass: 'sweet-alerts',
             });

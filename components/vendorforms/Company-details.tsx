@@ -105,6 +105,9 @@ const Companydetails: React.FC = () => {
         if (!user.cr_number) {
             newErrors.crnumber = t('field-required');
         }
+        if (!user.founding_year) {
+            newErrors.founding_year = t('field-required');
+        }
         if (!user.type_of_business) {
             newErrors.typeofbusiness = t('field-required');
         }
@@ -126,46 +129,55 @@ const Companydetails: React.FC = () => {
             ...user,
             vendor_profile_id: vendor_profile_id,
         };
-        const isValid = validateForm();
-        if (isValid) {
-            try {
-                const response = await fetch(`${API_BASE_URL}${COMPANYDETAIL_API_URL}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    body: JSON.stringify(payload),
+
+        try {
+            const response = await fetch(`${API_BASE_URL}${COMPANYDETAIL_API_URL}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: responseData?.message?.success || 'Company data submitted successful!',
+                    customClass: 'sweet-alerts',
                 });
-
-                if (response.ok) {
-                    const responseData = await response.json();
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: responseData?.message?.success || 'Company data submitted successful!',
-                        customClass: 'sweet-alerts',
-                    });
-                } else {
-                    const errorData = await response.json();
-                    if (errorData && errorData.errors) {
-                        Object.keys(errorData.errors).forEach(field => {
-                            const errorMessage = errorData.errors[field][0];
-                            toast.error(`${errorMessage}`);
+            } else {
+                const errorData = await response.json();
+                if (errorData && errorData.errors) {
+                    Object.keys(errorData.errors).forEach(field => {
+                        const errorMessage = errorData.errors[field][0];
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: errorMessage || 'An error occurred. Please try again.',
+                            padding: '2em',
+                            customClass: 'sweet-alerts',
                         });
-
-                    }
+                    });
                 }
-            } catch (error) {
-                console.error('Error submitting form:', error);
             }
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Error submitting form',
+                padding: '2em',
+                customClass: 'sweet-alerts',
+            });
+
         }
     };
     const handleClosePopup = () => {
         setShowPopup(false);
     };
-
-
     return (
         <>
             <ToastContainer />
@@ -193,7 +205,7 @@ const Companydetails: React.FC = () => {
                                     onChange={(e) =>
                                         setUser({ ...user, founding_year: e.target.value })
                                     }
-                                    className="form-control"
+                                    className={`form-input ${errors.founding_year ? 'border-red-500' : ''}`}
                                     value={user.founding_year}
                                 >
                                     {years?.map((year) => (
@@ -202,6 +214,9 @@ const Companydetails: React.FC = () => {
                                         </option>
                                     ))}
                                 </select>
+                                {errors?.founding_year && (
+                                    <p className="text-red-500 text-sm">{errors?.founding_year}</p>
+                                )}
                             </div>
                         </div>
                         <div className="col-lg-6 col-md-6 mb-2">
@@ -303,7 +318,7 @@ const Companydetails: React.FC = () => {
                                 <select
                                     name="qualitysafety"
                                     id="qualitysafetyval"
-                                    className="form-control"
+                                    className={`form-input ${errors.quality_safety ? 'border-red-500' : ''}`}
                                     onChange={(e) =>
                                         setUser({ ...user, quality_safety: e.target.value })
                                     }
@@ -315,6 +330,9 @@ const Companydetails: React.FC = () => {
                                     <option value="yes">{t('yes')}</option>
                                     <option value="no">{t('no')}</option>
                                 </select>
+                                {errors?.quality_safety && (
+                                    <p className="text-red-500 text-sm">{errors?.quality_safety}</p>
+                                )}
                             </div>
                         </div>
 

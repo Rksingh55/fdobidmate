@@ -80,7 +80,7 @@ const RfiListPage = () => {
       return;
     }
     const searchFilteredRfi = Rfilist.filter(Rfi => {
-      const combinedText = `${Rfi.company.code} ${Rfi?.r_f_idevlopment?.need?.department?.name} ${Rfi.publish_date}`;
+      const combinedText = `${Rfi.company.code} ${Rfi.req_id} ${Rfi?.r_f_idevlopment?.need?.department?.name} `;
       return combinedText.toLowerCase().includes(searchQuery.toLowerCase());
     });
 
