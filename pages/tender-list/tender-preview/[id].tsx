@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchTenderList } from '../../../Reducer/tenderlistSlice';
 import { getToken } from '@/localStorageUtil';
 import Loader from '@/components/front/loader';
+import { FaLock } from 'react-icons/fa';
 
 const TenderPreview = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -292,7 +293,7 @@ const TenderPreview = () => {
                                                         <td className='p-2'>{item.name?.toString() || 'N/A'}</td>
                                                         <td className='p-2'>{item.type?.toString() || 'N/A'}</td>
                                                         <td className='p-2'>{item.status?.toString() || 'N/A'}</td>
-                                                        <td className='p-2 flex justify-center'><MdCloudDownload className='text-[#00A9E2] text-xl cursor-pointer' /></td>
+                                                        <td className='p-2 flex justify-center'><FaLock className='cursor-pointer' /></td>
                                                     </tr>
                                                 ))
                                             ) : (

@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { TenderdocumentIcon, ItemlistIcon, ApplicablefeesIcon, PayemnentIcon, DepartmentIcon, EntityIcon, StartdateIcon, CurrencyIcon, PerformenceBackGuranteeIcon, OMRIcon, OMRicon, DocumentIcon, IssuedateIcon, BankIcon, PbgdocumentIcon, BidderRequireIcon } from '../../../../public/icons';
+import { TenderdocumentIcon, ItemlistIcon, ApplicablefeesIcon, PayemnentIcon, DepartmentIcon, EntityIcon, StartdateIcon, CurrencyIcon, PerformenceBackGuranteeIcon, OMRIcon, OMRicon, DocumentIcon, IssuedateIcon, BankIcon, PbgdocumentIcon, BidderRequireIcon, CreditCardIcon } from '../../../../public/icons';
 import { MdCancel, MdCloudDownload, } from 'react-icons/md';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { API_BASE_URL, INTERESTED_TENDER_VIEW_API_URL, TENDERPREVIEW_API_URL } from '@/api.config';
-import { AppDispatch, RootState } from '@/store';
-import { useDispatch, useSelector } from 'react-redux';
+import { API_BASE_URL, INTERESTED_TENDER_VIEW_API_URL, TENDER_PAYMENT_API_URL } from '@/api.config';
 import Dashboardbredcrumb from "@/components/dashboardbredcrumb"
 import { FcOk } from 'react-icons/fc';
 import { FaCloudUploadAlt, FaEdit, FaEye, FaFileDownload } from 'react-icons/fa';
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { AiOutlineDelete } from 'react-icons/ai';
-import Creditcard from "../../../../components/cards/Creditcard"
 import { getToken } from '@/localStorageUtil';
 import { downloadFile } from '@/components/cards/downloadFile';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
 const Tenderdetails = () => {
     const BASE_URL = 'https://fdo-bidmate.kefify.com';
     const router = useRouter();
@@ -23,7 +23,13 @@ const Tenderdetails = () => {
     const { id } = router.query;
     const [loading, setLoading] = useState<boolean>(true);
     const token = getToken();
-
+    const [showCreditCard, setShowCreditCard] = useState(false);
+    const handlePayNowClick = () => {
+        setShowCreditCard(true);
+    };
+    const handleCloseClick = () => {
+        setShowCreditCard(false);
+    };
     const fetchTenderInterestPreview = async (id: string) => {
         try {
             setLoading(true);
@@ -54,25 +60,67 @@ const Tenderdetails = () => {
         {}, {}, {}, {}
     ]
 
-    // const BASE_URL = 'https://fdo-bidmate.kefify.com';
-    // const handleDownload = (fileName: string) => {
-    //     const url = `${BASE_URL}/${"TenderRequiredDocument"}`;
-    //     const link = document.createElement('a');
-    //     link.href = url;
-    //     link.download = fileName; 
-    //     document.body.appendChild(link);
-    //     link.click();
-    //     document.body.removeChild(link);
-    // };
+    const [cardnumber, setCardNumber] = useState('');
+    const [cardholdername, setcardholdername] = useState('');
+    const [expiryMonth, setExpiryMonth] = useState('');
+    const [expiryYear, setExpiryYear] = useState('');
+    const [cvv, setCvv] = useState('');
+    const vendor_id = localStorage.getItem("vendor_id")
+    const email = localStorage.getItem("email")
 
-    const handleDownload = (documentUrl: string) => {
-        const link = document.createElement('a');
-        link.href = documentUrl;
-        link.download = data?.url;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+        if (!cardnumber || !cardholdername || !expiryMonth || !expiryYear || !cvv) {
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please fill out all fields.',
+                customClass: 'sweet-alerts',
+            });
+            return;
+        }
+        const formData = {
+            type: "Tender",
+            payment_type: "tender_fee",
+            vendor_id: vendor_id,
+            doc_id: id,
+            email: email,
+            amount: data?.tenderfeeamount,
+            currency: data?.currency?.code,
+            company_id: data?.currency_id,
+            cardnumber,
+            cardholdername,
+            expiry: `${expiryMonth}/${expiryYear}`,
+            cvv
+        };
+        try {
+            const response = await fetch(`${API_BASE_URL}${TENDER_PAYMENT_API_URL}`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify(formData),
+            });
+            console.log('Payment response:', response);
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Payment successful!',
+                customClass: 'sweet-alerts',
+            });
+        } catch (error) {
+            console.error('Payment error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Payment failed.',
+                customClass: 'sweet-alerts',
+            });
+        }
     };
+
 
     return (
         <>
@@ -148,9 +196,9 @@ const Tenderdetails = () => {
                                     <tr className='bg-[#F4F7FF]'>
                                         <th className='p-2 bg-[#F3F5F8] '>Sr. No</th>
                                         <th className='p-2 bg-[#F3F5F8] '>Document Name</th>
+                                        <th className='p-2 bg-[#F3F5F8] '>Type</th>
                                         <th className='p-2 bg-[#F3F5F8] flex flex-col justify-center '>Download
                                         </th>
-                                        <th className='p-2 bg-[#F3F5F8] '>Status</th>
                                     </tr>
 
                                 </thead>
@@ -161,18 +209,19 @@ const Tenderdetails = () => {
                                                 <tr key={item.id}>
                                                     <td className='p-2'>{index + 1}.</td>
                                                     <td className='p-2'>{item.tenderrequireddocument?.name || 'N/A'}</td>
+                                                    <td className='p-2'>{item?.tenderrequireddocument?.type || 'N/A'}</td>
                                                     <td className='p-2 flex'>
                                                         <MdCloudDownload
                                                             className='text-xl cursor-pointer'
                                                             onClick={() => downloadFile(
                                                                 BASE_URL,
-                                                                item.tenderrequireddocument?.images[0].url,
+                                                                item?.tenderrequireddocument?.images[0].url,
                                                                 item?.tenderrequireddocument?.images[0]?.name
                                                             )}
                                                         />
 
                                                     </td>
-                                                    <td className='p-2'>{item?.tenderrequireddocument?.type || 'N/A'}</td>
+
                                                 </tr>
                                             ) : null
                                         ))
@@ -229,8 +278,8 @@ const Tenderdetails = () => {
                                     <tr className='bg-[#F4F7FF]'>
                                         <th className='p-2 bg-[#00A9E2] text-white'>Type</th>
                                         <th className='p-2 bg-[#00A9E2] text-white'>Amount</th>
-                                        <th className='p-2 bg-[#00A9E2] text-white'>Status</th>
                                         <th className='p-2 bg-[#00A9E2] text-white'>Payment</th>
+                                        <th className='p-2 bg-[#00A9E2] text-white'>Status</th>
                                         <th className='p-2 bg-[#00A9E2] text-white'>Invoice</th>
 
                                     </tr>
@@ -238,28 +287,128 @@ const Tenderdetails = () => {
                                 <tbody>
                                     <tr>
                                         <td className='p-2'>Bid Bond Fees</td>
-                                        <td className='p-2'>2000</td>
-                                        <td className='p-2 flex gap-2'>--------</td>
-                                        <td className='p-2'>
-                                            <button className='hover:bg-[#e2a563] bg-[#FC8404] text-white px-3 py-1 rounded-md'>Pay Now</button>
-                                        </td>
+                                        <td className='p-2'>{data?.bidbondfeeamount || "N/A"}</td>
+                                        <td className='p-2 flex gap-2'>N/A</td>
+
                                     </tr>
                                     <tr>
                                         <td className='p-2'>Tender Fees</td>
-                                        <td className='p-2'>7000</td>
-                                        <td className='p-2 flex gap-2 '><FcOk className='mt-[3px]' />Done</td>
+                                        <td className='p-2'>{data?.tenderfeeamount || "N/A"}</td>
                                         <td className='p-2'>
-                                            <button className='hover:bg-[#e2a563] bg-[#FC8404] text-white px-3 py-1 rounded-md'>Pay Now</button>
+                                            {data?.tenderfee_applicable === "Yes" ? (
+                                                <button onClick={handlePayNowClick} className='hover:bg-[#e2a563] bg-[#FC8404] text-white px-3 py-1 rounded-md'>
+                                                    Pay Now
+                                                </button>
+                                            ) : (
+                                                <p>No Need to pay</p>
+                                            )}
                                         </td>
+                                        <td className='p-2 flex gap-2 '><FcOk className='mt-[3px]' />Done</td>
                                         <td className=' '><MdCloudDownload className='text-[#00A9E2] text-xl cursor-pointer' /></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <div className='mt-12'>
-                            <h3 className="text-xl font-semibold mb-2 text-[#00A9E2] flex gap-2 pb-2"> <PayemnentIcon />Payment</h3>
-                            <Creditcard />
-                        </div>
+                        {showCreditCard && (
+                            <div className='mt-12'>
+                                <div className="flex justify-between items-center mb-2">
+                                    <h3 className="text-xl font-semibold text-[#00A9E2] flex gap-2 items-center">
+                                        <PayemnentIcon /> Payment
+                                    </h3>
+                                    <button
+                                        className="text-red-500 hover:text-red-700 font-bold"
+                                        onClick={handleCloseClick}
+                                    >
+                                        Cancel Payement
+                                    </button>
+                                </div>
+                                <form onSubmit={handleSubmit}>
+                                    <div className='bg-[#C1E9FF] border-1 rounded-md p-3'>
+                                        <div className='flex flex-row justify-between'>
+                                            <div>
+                                                <h1 className='text-xl font-bold'>Card Details</h1>
+                                            </div>
+                                            <CreditCardIcon />
+                                        </div>
+                                        <div className='flex flex-col'>
+                                            <div className='flex md:flex-row flex-col gap-4 py-3'>
+                                                <div>
+                                                    <h1 className='text-lg font-bold'>Card number</h1>
+                                                    <p className='text-[#5E5E5E]'>Enter the 16-digit card number on the card</p>
+                                                </div>
+                                                <input
+                                                    className='bg-white border-1 rounded-md px-4 max-sm:py-2'
+                                                    type='number'
+                                                    placeholder='xxxx xxxx xxxx xxxx'
+                                                    value={cardnumber}
+                                                    onChange={(e) => setCardNumber(e.target.value)}
+                                                />
+                                                <div className='flex items-center text-3xl'>
+                                                    <FcOk className='max-sm:hidden' />
+                                                </div>
+                                            </div>
+                                            <div className='flex gap-4 py-3 md:flex-row flex-col'>
+                                                <div>
+                                                    <h1 className='text-lg font-bold'>Card owner</h1>
+                                                    <p className='text-[#5E5E5E]'>Enter the name on the card</p>
+                                                </div>
+                                                <input
+                                                    className='bg-white border-1 rounded-md px-4 max-sm:py-2'
+                                                    type='text'
+                                                    placeholder='Name'
+                                                    value={cardholdername}
+                                                    onChange={(e) => setcardholdername(e.target.value)}
+                                                />
+                                                <div className='flex items-center text-3xl'></div>
+                                            </div>
+                                            <div className='flex gap-4 py-3 md:flex-row flex-col'>
+                                                <div>
+                                                    <h1 className='text-lg font-bold'>Expiry date</h1>
+                                                    <p className='text-[#5E5E5E]'>Enter the expiration date</p>
+                                                </div>
+                                                <div className='flex justify-between gap-3'>
+                                                    <input
+                                                        className='bg-white border-1 rounded-md w-[120px] px-4'
+                                                        type='number'
+                                                        placeholder='MM'
+                                                        value={expiryMonth}
+                                                        onChange={(e) => setExpiryMonth(e.target.value)}
+                                                    />
+                                                    <span className='flex items-center justify-center font-extrabold text-2xl'>/</span>
+                                                    <input
+                                                        className='bg-white border-1 rounded-md w-[120px] px-2'
+                                                        type='number'
+                                                        placeholder='YY'
+                                                        value={expiryYear}
+                                                        onChange={(e) => setExpiryYear(e.target.value)}
+                                                    />
+                                                    <span>
+                                                        <h1 className='text-lg font-bold'>CVV2</h1>
+                                                        <p className='text-[#5E5E5E]'>Security code</p>
+                                                    </span>
+                                                    <input
+                                                        className='bg-white border-1 rounded-md w-[120px] px-2'
+                                                        type='number'
+                                                        placeholder='xxx'
+                                                        value={cvv}
+                                                        onChange={(e) => setCvv(e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className='flex items-center text-3xl'></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='flex justify-end'>
+                                        <button
+                                            type="submit"
+                                            className="mt-2 px-12 py-2 bg-[#FC8404] text-white font-semibold rounded-md hover:bg-[#e1a05a]"
+                                        >
+                                            Pay
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        )}
                         <div className='flex justify-between  items-center mt-5'>
                             <div>
                                 <h1 className='text-2xl font-semibold text-[#00A9E2] flex gap-2'> <ItemlistIcon />Item List</h1>

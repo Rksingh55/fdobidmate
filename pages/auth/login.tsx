@@ -50,11 +50,13 @@ const Login = () => {
                 setError({ type: 'error', text: data.message })
                 if (data.status == "success") {
                     router.push('/dashboard/vendor-register')
+                    setShowLoader(false)
                     if (data.data && data.data.length > 0) {
-                        setShowLoader(false)
                         const firstObject = data.data[0];
                         localStorage.setItem('token', JSON.stringify(firstObject.token))
                         localStorage.setItem('userName', JSON.stringify(firstObject.name))
+                        localStorage.setItem('email', JSON.stringify(firstObject.email))
+
                         setemail('');
                         setpassword('');
                     }
