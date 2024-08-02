@@ -22,6 +22,8 @@ const Login = () => {
     const [showLoader, setShowLoader] = useState(false);
     const [password, setpassword] = useState("");
     const [error, seterror] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
     const [user, setuser] = useState({})
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -31,6 +33,7 @@ const Login = () => {
             password: password,
             confirmpassword: confirmpassword
         };
+        setIsLoading(true);
         try {
             const response = await fetch(`${API_BASE_URL}${UPDATE_PASSWORD_API_URL}`, {
                 method: 'POST',
@@ -43,11 +46,14 @@ const Login = () => {
             if (response.ok) {
                 router.push("/auth/password-updated")
             } else {
+                setIsLoading(false);
                 seterror(data.message.error);
 
             }
         } catch (error) {
+            setIsLoading(false);
             seterror("something went wrong ! please try after some time");
+            
         }
 
     };
@@ -140,10 +146,10 @@ const Login = () => {
                                     <button
                                         type="submit"
                                         onSubmit={handleSubmit}
-                                        className={` rounded-full mt-4  w-full border-2   py-3 font-bold ${!isFormValid ? 'bg-transparent  py-3 border-gray-400  text-gray-500  shadow-none cursor-not-allowed' : '  bg-[#20427F]  text-white'}`}
-                                        disabled={!isFormValid}
+                                        className={`rounded-full mt-4 w-full border-2 py-3 font-bold ${isLoading ? 'bg-gray-400 text-white cursor-not-allowed border-gray-400' : (!isFormValid ? 'bg-transparent border-gray-400 text-gray-500 shadow-none cursor-not-allowed' : 'bg-[#20427F] text-white')}`}
+                                        disabled={!isFormValid || isLoading}
                                     >
-                                        Update Password
+                                     {isLoading ? 'Loading...' : 'Update Password'}   
                                     </button>
                                 </form>
                                 <button

@@ -18,7 +18,7 @@ import purchaseorder from '../Reducer/purchaseorderSlice';
 import vendoReducer from '../Reducer/Vendor_Registeration_Slice/getvendordata';
 import tenderlist from '../Reducer/tenderlistSlice';
 import rfilist from '../Reducer/rfilistSlice';
-
+import tenderInterestedSlice from '@/Reducer/tenderInterestedSlice';
 import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 
 const persistConfig = {
@@ -44,7 +44,8 @@ const rootReducer = combineReducers({
   termsofDelivery: termsofDelivery,
   vendordata: vendoReducer,
   Tenderlist: tenderlist,
-  Rfilist: rfilist
+  Rfilist: rfilist,
+  Tenderinterest: tenderInterestedSlice
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

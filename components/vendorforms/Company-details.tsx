@@ -129,7 +129,6 @@ const Companydetails: React.FC = () => {
             ...user,
             vendor_profile_id: vendor_profile_id,
         };
-
         try {
             const response = await fetch(`${API_BASE_URL}${COMPANYDETAIL_API_URL}`, {
                 method: 'POST',

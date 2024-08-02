@@ -6,7 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchvendordata } from '../../Reducer/Vendor_Registeration_Slice/getvendordata';
 import Base64Image from '../front/Base64Image';
 import { AccountholderIcon, AccountInformationIcon, AccountNumberIcon, BankbranchIcon, BillingIcon, CalenderIcon, CrnumberIcon, DelieveryIcon, DepartmentIcon, EmailIcon, IbancodeIcon, IdIcon, NationlityIcon, NumberofemployeeIcon, OMRIcon, OMRicon, PayementMethodIcon, PaymentcardIcon, PrimaryAdressIcon, ProfileIcon, QualityandsaftyIcon, SwiftCodeIcon, TaxbillingIcon, TaxRegisterationIcon, TenderDepartmentIcon, TenderdocumentIcon, TypeofbussinessIcon, VendorTypeIcon, WebsiteIcon } from '@/public/icons';
+
 function Profile_Preview() {
+
     const dispatch = useDispatch<AppDispatch>();
     const vendorInformationList = useSelector((state: RootState) => state.vendordata.list);
     const status = useSelector((state: RootState) => state.vendordata.status);
@@ -20,8 +22,9 @@ function Profile_Preview() {
         setdata(vendorInformationList)
         setProfileImg(data?.profile_img)
     }, [vendorInformationList]);
-    console.log(data);
+    console.log("all data", data);
     const Img = profileImg;
+
 
     return (
         <div className=''>
@@ -42,12 +45,12 @@ function Profile_Preview() {
                         <h1 className='flex justify-between'><span className='font-bold flex gap-2'><IdIcon />Vendor  Id</span>{data?.vendor_request_id || "N/A"}</h1>
 
                         <h1 className='flex justify-between'><span className='font-bold flex gap-2'><EmailIcon />Email id</span> {data?.email || "N/A"}</h1>
-                        <h1 className='flex justify-between'><span className='font-bold flex gap-2'><TenderDepartmentIcon />Company Name</span> amysoftech</h1>
+                        <h1 className='flex justify-between'><span className='font-bold flex gap-2'><TenderDepartmentIcon />Company Name</span> {data?.company_id || "N/A"}</h1>
                         <h1 className='flex justify-between'><span className='font-bold flex gap-2'><VendorTypeIcon />Vendor Type</span> {data?.vendor_type || "N/A"}</h1>
                         <h1 className='flex justify-between'><span className='font-bold flex gap-2 '><NationlityIcon />Nationality</span> Zimbabwe</h1>
                         <h1 className='flex justify-between'><span className='font-bold flex gap-2'><BillingIcon />Billing address</span> {data?.billing_address || "N/A"}</h1>
                         <h1 className='flex justify-between'><span className='font-bold flex gap-2'><PrimaryAdressIcon />Primary address</span> {data?.primary_address || "N/A"}</h1>
-                        <h1 className='flex justify-between'><span className='font-bold flex gap-2'><OMRIcon />Currency </span> UAE Dirham</h1>
+                        <h1 className='flex justify-between'><span className='font-bold flex gap-2'><OMRIcon />Currency </span> {data?.currency?.code || "N/A"}</h1>
                     </div>
                 </div>
 
@@ -93,50 +96,69 @@ function Profile_Preview() {
                 <div className='md:basis-[40%] w-full '>
                     <h1 className='font-semibold text-xl text-[#00A9E2] flex items-center gap-2'><TaxbillingIcon />Tax & Billing Info</h1>
                     <div className='md:basis-[40%] w-full bg-white  border-2   rounded-md mt-2 px-2'>
-                        <p className='flex justify-between px-2 py-3'><span className='font-bold flex gap-2 items-center'><TaxRegisterationIcon />TAX Registration Number </span>  {data?.tax_no}</p>
-                        <p className='flex justify-between px-2 py-3'><span className='font-bold flex gap-2 items-center'><PaymentcardIcon />Terms of Paymentr </span>  10% d</p>
-                        <p className='flex justify-between px-2 py-3'><span className='font-bold flex gap-2 items-center'><DelieveryIcon />Delivery Terms </span>  1 day</p>
-                        <p className='flex justify-between px-2 py-3'><span className='font-bold flex gap-2 items-center'><PayementMethodIcon />Method of Payment </span>  card</p>
+                        <p className='flex justify-between px-2 py-3'><span className='font-bold flex gap-2 items-center'><TaxRegisterationIcon />TAX Registration Number </span>  {data?.tax_no || "N/A"}</p>
+                        <p className='flex justify-between px-2 py-3'><span className='font-bold flex gap-2 items-center'><PaymentcardIcon />Terms of Paymentr </span>  {data?.termsofpayment?.name || "N/A"}</p>
+                        <p className='flex justify-between px-2 py-3'><span className='font-bold flex gap-2 items-center'><DelieveryIcon />Delivery Terms </span>  {data?.termsofpayment_id || "N/A"}</p>
+                        <p className='flex justify-between px-2 py-3'><span className='font-bold flex gap-2 items-center'><PayementMethodIcon />Method of Payment </span> {data?.modeofpayment?.name || "N/A"}</p>
                     </div>
                 </div>
 
                 {/* ------Documents------- */}
                 <div className='md:basis-[60%]  w-full   '>
                     <h1 className='font-semibold text-xl text-[#00A9E2] flex items-center gap-2'> <TenderdocumentIcon />Documents</h1>
-                    <div className=' bg-white  border-2   rounded-md  mt-2'>
-                        <table className=''>
-                            <tr className='bg-[#F3F5F8] '>
-                                <th className='px-2 py-2'>S.No</th>
-                                <th className='px-2 py-2'>Document Name</th>
-                                <th className='flex flex-col px-2 py-2'>Format <span className='text-red-500 text-[6px]'>(Only PDF, JPEG, PNG Accepted)</span></th>
-                                <th className='px-2 py-2'>Size</th>
-                                <th className='px-2 py-2'>Status</th>
+                    <div className=' bg-white  border-2   rounded-md  mt-2 overflow-y-auto h-[300px]'>
+                        <table className=' '>
+                            <thead>
+                                <tr className='bg-[#F3F5F8] '>
+                                    <th className='px-2 py-2'>S.No</th>
+                                    <th className='px-2 py-2'>Document Name</th>
+                                    <th className='flex flex-col px-2 py-2'>Format <span className='text-red-500 text-[10px]'>(Only PDF, JPEG, PNG Accepted)</span></th>
+                                    <th className='px-2 py-2'>Size</th>
 
-
-                            </tr>
-                            <tr >
-                                <td className='px-2 py-3'>1.</td>
-                                <td className='px-2 py-3'>Company Certificate</td>
-                                <td className='px-2 py-3'>Pdf</td>
-                                <td className='px-2 py-3'>6 mb</td>
-                                <td className='cursor-pointer flex font-bold px-2 py-3'><FaCloudUploadAlt className='text-xl' />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className='px-2 py-3'>2.</td>
-                                <td className='px-2 py-3'>Company Certificate</td>
-                                <td className='px-2 py-3'>Pdf</td>
-                                <td className='px-2 py-3'>6 mb</td>
-                                <td className='cursor-pointer flex font-bold px-2 py-3'><FaCloudUploadAlt className='text-xl' /></td>
-                            </tr>
-                            <tr>
-                                <td className='px-2 py-3'>3.</td>
-                                <td className='px-2 py-3'>Company Certificate</td>
-                                <td className='px-2 py-3'>Pdf</td>
-                                <td className='px-2 py-3'>6 mb</td>
-                                <td className='cursor-pointer flex font-bold px-2 py-3'><FaCloudUploadAlt className='text-xl' />
-                                </td>
-                            </tr>
+                                    <th className='px-2 py-2'>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody className=''>
+                                {data?.vt_documents && data?.vt_documents.length > 0 ? (
+                                    data?.vt_documents?.map((doc: any, index: any) => (
+                                        <tr key={doc.id} className=''>
+                                            <td className='p-2'>{index + 1}.</td>
+                                            <td className='p-2'>
+                                                <div className='mb-2'>
+                                                    <p>{doc?.attechmentType || "N/A"}</p>
+                                                </div>
+                                            </td>
+                                            <td className='p-2 flex gap-2 items-center'>
+                                                <a
+                                                    href={`data:image/jpeg;base64,${doc?.name}`}
+                                                    target='_blank'
+                                                    rel='noopener noreferrer'
+                                                    className='flex gap-2 items-center hover:text-blue-500 hover:underline cursor-pointer'
+                                                >
+                                                    {/* <Base64Image
+                                                        key={index}
+                                                        base64String={doc?.name}
+                                                        alt={`Document ${index}`}
+                                                        width={100}
+                                                        height={100}
+                                                    /> */}
+                                                    View
+                                                </a>
+                                            </td>
+                                            <td className='p-2  font-bold'>
+                                                --
+                                            </td>
+                                            <td className='p-2 text-green-500 font-bold'>
+                                                Active
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr >
+                                        <td colSpan={4} className='p-2 text-center text-red-500 font-bold'>No Data Available</td>
+                                    </tr>
+                                )}
+                            </tbody>
                         </table>
                     </div>
                 </div>

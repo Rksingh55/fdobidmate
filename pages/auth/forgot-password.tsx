@@ -23,6 +23,7 @@ const Login = () => {
     const [email, setemail] = useState("");
     const [showLoader, setShowLoader] = useState(false);
     const [error, seterror] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const { t, i18n } = useTranslation();
 
@@ -36,6 +37,8 @@ const Login = () => {
     };
     const handleSubmit = async (e: any) => {
         e.preventDefault();
+        setIsLoading(true);
+
         try {
             const response = await fetch(`${API_BASE_URL}${FORGOT_PASSWORD_API_URL}`, {
                 method: 'POST',
@@ -46,6 +49,8 @@ const Login = () => {
             });
             const data = await response.json();
             if (response.ok) {
+                setIsLoading(false);
+                
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
@@ -53,9 +58,13 @@ const Login = () => {
                     customClass: 'sweet-alerts',
                 });
             } else {
+                setIsLoading(false);
+                
                 seterror(data.message.error);
             }
         } catch (error) {
+            setIsLoading(false);
+
             seterror("something went wrong ! please try after some time");
         }
 
@@ -147,10 +156,10 @@ const Login = () => {
                                         <button
                                             type="submit"
                                             onSubmit={handleSubmit}
-                                            className={` rounded-full mt-3  w-full border-2    font-bold py-3 ${!isFormValid ? 'bg-transparent  text-gray-500  py-3 border-gray-500  shadow-none cursor-not-allowed' : '  bg-[#20427F]  text-white'}`}
-                                            disabled={!isFormValid}
+                                            className={`rounded-full mt-4 w-full border-2 py-3 font-bold ${isLoading ? 'bg-gray-400 text-white cursor-not-allowed border-gray-400' : (!isFormValid ? 'bg-transparent border-gray-400 text-gray-500 shadow-none cursor-not-allowed' : 'bg-[#20427F] text-white')}`}
+                                            disabled={!isFormValid || isLoading}
                                         >
-                                            Reset Password
+                                              {isLoading ? 'Loading...' : 'Reset Password'}     
                                         </button>
 
                                     </form>

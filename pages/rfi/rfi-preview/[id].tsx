@@ -201,7 +201,7 @@ const RfiPreview = () => {
                                             <tr className='bg-[#F4F7FF]'>
                                                 <th className='p-2 bg-[#00A9E2] text-white'>Item No.</th>
                                                 <th className='p-2 bg-[#00A9E2] text-white'>Description</th>
-                                                <th className='p-2 bg-[#00A9E2] text-white'>Quanity</th>
+                                                <th className='p-2 bg-[#00A9E2] text-white'>Quantity</th>
 
                                                 <th className='p-2 bg-[#00A9E2] text-white'>Unit</th>
                                             </tr>

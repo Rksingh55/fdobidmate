@@ -115,8 +115,6 @@ const HomePage: React.FC = () => {
 
         }
     };
-
-
     const handleDeleteDocument = (type: string, index: number) => {
         setDocuments((prevDocuments) => {
             const documentIndex = prevDocuments.findIndex(doc => doc.type === type);
@@ -126,17 +124,14 @@ const HomePage: React.FC = () => {
             return [...prevDocuments];
         });
     };
-
     const handleViewDocument = (file: File) => {
         setViewDocument(file);
         setIsViewPopupVisible(true);
     };
-
     const handleCloseViewPopup = () => {
         setIsViewPopupVisible(false);
         setViewDocument(null);
     };
-
     return (
         <div className="">
             <ToastContainer />

@@ -3,10 +3,8 @@ import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import { useState, useEffect } from 'react';
 import sortBy from 'lodash/sortBy';
 import { PiDotsThreeOutlineVerticalLight, PiDotsThreeVerticalBold, PiFilePdfDuotone } from 'react-icons/pi';
-import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable'
 import Dashboardbredcrumb from "@/components/dashboardbredcrumb"
-import { fetchQuatationList } from '../../../Reducer/quatationSlice';
+import { fetchTenderInterestList } from '@/Reducer/tenderInterestedSlice';
 import FormSkeltonloader from "../../../components/cards/FormSkeletonloader"
 import { RootState, AppDispatch } from '@/store';
 import { useSelector, useDispatch } from 'react-redux';
@@ -22,21 +20,21 @@ const Quotations = () => {
             router.replace('/');
         }
     }, []);
-
     const dispatch = useDispatch<AppDispatch>();
-    const quotation = useSelector((state: RootState) => state.quotation.list);
-    const status = useSelector((state: RootState) => state.quotation.status);
-    const error = useSelector((state: RootState) => state.quotation.error);
+    const TenderInterest = useSelector((state: RootState) => state.Tenderinterest.list);
+    const status = useSelector((state: RootState) => state.Tenderinterest.status);
+    const error = useSelector((state: RootState) => state.Tenderinterest.error);
     useEffect(() => {
-        dispatch(fetchQuatationList());
+        dispatch(fetchTenderInterestList());
     }, [dispatch]);
-    
-    const [initialRecords, setInitialRecords] = useState<any[]>(sortBy(quotation));
-    useEffect(() => {
-        setInitialRecords(sortBy(quotation));
-    }, [quotation]);
 
-    console.log("quotation", quotation);
+    const [initialRecords, setInitialRecords] = useState<any[]>(sortBy(TenderInterest));
+    useEffect(() => {
+        setInitialRecords(sortBy(TenderInterest));
+    }, [TenderInterest]);
+
+    console.log("TenderInterest", TenderInterest);
+
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
@@ -60,7 +58,7 @@ const Quotations = () => {
 
     useEffect(() => {
         setInitialRecords(() => {
-            return quotation.filter((item) => {
+            return TenderInterest.filter((item: any) => {
                 return (
                     item.code.toLowerCase().includes(search.toLowerCase()) ||
                     item.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -79,8 +77,6 @@ const Quotations = () => {
         setPage(1);
     }, [sortStatus]);
 
-
-
     const capitalize = (text: any) => {
         return text
             .replace('_', ' ')
@@ -91,7 +87,7 @@ const Quotations = () => {
             .join(' ');
     };
 
-    const renderActions = (rowData: any) => {
+    const renderActions = (TenderInterest: any) => {
         return (
             <div className="dropdown z-[999]">
                 <Dropdown
@@ -100,31 +96,30 @@ const Quotations = () => {
                     button={<PiDotsThreeVerticalBold className="opacity-70 cursor-pointer" />}
                 >
                     <div className='flex flex-col bg-white shadow-md rounded-md border-1'>
-                        <Link href="/dashboard/tender/tender-details">
-                            <button className='bg-white p-2 rounded-md hover:text-blue-400  px-3' type="button" onClick={() => handleAction(rowData, 'view')}>View</button>
+                        <Link href={`/dashboard/tender/tender-details/${TenderInterest?.id}`}>
+                            <button className='bg-white p-2 rounded-md hover:text-blue-400  px-3' type="button" >View</button>
                         </Link>
                     </div>
                 </Dropdown>
             </div>
         );
     };
-
     const handleAction = (rowData: any, action: string) => {
         console.log(`Performing action "${action}" on row with ID: ${rowData.id}`);
     };
     return (
         <>
             <Dashboardbredcrumb />
-            <div className="mb-4.5 flex flex-col gap-5 px-2 md:flex-row md:items-center">
-                {/* <div className="ltr:ml-auto rtl:mr-auto">
+            {/* <div className="mb-4.5 flex flex-col gap-5 px-2 md:flex-row md:items-center">
+                <div className="ltr:ml-auto rtl:mr-auto">
                     <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
-                </div> */}
-            </div>
+                </div>
+            </div> */}
             <div className="panel border-white-light px-0 dark:border-[#1b2e4b] mt-3 ">
                 <div className="invoice-table">
                     <div className="datatables pagination-padding pago ">
                         {status === 'loading' && (
-                            <div className="flex flex-wrap gap-4">
+                            <div className="flex flex-wrap ml-4 gap-4">
                                 {Array.from({ length: 6 }).map((_, index) => (
                                     <FormSkeltonloader />
                                 ))}
@@ -138,9 +133,9 @@ const Quotations = () => {
                                     {
                                         accessor: 'Tender ID ',
                                         sortable: true,
-                                        render: ({ code, id }: any) => (
+                                        render: ({ code }: any) => (
                                             <div className="flex items-center font-semibold">
-                                                <div> TDR-000003</div>
+                                                <div>{`${code}`}</div>
                                             </div>
                                         ),
                                     },
@@ -148,34 +143,30 @@ const Quotations = () => {
                                         accessor: ('title'),
                                         sortable: true,
                                         titleClassName: 'text-left',
-                                        render: ({ title, id }) => <div className="text-left font-semibold">{`${title}`}</div>,
+                                        render: ({ title }) => <div className="text-left font-semibold">{`${title}`}</div>,
                                     },
                                     {
                                         accessor: 'Start Date',
                                         sortable: true,
-                                        render: ({ purchase_type, id }) => <div className="text-left font-semibold"> 05 / 07 / 2024</div>,
+                                        render: ({ publish_date }) => <div className="text-left font-semibold"> {`${publish_date}`}</div>,
                                     },
                                     {
                                         accessor: 'End Date',
                                         sortable: true,
-                                        render: ({ delivery_date, id }) => <div className="text-left font-semibold">{`${delivery_date}`}</div>,
+                                        render: ({ close_date }) => <div className="text-left font-semibold">{`${close_date}`}</div>,
                                     },
                                     {
-                                        accessor: 'Entity',
+                                        accessor: 'Company',
                                         sortable: true,
-                                        render: ({ status }) => <div className="text-left font-semibold">{`${status}`}</div>,
+                                        render: ({ company }) => <div className="text-left font-semibold">{`${company}`}</div>,
                                     },
 
                                     {
                                         accessor: 'Department',
                                         sortable: true,
-                                        render: ({ status }) => <div className="text-left font-semibold">Department 1</div>,
+                                        render: ({ department }) => <div className="text-left font-semibold">{`${department}`}</div>,
                                     },
-                                    {
-                                        accessor: 'Status',
-                                        sortable: true,
-                                        render: ({ status }) => <div className="text-left font-semibold">active</div>,
-                                    },
+
                                     {
                                         accessor: 'action',
                                         title: 'Action',

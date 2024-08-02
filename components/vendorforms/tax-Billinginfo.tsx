@@ -201,7 +201,6 @@ function TaxBillinginfo() {
                                 <div className="form-group form-float">
                                     <label className="mb-1" htmlFor="">{t('terms-of-payment')}</label>
                                     <select name="terms_of_payment_id" id="terms_of_payment_id" onChange={(e) => setUser({ ...user, termsofpayment_id: e.target.value })} className="form-control"
-
                                         value={user.termsofpayment_id}
                                     >
                                         {termsofpayment?.map((item) => (
@@ -218,7 +217,6 @@ function TaxBillinginfo() {
                                     <select name="method_of_payment_id" id="method_of_payment_id" onChange={(e) => setUser({ ...user, modeofpayment_id: e.target.value })} className="form-control"
                                         value={user.modeofpayment_id}
                                     >
-
                                         {modeofpayment?.map((item) => (
                                             <option key={item.id} value={item.id}>
                                                 {item.name}

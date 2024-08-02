@@ -253,14 +253,14 @@ const Quotations = () => {
 
                         </div>
 
-                        <div className="ltr:ml-auto rtl:mr-auto">
+                        {/* <div className="ltr:ml-auto rtl:mr-auto">
                             <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
-                        </div>
+                        </div> */}
                     </div>
 
                     <div className="datatables pagination-padding pago">
                     {status === 'loading' && (
-                            <div className="flex flex-wrap gap-4">
+                            <div className="flex flex-wrap ml-4 gap-4">
                                 {Array.from({ length: 6 }).map((_, index) => (
                                     <FormSkeltonloader />
                                 ))}

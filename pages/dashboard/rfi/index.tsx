@@ -124,7 +124,7 @@ const Quotations = () => {
                 <div className="invoice-table">
                     <div className="datatables pagination-padding pago ">
                         {status === 'loading' && (
-                            <div className="flex flex-wrap gap-4">
+                            <div className="flex flex-wrap ml-4 gap-4">
                                 {Array.from({ length: 6 }).map((_, index) => (
                                     <FormSkeltonloader />
                                 ))}

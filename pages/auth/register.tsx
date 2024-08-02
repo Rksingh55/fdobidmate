@@ -1,31 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import Link from 'next/link';
 import BlankLayout from '@/components/Layouts/BlankLayout';
-import { useTranslation } from 'react-i18next';
-import { GrOrganization } from 'react-icons/gr';
-import { MdArrowDropDown, MdClose, MdFormatListNumbered, MdPhone } from 'react-icons/md';
-import { AiTwotoneHome, AiTwotoneMail } from "react-icons/ai";
+import { MdArrowDropDown, MdClose } from 'react-icons/md';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Image from 'next/image'
 import Herosectionleftimage from "../../public/assets/images/fdoIcon_black.png";
-import Fdomainlogo from "../../public/assets/images/fdo icon3.png";
-import { BsBuildings } from 'react-icons/bs';
 import Loader from '@/components/front/loader';
 import OtpModal from "@/components/front/OtpModal"
 import { TiHome } from 'react-icons/ti';
 import { API_BASE_URL, COMPANYLIST_API_URL, OTPVALIDATE_API_URL, REGISTER_API_URL } from '@/api.config';
 import { AddressIcon, CompanyNameIcon, ConatctNumberIcon, CrNumberIcon, EmailsIcon, FullNameIcon, LoginbuttonIcon, OrganiszationIcon, RegisterbuttonIcon } from '@/public/icons';
-import Footer from '@/components/Layouts/Footer';
 
 const RegisterCover = () => {
     const router = useRouter();
-    const [message, setmessege] = useState("");
     const [emailvalidate, setemailvalidate] = useState(true);
     const [showLoader, setShowLoader] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const [user, setuser] = useState<any>({
         organization_name: "",
         name: "",
@@ -97,15 +92,13 @@ const RegisterCover = () => {
             return { data: [] };
         }
     };
-
-
     useEffect(() => {
         fetchCompanyList()
     }, [])
 
-    const handleVerifyClick = async (body: any) => {
+    const handleVerifyClick = async () => {
         const { organization_name, name, email } = user;
-        setShowLoader(true)
+
         if (!organization_name || !name || !email) {
             toast.error("Please fill in all required fields: organization name, name, and email.");
             return;
@@ -120,6 +113,8 @@ const RegisterCover = () => {
                 name,
                 email,
             };
+            setShowLoader(true)
+
             const response = await fetch(`${API_BASE_URL}${OTPVALIDATE_API_URL}`, {
                 method: 'POST',
                 headers: {
@@ -145,13 +140,12 @@ const RegisterCover = () => {
         } catch (error) {
             if (error instanceof Error) {
                 setShowLoader(false)
-                toast.error(error.message);
+                setErrorMessage(error.message);
             } else {
                 setShowLoader(false)
-                toast.error("Something went wrong! Please try again later.");
+                setErrorMessage("Something went wrong! Please try again later.");
             }
         }
-
     };
     const handleOtpSubmit = (otp: any) => {
         console.log('Submitting OTP:', otp);
@@ -164,59 +158,52 @@ const RegisterCover = () => {
         dispatch(setPageTitle('Register'));
     });
 
-    const submitForm = (e: any) => {
+    const submitForm = async (e: any) => {
         e.preventDefault();
-        if (!FormValididate) {
-            // toast.error("Please validate required fields")
-        } else {
-            const vendor_id = localStorage.getItem("vendor_id");
-            const payload = {
-                ...user,
-                id: vendor_id,
-            };
-            fetch(`${API_BASE_URL}${REGISTER_API_URL}`, {
+        if (!isFormValid) return;
+        setIsLoading(true);
+        setErrorMessage('');
+        const vendor_id = localStorage.getItem("vendor_id");
+        const payload = {
+            ...user,
+            id: vendor_id,
+        };
+
+        try {
+            const response = await fetch(`${API_BASE_URL}${REGISTER_API_URL}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(payload),
-            })
-                .then((response) => {
-                    console.log(response);
-                    return response.json();
-                })
-                .then((data) => {
-                    if (data.status == "success") {
-                        toast.success(data.message.success);
-                        setTimeout(() => {
-                            router.push("/auth/login")
-                        }, 2000);
-                    }
-                    else {
-                        toast.error(data.message.error)
-                        console.error("Error:", data.message.error);
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                    toast.error("something went wrong ! please try after some time");
+            });
+            const data = await response.json();
+            if (data.status === "success") {
+                toast.success(data.message.success);
+                setTimeout(() => {
+                    router.push("/auth/login");
+                }, 2000);
+            } else {
+                setErrorMessage(data.message.error);
 
-                });
+            }
+        } catch (error) {
+            setErrorMessage("Something went wrong! Please try again later.");
+        } finally {
+            setIsLoading(false);
         }
     };
-    const { t, i18n } = useTranslation();
-
-
 
     const initialCompanies = companies
     const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
+
     const handleSelectCompany = (selectedCompanyId: number) => {
         const isSelected = user.company_id.includes(selectedCompanyId);
-
         if (isSelected) {
             setuser({
                 ...user,
@@ -239,12 +226,22 @@ const RegisterCover = () => {
         setuser({ ...user, company_id: [] });
     };
 
-    const isAllSelected = initialCompanies.length === user.company_id.length;
-
     const handleRemoveCompany = (selectedCompanyId: number) => {
         setuser({ ...user, company_id: user.company_id.filter((companyId: number) => companyId !== selectedCompanyId) });
     };
 
+    const isAllSelected = initialCompanies.length === user.company_id.length;
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     return (
         <>
@@ -303,10 +300,9 @@ const RegisterCover = () => {
                             </div>
                             <div className="relative flex w-full flex-col items-center justify-center gap-6 md:px-4   sm:px-6 lg:max-w-[667px]">
                                 <div className="w-full max-w-[440px] ">
-                                    <div className='text-center py-2'>
-                                        {message && <p className='text-red-500 font-bold'>{message}*</p>}
-                                    </div>
-                                    <div className='pb-2'>
+                                   
+                                    <div className=' font-bold'>
+                                        {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
                                     </div>
                                     <form className="space-y-3 dark:text-white" onSubmit={submitForm}>
                                         <p className="text-start font-semibold">Fill Out the Form Carefully for Registration</p>
@@ -346,16 +342,13 @@ const RegisterCover = () => {
                                                 type="email"
                                                 placeholder="Email *"
                                                 className={`form-input py-3 pl-10 placeholder-text-white-dark border-2 rounded-full border-[#00A9E2] ${user.email.trim() === '' || validateEmail(user.email) ? 'text-green-500' : 'text-red-500'}`}
-                                                required
                                             />
-
                                             <span className="absolute left-4 top-1/2 -translate-y-1/2">
                                                 <EmailsIcon />
                                             </span>
 
                                             {user.showVerifyButton && (
                                                 <button
-                                                    type='submit'
                                                     onClick={handleVerifyClick}
                                                     className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-red-500  p- font-bold rounded-full px-3"
                                                 >
@@ -388,45 +381,53 @@ const RegisterCover = () => {
                                                                     : ''
                                                             }
                                                         />
-                                                        <span className="absolute start-4 top-1/2 -translate-y-1/2">
+                                                        <span className="absolute start-4 top-[27px] -translate-y-1/2">
                                                             <CompanyNameIcon />
                                                         </span>
                                                         <span>
                                                             <MdArrowDropDown className="text-xl" />
                                                         </span>
                                                     </div>
-                                                    {isOpen && (
-                                                        <div className="absolute top-full mt-1 border-1 border-[#00A9E2] bg-white rounded-lg w-full z-[100]">
-                                                            <ul className="py-1 overflow-y-auto max-h-40">
-                                                                <li className="px-4 py-2 cursor-pointer flex items-center">
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        checked={isAllSelected}
-                                                                        onChange={handleSelectAll}
-                                                                        className="form-checkbox mr-2 cursor-pointer"
-                                                                    />
-                                                                    <span>Select All</span>
-                                                                </li>
-                                                                {initialCompanies.map(company => (
-                                                                    <li key={company.id} className="px-4 py-2 flex items-center">
+                                                    <div className="relative">
+                                                        {isOpen && (
+                                                            <div
+                                                                ref={dropdownRef}
+                                                                className="absolute top-full mt-1 border-1 border-[#00A9E2] bg-white rounded-lg w-full z-[100]"
+                                                            >
+                                                                <ul className="py-1 overflow-y-auto max-h-40">
+                                                                    <li className="px-4 py-2 cursor-pointer flex items-center">
                                                                         <input
                                                                             type="checkbox"
-                                                                            checked={user.company_id.includes(company.id)}
-                                                                            onChange={() => handleSelectCompany(company.id)}
+                                                                            checked={isAllSelected}
+                                                                            onChange={handleSelectAll}
                                                                             className="form-checkbox mr-2 cursor-pointer"
                                                                         />
-                                                                        <span>{company.name}</span>
+                                                                        <span>Select All</span>
                                                                     </li>
-                                                                ))}
-                                                            </ul>
-                                                        </div>
-                                                    )}
-                                                    {user.company_id.length > 0 && (
-                                                        <div onClick={handleRemoveAll} className="cursor-pointer absolute flex gap-1 justify-center items-center px-2 end-8 top-1/2 -translate-y-1/2 bg-white text-[#00A9E2] rounded-full p-1 font-bold">
-                                                            Remove all
-                                                            <MdClose className="text-[#00A9E2]" />
-                                                        </div>
-                                                    )}
+                                                                    {initialCompanies.map(company => (
+                                                                        <li key={company.id} className="px-4 py-2 flex items-center">
+                                                                            <input
+                                                                                type="checkbox"
+                                                                                checked={user.company_id.includes(company.id)}
+                                                                                onChange={() => handleSelectCompany(company.id)}
+                                                                                className="form-checkbox mr-2 cursor-pointer"
+                                                                            />
+                                                                            <span>{company.name}</span>
+                                                                        </li>
+                                                                    ))}
+                                                                </ul>
+                                                            </div>
+                                                        )}
+                                                        {user.company_id.length > 0 && (
+                                                            <div
+                                                                onClick={handleRemoveAll}
+                                                                className="cursor-pointer absolute flex gap-1 justify-center items-center px-2 end-8 md:top-[-25px] max-sm:top-[-28px] -translate-y-1/2 bg-white text-[#00A9E2] rounded-full p-1 font-bold"
+                                                            >
+                                                                Remove all
+                                                                <MdClose className="text-[#00A9E2]" />
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </div>
 
 
@@ -493,13 +494,21 @@ const RegisterCover = () => {
                                             onClose={() => setIsOpenModal(false)}
                                             onOtpSubmit={handleOtpSubmit}
                                         />
-                                        <button
+                                        {/* <button
                                             type="submit"
                                             className={` rounded-full mt-3  w-full border-2    font-bold py-3 ${!isFormValid ? 'bg-transparent  text-gray-500 py-3 shadow-none cursor-not-allowed border-gray-500' : '  bg-[#20427F]  text-white'}`}
                                             disabled={!isFormValid}
                                         >
                                             Submit
+                                        </button> */}
+                                        <button
+                                            type="submit"
+                                            className={`rounded-full mt-3 w-full border-2 font-bold py-3 ${isLoading ? 'bg-gray-400 text-white cursor-not-allowed border-gray-400' : (!isFormValid ? 'bg-transparent text-gray-500 shadow-none cursor-not-allowed border-gray-500' : 'bg-[#20427F] text-white')}`}
+                                            disabled={!isFormValid || isLoading}
+                                        >
+                                            {isLoading ? 'Loading...' : 'Submit'}
                                         </button>
+
                                         <p className='text-black font-bold text-center'>Already Have Account ?  <Link href="/auth/login">
                                             <span className='text-[#00A9E2]'>Login</span></Link></p>
                                     </form>

@@ -96,7 +96,6 @@ const TenderListPage = () => {
   };
   const { currentPage, lastPage } = pagination;
 
-  // Generate an array of page numbers
   const pages = Array.from({ length: lastPage }, (_, i) => i + 1);
   return (
     <>
@@ -129,7 +128,7 @@ const TenderListPage = () => {
         </div>
         {status === 'loading' && (
           <div className="flex flex-wrap gap-4">
-            {Array.from({ length: 10 }).map((_, index) => (
+            {Array?.from({ length: 10 })?.map((_, index) => (
               <SkeletonCard key={index} />
             ))}
           </div>
@@ -174,8 +173,8 @@ const TenderListPage = () => {
                     key={page}
                     onClick={() => handlePageChange(page)}
                     className={`px-2 py-1 border rounded-md ${page === currentPage
-                        ? 'bg-[#FC8404] text-white'
-                        : 'bg-gray-200 hover:bg-[#FC8404] hover:text-white'
+                      ? 'bg-[#FC8404] text-white'
+                      : 'bg-gray-200 hover:bg-[#FC8404] hover:text-white'
                       }`}
                   >
                     {page}

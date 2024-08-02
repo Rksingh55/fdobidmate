@@ -106,7 +106,7 @@ const Sidebar = () => {
                 <div className="h-full bg-[#00A9E2] dark:bg-black  ">
                     <div className="flex items-center justify-between px-2 py-3">
                         <Link href="/" className="main-logo flex shrink-0 items-center">
-                            <img src="/assets/images/fdo dashboard logo.png" alt="Logo" className="  ml-2 flex-none" />
+                            <img src="/assets/images/dashboard_sidebar_logo.svg" alt="Logo" className="w-[210px]  ml-2 flex-none" />
                         </Link>
 
                         <button

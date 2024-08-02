@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import BlankLayout from '@/components/Layouts/BlankLayout';
 import Link from 'next/link';
-import IconMail from '@/components/Icon/IconMail';
-import IconLockDots from '@/components/Icon/IconLockDots';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Herosectionleftimage from "../../public/assets/images/fdoIcon_black.png";
@@ -14,7 +12,6 @@ import { TiHome } from "react-icons/ti";
 import { API_BASE_URL, LOGIN_API_URL } from '@/api.config';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { EmailIcon, LoginbuttonIcon, PaswordIcon, RegisterbuttonIcon } from '@/public/icons';
-import Footer from '@/components/Layouts/Footer';
 
 const Login = () => {
     const router = useRouter()
@@ -23,6 +20,7 @@ const Login = () => {
     const [password, setpassword] = useState("");
     const [error, setError] = useState<{ type: 'success' | 'error'; text: string }>({ type: 'error', text: '' });
     const [showPassword, setShowPassword] = useState(false);
+
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -53,8 +51,8 @@ const Login = () => {
                 if (data.status == "success") {
                     router.push('/dashboard/vendor-register')
                     if (data.data && data.data.length > 0) {
-                        const firstObject = data.data[0];
                         setShowLoader(false)
+                        const firstObject = data.data[0];
                         localStorage.setItem('token', JSON.stringify(firstObject.token))
                         localStorage.setItem('userName', JSON.stringify(firstObject.name))
                         setemail('');
@@ -68,7 +66,7 @@ const Login = () => {
             })
             .catch((error) => {
                 setShowLoader(false)
-                console.error("Error:", error);
+                setError({ type: 'error', text: "Something went wrong! Please try again later." });
             });
     };
     const { t } = useTranslation();
@@ -142,7 +140,7 @@ const Login = () => {
                                     <div>
 
                                         {error && (
-                                            <div className={` ${error.type === 'success' ? 'text-green-500' : 'text-red-500'} text-${error.type === 'success' ? 'green' : 'red'}-500 rounded font-bold text-center pb-3`}>
+                                            <div className={` ${error.type === 'success' ? 'text-green-500' : 'text-red-500'} text-${error.type === 'success' ? 'green' : 'red'}-500 rounded font-bold text-center pb-1`}>
                                                 {error.text}
                                             </div>
                                         )}
@@ -187,6 +185,7 @@ const Login = () => {
                                         </div>
                                         <Link href="/auth/forgot-password" className=" text-[#00A9E2]     dark:hover:text-white hover:font-bold ">
                                             Forgot Password?
+
                                         </Link>
                                     </div>
                                     <button
