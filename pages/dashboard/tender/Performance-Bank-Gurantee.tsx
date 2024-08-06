@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { fetchCurrencyList } from '../../../Reducer/currencySlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
 import { getToken } from '@/localStorageUtil';
 import SuccessPopup from '../../../components/front/SuccessPopup';
-import { API_BASE_URL, GENERAL_INFORMATION_FORM_API_URL } from '@/api.config';
+import { API_BASE_URL, TENDER_ADDPBG_API_URL } from '@/api.config';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Dashboardbredcrumb from "@/components/dashboardbredcrumb"
 import { FiSave } from "react-icons/fi";
 import { GrPowerReset } from 'react-icons/gr';
-import { IoIosCloseCircleOutline } from 'react-icons/io';
+import Swal from 'sweetalert2';
+import Loader from '@/components/front/loader';
 
 interface User {
   pbg_num: string;
@@ -28,12 +28,18 @@ interface User {
   swift_code: string;
   ibn_code: string;
   bycheckbox: boolean;
+  tender_id: any;
+  company_id: any;
 }
 
 const GeneralInformation: React.FC = () => {
+  const id = sessionStorage.getItem("id")
+  const company_id = sessionStorage.getItem("company_id")
   const { t } = useTranslation();
   const [showPopup, setShowPopup] = useState(false);
   const [message, setMessage] = useState('');
+  const [showLoader, setShowLoader] = useState(false);
+
   const handleClosePopup = () => {
     setShowPopup(false);
   };
@@ -47,8 +53,8 @@ const GeneralInformation: React.FC = () => {
   const [user, setUser] = useState<User>({
     pbg_num: " ",
     date_of_issue: " ",
-    currency_id: " ",
     amount: " ",
+    currency_id: " ",
     valid_upto: " ",
     claim_date_upto: " ",
     bank_of_issue: " ",
@@ -58,6 +64,8 @@ const GeneralInformation: React.FC = () => {
     swift_code: " ",
     ibn_code: " ",
     bycheckbox: false,
+    tender_id: id,
+    company_id: company_id
   }
   );
   const resetUser = () => {
@@ -75,6 +83,8 @@ const GeneralInformation: React.FC = () => {
       swift_code: "",
       ibn_code: "",
       bycheckbox: false,
+      tender_id: "",
+      company_id: "",
     });
   };
 
@@ -142,46 +152,71 @@ const GeneralInformation: React.FC = () => {
     }
   };
 
-
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const isValid = validateForm();
+    // if (!isValid) {
+    //   return;
+    // }
+    setShowLoader(true)
+    const Tender_vendorid = sessionStorage.getItem("Tender_vendorid")
+    const payload = {
+      ...user,
+      vendor_id: Tender_vendorid,
+    };
     const token = getToken();
     try {
-      const response = await fetch(`${API_BASE_URL}${GENERAL_INFORMATION_FORM_API_URL}`, {
+      const response = await fetch(`${API_BASE_URL}${TENDER_ADDPBG_API_URL}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify(payload),
       });
       if (response.ok) {
         const responseData = await response.json();
-        localStorage.setItem("vendorId", responseData.data)
-        setMessage('General data submitted successful!');
-        setShowPopup(true);
+        setShowLoader(false)
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: responseData?.message?.success || 'PBG added successfully',
+          customClass: 'sweet-alerts',
+        });
+
       } else {
         const errorData = await response.json();
         if (errorData && errorData.errors) {
           Object.keys(errorData.errors).forEach(field => {
             const errorMessage = errorData.errors[field][0];
+            setShowLoader(false)
             toast.error(`${errorMessage}`);
           });
 
         }
       }
     } catch (error) {
-      toast.error('Failed to submit form. Please try again later.');
+      setShowLoader(false)
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to submit form. Please try again later.',
+        padding: '2em',
+        customClass: 'sweet-alerts',
+      });
     }
+
 
   };
 
   return (
     <div>
+      {showLoader && (
+        <Loader />
+      )}
       <Dashboardbredcrumb />
       <ToastContainer />
+
       <SuccessPopup
         message={message}
         show={showPopup}
@@ -195,7 +230,7 @@ const GeneralInformation: React.FC = () => {
               <div className="form-group form-float">
                 <label htmlFor="pbg_num" className="mb-0">{t('PBG Number')}<span className="text-red-700 relative">*</span></label>
                 <input
-                  type="number"
+                  type="text"
                   id="pbg_num"
                   placeholder='PBG Number'
                   className={`form-input  ${errors.pbg_num ? 'border-red-500' : ''}`}
@@ -315,7 +350,7 @@ const GeneralInformation: React.FC = () => {
                   type="text"
                   id="bank_of_issue"
                   placeholder='Issuing Bank'
-                  className={`form-input  ${errors.bank_of_issue ? 'border-red-500' : ''}`}
+                  className={`form-input  ${errors.bank_of_issue ? '' : ''}`}
                   value={user.bank_of_issue}
                   onChange={(e) => setUser({ ...user, bank_of_issue: e.target.value })}
                 />
@@ -364,7 +399,7 @@ const GeneralInformation: React.FC = () => {
               <div className="form-group form-float">
                 <label htmlFor="swift_code" className="mb-0">{t('Swift Code')} <span className="text-red-700 relative">*</span></label>
                 <input
-                  type="number"
+                  type="text"
                   id="swift_code"
                   className={`form-input  ${errors.swift_code ? 'border-red-500' : ''}`}
                   value={user.swift_code}
@@ -413,7 +448,7 @@ const GeneralInformation: React.FC = () => {
           </div>
         </>
         <div className='flex gap-2 justify-end py-2'>
-          <span onClick={resetUser} className="bg-[#00A9E2]  text-white font-bold py-2 px-4 flex gap-1 items-center rounded-md">
+          <span onClick={resetUser} className="bg-[#00A9E2]  cursor-pointer text-white font-bold py-2 px-4 flex gap-1 items-center rounded-md">
             <GrPowerReset />
             Reset
           </span>
@@ -423,9 +458,6 @@ const GeneralInformation: React.FC = () => {
           </button>
         </div>
       </form>
-
-
-
     </div>
   );
 }

@@ -194,11 +194,14 @@ const Navbar = () => {
                                                             </button>
                                                         </Link>
                                                     )}
-                                                    <Link href="/auth/login">
-                                                        <button className=" bg-[#C1E9FF]  px-6 py-2 rounded-md  w-full hover:bg-[#eceffd] hover:text-primary ">
+                                                        <a
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            href="https://fdo-bidmate.kefify.com/"
+                                                            className="bg-[#C1E9FF] px-6 py-2 rounded-md w-full hover:bg-[#eceffd] hover:text-primary"
+                                                        >
                                                             {t('Employee')}
-                                                        </button>
-                                                    </Link>
+                                                        </a>
                                                 </ul>
                                             </Dropdown>
                                         </>

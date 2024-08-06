@@ -6,7 +6,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Herosectionleftimage from "../../public/assets/images/fdoIcon_black.png";
 import Image from 'next/image'
-import { useTranslation } from 'react-i18next';
 import Loader from '@/components/front/loader';
 import { TiHome } from "react-icons/ti";
 import { API_BASE_URL, LOGIN_API_URL } from '@/api.config';
@@ -18,9 +17,8 @@ const Login = () => {
     const [email, setemail] = useState("");
     const [showLoader, setShowLoader] = useState(false);
     const [password, setpassword] = useState("");
-    const [error, setError] = useState<{ type: 'success' | 'error'; text: string }>({ type: 'error', text: '' });
+    const [error, setError] = useState<any>();
     const [showPassword, setShowPassword] = useState(false);
-
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -30,10 +28,7 @@ const Login = () => {
         const data = { email, password };
         setShowLoader(true)
         if (email == "" || password == "") {
-            setError({ type: 'error', text: "Please enter valid email and password" });
-        }
-        else {
-            setError({ type: 'error', text: "Something went wrong, try after some time" });
+            setError("Please Enter Valid Email & Password");
         }
         fetch(`${API_BASE_URL}${LOGIN_API_URL}`, {
             method: "POST",
@@ -47,31 +42,25 @@ const Login = () => {
                 return response.json();
             })
             .then((data) => {
-                setError({ type: 'error', text: data.message })
-                if (data.status == "success") {
+                if (data?.status == "success") {
+                    setError(<p className='text-green-500'>Credentials Validation Successful.</p>);
                     router.push('/dashboard/vendor-register')
-                    setShowLoader(false)
                     if (data.data && data.data.length > 0) {
                         const firstObject = data.data[0];
                         localStorage.setItem('token', JSON.stringify(firstObject.token))
                         localStorage.setItem('userName', JSON.stringify(firstObject.name))
                         localStorage.setItem('email', JSON.stringify(firstObject.email))
-
                         setemail('');
                         setpassword('');
                     }
+                    setShowLoader(false)
                 }
                 else {
                     setShowLoader(false)
-                    setError({ type: 'error', text: "Please enter correct email & password" });
+                    setError("Please Enter Correct Email & Password");
                 }
             })
-            .catch((error) => {
-                setShowLoader(false)
-                setError({ type: 'error', text: "Something went wrong! Please try again later." });
-            });
     };
-    const { t } = useTranslation();
     const handleChange = (e: any) => {
         if (e.target.name == "email") {
             setemail(e.target.value);
@@ -136,18 +125,16 @@ const Login = () => {
                                     </div></Link>
                             </div>
                         </div>
-                        <div className="relative flex w-full flex-col items-center justify-center gap-6 md:px-4 pb-16 sm:px-6 lg:max-w-[667px]">
+                        <div className="relative  mt-5 flex w-full flex-col items-center justify-center gap-6 md:px-4 pb-16 sm:px-6 lg:max-w-[667px]">
+                            {error && (
+                                <div className="font-bold text-red-500 ">
+                                    {error}
+                                </div>
+                            )}
                             <div className="w-full max-w-[440px] ">
+                                <p className="text-start  font-semibold ">Please Login to Your Account and Explore</p>
                                 <form className="space-y-4 dark:text-white" method="post" onSubmit={handleSubmit}>
                                     <div>
-
-                                        {error && (
-                                            <div className={` ${error.type === 'success' ? 'text-green-500' : 'text-red-500'} text-${error.type === 'success' ? 'green' : 'red'}-500 rounded font-bold text-center pb-1`}>
-                                                {error.text}
-                                            </div>
-                                        )}
-                                        <p className="text-start py-3 font-semibold">Please Login to Your Account and Explore</p>
-
                                         {/* {error && <p className='font-bold text-red-500 text-center pb-3'>{error}</p>} */}
                                         <div className="relative text-white-dark">
                                             <input type="text" className="form-input py-3 ps-10 placeholder:text-white-dark rounded-full border-[#00A9E2] border-2" placeholder="Enter Email" name="email" value={email}

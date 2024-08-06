@@ -3,12 +3,14 @@ import { FaRegEye } from 'react-icons/fa';
 import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 interface PopupProps {
     isVisible: boolean;
     onClose: () => void;
-    onUploadDocuments: (type: string, files: File[]) => Promise<void>;
+    onUploadDocuments: (type: string, files: File[], id?: any) => Promise<void>;
     onViewDocument: (file: File) => void;
     documentType: string;
+    documentId?: any;
 }
 
 const UploadDocumentPopup: React.FC<PopupProps> = ({
@@ -17,6 +19,7 @@ const UploadDocumentPopup: React.FC<PopupProps> = ({
     onUploadDocuments,
     onViewDocument,
     documentType,
+    documentId
 }) => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [uploading, setUploading] = useState(false);
@@ -37,29 +40,34 @@ const UploadDocumentPopup: React.FC<PopupProps> = ({
 
     const handleUpload = async () => {
         if (selectedFiles.length === 0) {
-            setError('Please select at least one document before uploading.');
-            toast.error('Please select at least one document before uploading.');
+            const errorMessage = 'Please select at least one document before uploading.';
+            setError(errorMessage);
+            toast.error(errorMessage);
             return;
         }
         setUploading(true);
         setMessage(null);
         setError(null);
         try {
-            await onUploadDocuments(documentType, selectedFiles);
-            setMessage({ type: 'success', text: 'Upload successful!' });
+            await onUploadDocuments(documentType, selectedFiles, documentId);  // Pass documentId if present
+            const successMessage = 'Upload successful!';
+            setMessage({ type: 'success', text: successMessage });
             setSelectedFiles([]);
             onClose();
-        } catch (error) {
-            setMessage({ type: 'error', text: 'Upload failed. Please try again.' });
+        } catch (err) {
+            const errorMessage = 'Upload failed. Please try again.';
+            setMessage({ type: 'error', text: errorMessage });
+            toast.error(errorMessage);
         } finally {
             setUploading(false);
         }
     };
+
     if (!isVisible) return null;
+
     return (
         <>
             <ToastContainer />
-
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                 <div className="bg-white p-4 rounded-lg shadow-lg md:w-[50%]">
                     <h2 className="text-xl font-semibold mb-4">Upload Documents</h2>
@@ -74,7 +82,7 @@ const UploadDocumentPopup: React.FC<PopupProps> = ({
                     <div className="mt-4">
                         {selectedFiles.length > 0 && (
                             <>
-                                <h3 className="text-lg font-semibold mb-2">Selected Files :</h3>
+                                <h3 className="text-lg font-semibold mb-2">Selected Files:</h3>
                                 {selectedFiles.map((file, index) => (
                                     <div key={index} className="flex justify-between items-center mb-2 border-1 rounded-md p-2">
                                         <span>{index + 1}. {file.name}</span>
@@ -97,7 +105,7 @@ const UploadDocumentPopup: React.FC<PopupProps> = ({
                         </button>
                         <button
                             onClick={handleUpload}
-                            className={`bg-green-500 text-white py-2 px-4 ${uploading ? 'opacity-20  cursor-not-allowed' : ''}`}
+                            className={`bg-green-500 text-white py-2 px-4 ${uploading ? 'opacity-20 cursor-not-allowed' : ''}`}
                             disabled={uploading || selectedFiles.length === 0}
                         >
                             {uploading ? 'Uploading...' : 'Upload'}

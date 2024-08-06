@@ -168,7 +168,6 @@ const RegisterCover = () => {
             ...user,
             id: vendor_id,
         };
-
         try {
             const response = await fetch(`${API_BASE_URL}${REGISTER_API_URL}`, {
                 method: "POST",

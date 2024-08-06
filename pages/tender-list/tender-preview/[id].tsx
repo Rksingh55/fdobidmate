@@ -3,7 +3,6 @@ import Header from '@/components/front/Pageheader';
 import Frontheader from '@/components/front/Navbar';
 import React, { useEffect, useState } from 'react';
 import { StartdateIcon, OMRIcon, TenderDepartmentIcon, TenderEntityIcon, TenderfeesIcon } from '../../../public/icons';
-import { MdCloudDownload } from 'react-icons/md';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
@@ -22,8 +21,8 @@ const TenderPreview = () => {
     const router = useRouter();
     const [data, setData] = useState<any>([]);
     const [daysToGo, setDaysToGo] = useState<number | null>(null);
-    const tenderlist = useSelector((state: RootState) => state.Tenderlist.list || []);
     const [showLoader, setShowLoader] = useState(false);
+    const tenderlist = useSelector((state: RootState) => state.Tenderlist.list || []);
     const fetchTenderData = (page: number) => {
         dispatch(fetchTenderList(page));
     };
@@ -92,10 +91,8 @@ const TenderPreview = () => {
             console.log(result)
             if (result?.status === "success") {
                 toast.success(result?.message?.success);
-                setTimeout(() => {
-                    router.push("/dashboard/tender");
-                    setShowLoader(false)
-                }, 2000);
+                router.push("/dashboard/tender");
+                setShowLoader(false)
             } else {
                 toast.error(result?.message?.error || 'An error occurred');
             }
@@ -123,7 +120,7 @@ const TenderPreview = () => {
             toast.error('You must be logged in to apply tender, Please Login');
             setTimeout(() => {
                 router.push("/auth/login");
-            }, 3000);
+            }, 2000);
             return;
         } else {
             Tenderapply();

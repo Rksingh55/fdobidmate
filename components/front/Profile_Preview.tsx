@@ -29,7 +29,13 @@ function Profile_Preview() {
     console.log("all data", data);
     const Img = profileImg;
 
-
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const handleViewImage = (imageBase64: string) => {
+        setSelectedImage(imageBase64);
+    };
+    const handleCloseModal = () => {
+        setSelectedImage(null);
+    };
     return (
         <>
             {status === 'loading' && (
@@ -122,7 +128,7 @@ function Profile_Preview() {
                                         <tr className='bg-[#F3F5F8] '>
                                             <th className='px-2 py-2'>S.No</th>
                                             <th className='px-2 py-2'>Document Name</th>
-                                            <th className='flex flex-col px-2 py-2'>Format <span className='text-red-500 text-[10px]'>(Only PDF, JPEG, PNG Accepted)</span></th>
+                                            <th className='flex flex-col px-2 py-2'>Format </th>
                                             <th className='px-2 py-2'>Size</th>
 
                                             <th className='px-2 py-2'>Status</th>
@@ -139,21 +145,7 @@ function Profile_Preview() {
                                                         </div>
                                                     </td>
                                                     <td className='p-2 flex gap-2 items-center'>
-                                                        <a
-                                                            href={`data:image/jpeg;base64,${doc?.name}`}
-                                                            target='_blank'
-                                                            rel='noopener noreferrer'
-                                                            className='flex gap-2 items-center hover:text-blue-500 hover:underline cursor-pointer'
-                                                        >
-                                                            {/* <Base64Image
-                                                        key={index}
-                                                        base64String={doc?.name}
-                                                        alt={`Document ${index}`}
-                                                        width={100}
-                                                        height={100}
-                                                    /> */}
-                                                            View
-                                                        </a>
+                                                        <p className='cursor-pointer' onClick={() => handleViewImage(doc?.name)}>View</p>
                                                     </td>
                                                     <td className='p-2  font-bold'>
                                                         --
@@ -178,6 +170,19 @@ function Profile_Preview() {
                 </div>
             )
             }
+            {selectedImage && (
+                <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+                    <div className="bg-white p-4 rounded-md">
+                        <button
+                            className="absolute top-2 right-2 text-white bg-orange-500 p-2 "
+                            onClick={handleCloseModal}
+                        >
+                            &times;
+                        </button>
+                        <Base64Image base64String={selectedImage} alt="PBG Document" width={600} height={400} />
+                    </div>
+                </div>
+            )}
         </>
     )
 }

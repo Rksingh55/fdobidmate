@@ -175,8 +175,6 @@ const HomePage: React.FC = () => {
                     </tbody>
                 </table>
             </div>
-
-
             <UploadDocumentPopup
                 isVisible={isUploadPopupVisible}
                 onClose={handleCloseUploadPopup}
@@ -190,12 +188,12 @@ const HomePage: React.FC = () => {
                 document={viewDocument}
             />
             <div className="mt-4">
-                {documents.map((doc) => (
+                {documents?.map((doc) => (
                     <div key={doc.type} className="mb-4">
                         <h3 className="text-lg font-semibold mb-2">{doc.type}:</h3>
-                        {doc.files.map((file, index) => (
+                        {doc?.files?.map((file, index) => (
                             <div key={index} className="flex justify-between items-center mb-2">
-                                <span>{file.name}</span>
+                                <span>{file?.name}</span>
                                 <div>
                                     <button
                                         onClick={() => handleViewDocument(file)}

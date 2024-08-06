@@ -8,14 +8,14 @@ import { getToken } from '@/localStorageUtil';
 function Grn() {
   const router = useRouter();
   useEffect(() => {
-      const token = getToken();
-      if (!token) {
-          router.replace('/');
-      }
+    const token = getToken();
+    if (!token) {
+      router.replace('/');
+    }
   }, []);
   return (
     <div>
-       <Dashboardbredcrumb />
+      <Dashboardbredcrumb />
     </div>
   )
 }
