@@ -259,87 +259,87 @@ const Quotations = () => {
                     </div>
 
                     <div className="datatables pagination-padding pago">
-                    {status === 'loading' && (
+                        {status === 'loading' && (
                             <div className="flex flex-wrap ml-4 gap-4">
                                 {Array.from({ length: 6 }).map((_, index) => (
                                     <FormSkeltonloader />
                                 ))}
                             </div>
                         )}
-                           {status === 'succeeded' && (
-                        <DataTable
-                            className="table-hover whitespace-nowrap  "
-                            records={records}
-                            columns={[
-                                // {
-                                //     accessor: 'invoice',
-                                //     sortable: true,
-                                //     render: ({ invoice }) => (
-                                //         <Link href="/dashboard/vendor-list/preview">
-                                //             <div className="font-semibold text-primary underline hover:no-underline">{`#${invoice}`}</div>
-                                //         </Link>
-                                //     ),
-                                // },
-                                {
-                                    accessor: 'Quotation',
-                                    sortable: true,
-                                    render: ({ code, id }: any) => (
-                                        <div className="flex items-center font-semibold">
-                                            <div>{code}</div>
-                                        </div>
-                                    ),
-                                },
-                                {
-                                    accessor: ('title'),
-                                    sortable: true,
-                                    titleClassName: 'text-left',
-                                    render: ({ title, id }) => <div className="text-left font-semibold">{`${title}`}</div>,
-                                },
-                                {
-                                    accessor: 'Purchase Type',
-                                    sortable: true,
-                                    render: ({ purchase_type, id }) => <div className="text-left font-semibold">{`${purchase_type}`}</div>,
-                                },
-                                {
-                                    accessor: 'date',
-                                    sortable: true,
-                                    render: ({ delivery_date, id }) => <div className="text-left font-semibold">{`${delivery_date}`}</div>,
-                                },
-                                {
-                                    accessor: 'status',
-                                    sortable: true,
-                                    render: ({ status }) => <div className="text-left font-semibold">{`${status}`}</div>,
-                                },
-                                {
-                                    accessor: 'action',
-                                    title: 'Actions',
-                                    render: ({ id }) => (
-                                        <div className="mx-auto flex w-max items-center gap-4">
-                                            <Link href="/dashboard/vendor/vendor-list/edit" className="flex hover:text-info">
-                                                <IconEdit className="w-4.5 h-4.5" />
-                                            </Link>
-                                            <Link href="/dashboard/quotations/view" className="flex hover:text-primary">
-                                                <IconEye />
-                                            </Link>
+                        {status === 'succeeded' && (
+                            <DataTable
+                                className="table-hover whitespace-nowrap  "
+                                records={records}
+                                columns={[
+                                    // {
+                                    //     accessor: 'invoice',
+                                    //     sortable: true,
+                                    //     render: ({ invoice }) => (
+                                    //         <Link href="/dashboard/vendor-list/preview">
+                                    //             <div className="font-semibold text-primary underline hover:no-underline">{`#${invoice}`}</div>
+                                    //         </Link>
+                                    //     ),
+                                    // },
+                                    {
+                                        accessor: 'Quotation',
+                                        sortable: true,
+                                        render: ({ code, id }: any) => (
+                                            <div className="flex items-center font-semibold">
+                                                <div>{code}</div>
+                                            </div>
+                                        ),
+                                    },
+                                    {
+                                        accessor: ('title'),
+                                        sortable: true,
+                                        titleClassName: 'text-left',
+                                        render: ({ title, id }) => <div className="text-left font-semibold">{`${title}`}</div>,
+                                    },
+                                    {
+                                        accessor: 'Purchase Type',
+                                        sortable: true,
+                                        render: ({ purchase_type, id }) => <div className="text-left font-semibold">{`${purchase_type}`}</div>,
+                                    },
+                                    {
+                                        accessor: 'date',
+                                        sortable: true,
+                                        render: ({ delivery_date, id }) => <div className="text-left font-semibold">{`${delivery_date}`}</div>,
+                                    },
+                                    {
+                                        accessor: 'status',
+                                        sortable: true,
+                                        render: ({ status }) => <div className="text-left font-semibold">{`${status}`}</div>,
+                                    },
+                                    {
+                                        accessor: 'action',
+                                        title: 'Actions',
+                                        render: ({ id }) => (
+                                            <div className="mx-auto flex w-max items-center gap-4">
+                                                <Link href="/dashboard/vendor/vendor-list/edit" className="flex hover:text-info">
+                                                    <IconEdit className="w-4.5 h-4.5" />
+                                                </Link>
+                                                <Link href="/dashboard/quotations/view" className="flex hover:text-primary">
+                                                    <IconEye />
+                                                </Link>
 
-                                        </div>
-                                    ),
-                                },
+                                            </div>
+                                        ),
+                                    },
 
-                            ]}
-                            highlightOnHover
-                            totalRecords={initialRecords.length}
-                            recordsPerPage={pageSize}
-                            page={page}
-                            onPageChange={(p) => setPage(p)}
-                            recordsPerPageOptions={PAGE_SIZES}
-                            onRecordsPerPageChange={setPageSize}
-                            sortStatus={sortStatus}
-                            onSortStatusChange={setSortStatus}
-                            onSelectedRecordsChange={setSelectedRecords}
-                            paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
-                        />
-                           )}
+                                ]}
+                                highlightOnHover
+                                totalRecords={initialRecords.length}
+                                recordsPerPage={pageSize}
+                                page={page}
+                                onPageChange={(p) => setPage(p)}
+                                recordsPerPageOptions={PAGE_SIZES}
+                                onRecordsPerPageChange={setPageSize}
+                                sortStatus={sortStatus}
+                                onSortStatusChange={setSortStatus}
+                                onSelectedRecordsChange={setSelectedRecords}
+                                paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
+                            />
+                        )}
                     </div>
                 </div>
             </div>

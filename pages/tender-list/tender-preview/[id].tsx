@@ -107,16 +107,17 @@ const TenderPreview = () => {
             }
         }
     };
-
-
     const [name, setName] = useState<string>('');
     useEffect(() => {
         const u_name = localStorage.getItem("userName");
         setName(u_name ?? "");
     }, []);
-
     const handletenderapply = () => {
+        const Id = data[0]?.id
         if (!name) {
+            if (Id) {
+                sessionStorage.setItem("TenderId", Id)
+            }
             toast.error('You must be logged in to apply tender, Please Login');
             setTimeout(() => {
                 router.push("/auth/login");
@@ -126,7 +127,6 @@ const TenderPreview = () => {
             Tenderapply();
         }
     };
-
 
     return (
         <>      <ToastContainer />

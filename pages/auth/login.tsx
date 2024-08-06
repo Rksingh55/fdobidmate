@@ -25,7 +25,15 @@ const Login = () => {
     };
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        const data = { email, password };
+        const TenderId = sessionStorage.getItem("TenderId")
+        const RfiId = sessionStorage.getItem("RFIId")
+        const data = {
+            email,
+            password,
+            ...(TenderId && { doc_id: TenderId, doc_type: "Tender" }),
+            ...(RfiId && { doc_id: RfiId, doc_type: "RFI" })
+
+        };
         setShowLoader(true)
         if (email == "" || password == "") {
             setError("Please Enter Valid Email & Password");
