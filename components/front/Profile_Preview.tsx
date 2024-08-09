@@ -105,7 +105,6 @@ function Profile_Preview() {
                                         </div>
                                     ))) : (
                                     <div className=' w-full border-2 bg-white  rounded-md p-3 flex md:flex-row flex-col gap-3  justify-between'>
-
                                         <td colSpan={4} className='p-2 text-center text-red-500 font-bold'>No Data Available</td>
                                     </div>
                                 )}

@@ -25,6 +25,7 @@ import Loader from '@/components/front/loader';
 interface Quotation {
     id: string;
     title:any;
+    creator:any
     
 }
 
@@ -532,7 +533,7 @@ const Quotations = (rowData: any) => {
                                             const statusColor = getStatusColor(row.status);
                                             return (
                                                 <div className={`text-centre font-semibold px-2 py-1 rounded ${statusColor}`}>
-                                                    {row.status}
+                                                    {row?.status}
                                                 </div>
                                             );
                                         },
