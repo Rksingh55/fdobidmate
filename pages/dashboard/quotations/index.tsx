@@ -555,7 +555,7 @@ const Quotations = (rowData: any) => {
                                 recordsPerPageOptions={PAGE_SIZES}
                                 onRecordsPerPageChange={setPageSize}
                                 sortStatus={sortStatus}
-                                onSortStatusChange={setSortStatus}
+                                // onSortStatusChange={setSortStatus}
                                 onSelectedRecordsChange={setSelectedRecords}
                                 paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
                             />
