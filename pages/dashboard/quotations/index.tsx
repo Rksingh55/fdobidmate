@@ -469,17 +469,17 @@ const Quotations = (rowData: any) => {
                                     {
                                         accessor: 'Quotation ID ',
                                         sortable: true,
-                                        render: ({ code, id }: any) => (
+                                        render: ({ code }: any) => (
                                             <div className="flex items-center font-semibold">
                                                 <div>{code || "N/A"}</div>
                                             </div>
                                         ),
                                     },
                                     {
-                                        accessor: ('title'),
+                                        accessor: 'title',
                                         sortable: true,
                                         titleClassName: 'text-left',
-                                        render: ({ title, id }) => <div className="text-left font-semibold">{`${title || "N/A"}`}</div>,
+                                        render: ({ title}) => <div className="text-left font-semibold">{`${title || "N/A"}`}</div>,
                                     },
                                     {
                                         accessor: 'Quotation Case ',

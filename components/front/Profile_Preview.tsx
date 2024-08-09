@@ -89,20 +89,26 @@ function Profile_Preview() {
                             </div>
                             <div className='mt-3'>
                                 <h1 className='font-semibold text-xl py-2 text-[#00A9E2] flex items-center gap-2'><AccountInformationIcon />Account Information</h1>
-                                {data?.vendor_bank_details?.map((item: any) => (
-                                    <div className=' w-full border-2 bg-white  rounded-md p-3 flex md:flex-row flex-col gap-3 justify-between'>
-                                        <div className='flex flex-col gap-3'>
-                                            <p className='flex justify-between gap-10 '><span className='font-bold flex items-center gap-1'><AccountNumberIcon />  Account Number</span> {item?.account_no || "N/A"}</p>
-                                            <p className='flex justify-between gap-10'> <span className='font-bold flex items-center gap-1'><SwiftCodeIcon /> Swift Code</span> {item?.swift_code || "N/A"}</p>
-                                            <p className='flex justify-between gap-10'><span className='font-bold flex items-center gap-1'><BankbranchIcon /> Bank Branch & Address</span> {item?.bank_name || "N/A"}</p>
-                                        </div>
-                                        <div className='flex flex-col gap-3'>
-                                            <p className='flex justify-between gap-10 '><span className='font-bold flex items-center gap-1'><AccountholderIcon /> Account Holder Name</span> {item?.account_holder_name || "N/A"}</p>
-                                            <p className='flex justify-between gap-10'> <span className='font-bold flex items-center gap-1'><IbancodeIcon /> IBAN</span> {item?.iban || "N/A"}</p>
-                                        </div>
-                                    </div>
-                                ))}
 
+                                {data?.vendor_bank_details && data?.vendor_bank_details.length > 0 ? (
+                                    data?.vendor_bank_details?.map((item: any) => (
+                                        <div className=' w-full border-2 bg-white  rounded-md p-3 flex md:flex-row flex-col gap-3 justify-between'>
+                                            <div className='flex flex-col gap-3'>
+                                                <p className='flex justify-between gap-10 '><span className='font-bold flex items-center gap-1'><AccountNumberIcon />  Account Number</span> {item?.account_no || "N/A"}</p>
+                                                <p className='flex justify-between gap-10'> <span className='font-bold flex items-center gap-1'><SwiftCodeIcon /> Swift Code</span> {item?.swift_code || "N/A"}</p>
+                                                <p className='flex justify-between gap-10'><span className='font-bold flex items-center gap-1'><BankbranchIcon /> Bank Branch & Address</span> {item?.bank_name || "N/A"}</p>
+                                            </div>
+                                            <div className='flex flex-col gap-3'>
+                                                <p className='flex justify-between gap-10 '><span className='font-bold flex items-center gap-1'><AccountholderIcon /> Account Holder Name</span> {item?.account_holder_name || "N/A"}</p>
+                                                <p className='flex justify-between gap-10'> <span className='font-bold flex items-center gap-1'><IbancodeIcon /> IBAN</span> {item?.iban || "N/A"}</p>
+                                            </div>
+                                        </div>
+                                    ))) : (
+                                    <div className=' w-full border-2 bg-white  rounded-md p-3 flex md:flex-row flex-col gap-3  justify-between'>
+
+                                        <td colSpan={4} className='p-2 text-center text-red-500 font-bold'>No Data Available</td>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

@@ -479,7 +479,6 @@ function QuetationViews() {
                 </div>
             </div>
             <div className="flex justify-end mt-4 gap-2">
-
                 {data?.status === "Sent" ? (
                     <>
                         <button onClick={() => handleAcceptQuotation(data?.id)} className='px-8 py-2 border-1 hover:bg-green-500 hover:text-white rounded-md text-[#00A9E2] border-[#00A9E2] hover:border-none'>Accept</button>
