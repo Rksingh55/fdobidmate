@@ -24,7 +24,8 @@ import { API_BASE_URL, QUATATION_UPDATE_STATUS_VIEW_API_URL } from '@/api.config
 import Loader from '@/components/front/loader';
 interface Quotation {
     id: string;
-    // Add other properties as needed
+    title:any;
+    
 }
 
 const Quotations = (rowData: any) => {
@@ -479,7 +480,7 @@ const Quotations = (rowData: any) => {
                                         accessor: 'title',
                                         sortable: true,
                                         titleClassName: 'text-left',
-                                        render: ({ title}) => <div className="text-left font-semibold">{`${title || "N/A"}`}</div>,
+                                        render: ({ title }) => <div className="text-left font-semibold">{`${title || "N/A"}`}</div>,
                                     },
                                     {
                                         accessor: 'Quotation Case ',
