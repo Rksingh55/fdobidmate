@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Dashboardbredcrumb from "@/components/dashboardbredcrumb";
-import axios from 'axios';
-import { PiDotsThreeVerticalBold } from 'react-icons/pi';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Swal from 'sweetalert2';
 import { API_BASE_URL, QUATATION_DELETE_API_URL, QUATATION_SAVE_API_URL, QUATATION_SUBMIT_API_URL, QUATATION_UPDATE_STATUS_VIEW_API_URL, QUATATION_VIEW_API_URL } from '@/api.config';
@@ -48,14 +46,13 @@ function QuetationViews() {
     const Modeofdelivery = useSelector((state: RootState) => state.Modeofdelivery.list);
     console.log("termsofdelivery-----", termsofdelivery)
     console.log("Modeofdelivery-----", Modeofdelivery)
-
-
     const token = getToken();
     const [showLoader, setShowLoader] = useState(false);
     const [data, setData] = useState<any>(null);
     console.log("---->", data)
     const [quotationline, setQuotationLine] = useState<Item[]>([]);
     const [editData, setEditData] = useState<Item[]>([]);
+    const [editedItems, setEditedItems] = useState<Set<string>>(new Set());
     const [deliveryDate, setDeliveryDate] = useState<string>("");
     const [modeOfDelivery, setModeOfDelivery] = useState<string>("");
     const [termsOfDelivery, setTermsOfDelivery] = useState<string>("");
@@ -160,11 +157,54 @@ function QuetationViews() {
             (updatedEditData[index] as any)[field] = value;
         }
         setEditData(updatedEditData);
+        setEditedItems(prev => new Set(prev.add(updatedEditData[index].id)));
     };
 
-
+    const isExpired = (expirationDate: string | null) => {
+        if (!expirationDate) return false;
+        const now = new Date();
+        const expiryDate = new Date(expirationDate);
+        return expiryDate < now;
+    };
 
     const handleSave = async (id: string) => {
+        const modifiedItems = editData.filter(item => editedItems.has(item.id));
+
+        if (modifiedItems.length === 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'No changes to save, Please Change First!',
+                customClass: 'sweet-alerts',
+            });
+            return;
+        }
+        if (data?.expiration_date && isExpired(data.expiration_date)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'The expiration date has passed. Please update the expiration date.',
+                customClass: 'sweet-alerts',
+            });
+            return;
+        }
+        const formattedData = editData
+            .filter(item => editedItems.has(item.id))
+            .map(item => ({
+                quotation_sendline_id: item.id,
+                price: item.unit_price,
+                quantity: item.quantity,
+                total: item.total_amount,
+                your_comment: item.yourcomment
+            }));
+
+        const requestData = {
+            Quotation_submission: formattedData,
+            quotation_id: id,
+            delivery_date: deliveryDate,
+            modeofdelivery_id: modeOfDelivery,
+            termsofdelivery_id: termsOfDelivery,
+        };
         try {
             const response = await fetch(`${API_BASE_URL}${QUATATION_SAVE_API_URL}`, {
                 method: 'POST',
@@ -172,13 +212,7 @@ function QuetationViews() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({
-                    quotation_id: id,
-                    delivery_date: deliveryDate,
-                    modeofdelivery_id: modeOfDelivery,
-                    termsofdelivery_id: termsOfDelivery,
-                    data: editData,
-                })
+                body: JSON.stringify(requestData)
             });
             const result = await response.json();
             if (response.ok) {
@@ -189,6 +223,8 @@ function QuetationViews() {
                     customClass: 'sweet-alerts',
                 });
                 setQuotationLine(editData);
+                setEditedItems(new Set());
+                fetchQuotationDetail(id)
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -431,7 +467,7 @@ function QuetationViews() {
                                 value={modeOfDelivery}
                                 onChange={(e) => handleFieldChange(e, 'mode_of_delivery')}
                             >
-                                {Modeofdelivery.map((item) => (
+                                {Modeofdelivery?.map((item) => (
                                     <option key={item.id} value={item.id}>
                                         {item.name}
                                     </option>
@@ -499,12 +535,6 @@ function QuetationViews() {
                 ) : null}
                 {data?.status === "Responded" || data?.status === "Save & Draft" ? (
                     <>
-                        <button
-                            onClick={() => handleSave(data?.id)}
-                            className="bg-blue-500 text-white px-4 py-2 rounded"
-                        >
-                            Save
-                        </button>
                         <button
                             onClick={() => handleSubmit(data?.id)}
                             className="bg-blue-500 text-white px-4 py-2 rounded"

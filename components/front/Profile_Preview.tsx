@@ -63,7 +63,7 @@ function Profile_Preview() {
                                 <h1 className='flex justify-between'><span className='font-bold flex gap-2'><EmailIcon />Email id</span> {data?.email || "N/A"}</h1>
                                 <h1 className='flex justify-between'><span className='font-bold flex gap-2'><TenderDepartmentIcon />Company Name</span> {data?.company_id || "N/A"}</h1>
                                 <h1 className='flex justify-between'><span className='font-bold flex gap-2'><VendorTypeIcon />Vendor Type</span> {data?.vendor_type || "N/A"}</h1>
-                                <h1 className='flex justify-between'><span className='font-bold flex gap-2 '><NationlityIcon />Nationality</span> Zimbabwe</h1>
+                                <h1 className='flex justify-between'><span className='font-bold flex gap-2 '><NationlityIcon />Nationality</span>---</h1>
                                 <h1 className='flex justify-between'><span className='font-bold flex gap-2'><BillingIcon />Billing address</span> {data?.billing_address || "N/A"}</h1>
                                 <h1 className='flex justify-between'><span className='font-bold flex gap-2'><PrimaryAdressIcon />Primary address</span> {data?.primary_address || "N/A"}</h1>
                                 <h1 className='flex justify-between'><span className='font-bold flex gap-2'><OMRIcon />Currency </span> {data?.currency?.code || "N/A"}</h1>
@@ -133,9 +133,7 @@ function Profile_Preview() {
                                         <tr className='bg-[#F3F5F8] '>
                                             <th className='px-2 py-2'>S.No</th>
                                             <th className='px-2 py-2'>Document Name</th>
-                                            <th className='flex flex-col px-2 py-2'>Format </th>
-                                            <th className='px-2 py-2'>Size</th>
-
+                                            <th className='flex flex-col px-2 py-2'>Action </th>
                                             <th className='px-2 py-2'>Status</th>
                                         </tr>
                                     </thead>
@@ -152,9 +150,7 @@ function Profile_Preview() {
                                                     <td className='p-2 flex gap-2 items-center'>
                                                         <p className='cursor-pointer' onClick={() => handleViewImage(doc?.name)}>View</p>
                                                     </td>
-                                                    <td className='p-2  font-bold'>
-                                                        --
-                                                    </td>
+                                                  
                                                     <td className='p-2 text-green-500 font-bold'>
                                                         Active
                                                     </td>

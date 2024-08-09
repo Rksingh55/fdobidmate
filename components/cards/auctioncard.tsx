@@ -90,7 +90,7 @@ function AuctionCard() {
             <div className='my-3 rounded-md flex justify-between flex-col md:flex-row bg-white' >
                 <input
                     type='search'
-                    className=' outline-none py-2.5 px-10 md:w-[350px] rounded'
+                    className=' outline-none py-2.5 px-10 md:w-[350px] rounded border-2'
                     placeholder='Search here by name, model and year '
                     value={searchQuery}
                     onChange={handleSearchChange}
@@ -113,7 +113,7 @@ function AuctionCard() {
                     />
                 </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            <div className="flex justify-between flex-wrap">
                 {filteredCars?.length > 0 ? (
                     filteredCars?.map((car) => (
                         <div data-aos="zoom-in" className="border-[#FC8404] border-2  rounded-md max-w-sm w-full bg-white my-3 overflow-hidden  transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-100">

@@ -31,10 +31,7 @@ function OtherDetails() {
         dispatch(fetchvendordata());
     }, [dispatch]);
     const [user, setUser] = useState({
-        company_name: "",
-        contact_no: "",
-        contact_person: "",
-        client: "",
+        
     });
     const [user2, setUser2] = useState({
         contactperson: "",

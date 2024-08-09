@@ -46,6 +46,12 @@ const GeneralInformation: React.FC = () => {
     };
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const dispatch = useDispatch<AppDispatch>();
+    const currencyList = useSelector((state: RootState) => state.currency.list);
+    const countryList = useSelector((state: RootState) => state.country.list);
+    const vendorType = useSelector((state: RootState) => state.vendortype.list);
+    const vendorInformationList = useSelector((state: RootState) => state.vendordata.list);
+    const status = useSelector((state: RootState) => state.vendordata.status);
+    const error = useSelector((state: RootState) => state.vendordata.error);
     useEffect(() => {
         dispatch(fetchCurrencyList());
         dispatch(fetchCountryList());
@@ -53,12 +59,7 @@ const GeneralInformation: React.FC = () => {
         dispatch(fetchvendordata());
     }, [dispatch]);
 
-    const currencyList = useSelector((state: RootState) => state.currency.list);
-    const countryList = useSelector((state: RootState) => state.country.list);
-    const vendorType = useSelector((state: RootState) => state.vendortype.list);
-    const vendorInformationList = useSelector((state: RootState) => state.vendordata.list);
-    const status = useSelector((state: RootState) => state.vendordata.status);
-    const error = useSelector((state: RootState) => state.vendordata.error);
+
 
 
 
@@ -224,7 +225,7 @@ const GeneralInformation: React.FC = () => {
                 {status === 'loading' && (
                     <FormSkeltonloader />
                 )}
-                 {status === 'failed' && <div className="text-red-500 text-center mt-12 font-bold">  {error}</div>}
+                {status === 'failed' && <div className="text-red-500 text-center mt-12 font-bold">  {error}</div>}
                 {status === 'succeeded' && (
                     <>
                         <div className='row'>

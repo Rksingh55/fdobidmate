@@ -13,7 +13,7 @@ const AuctionCard = () => {
       <ToastContainer />
       <Frontheader />
       <Header heading="Auction List" />
-      <div className='w-[90%] m-auto '>
+      <div className='md:w-[90%] m-auto '>
         <Auctioncards />
       </div>
 

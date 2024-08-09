@@ -24,9 +24,9 @@ import { API_BASE_URL, QUATATION_UPDATE_STATUS_VIEW_API_URL } from '@/api.config
 import Loader from '@/components/front/loader';
 interface Quotation {
     id: string;
-    title:any;
-    creator:any
-    
+    title: any;
+    creator: any
+
 }
 
 const Quotations = (rowData: any) => {
@@ -371,6 +371,13 @@ const Quotations = (rowData: any) => {
                         <FaEye /> View
                     </button>
                 );
+            case 'Save & Draft':
+                return (
+
+                    <button onClick={() => handleViewQutations(id)} className='bg-white p-2 rounded-md hover:text-blue-400 px-3 flex justify-center items-center gap-1' type="button">
+                        <FaEye /> View
+                    </button>
+                );
             default:
                 return null;
         }
@@ -416,6 +423,10 @@ const Quotations = (rowData: any) => {
                 return 'bg-yellow-100 text-yellow-800';
             case 'Cancel':
                 return 'bg-gray-100 text-gray-800';
+            case 'Save & Draft':
+                return 'bg-blue-100 text-text-800';
+            case 'Responded':
+                return 'bg-purple-100 text-purple-800';
             default:
                 return 'bg-gray-100 text-gray-800';
         }
