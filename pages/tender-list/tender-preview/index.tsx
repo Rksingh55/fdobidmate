@@ -49,7 +49,6 @@ const TenderPreview = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const fetchData = async (id: string) => {
         try {
-            alert(id)
             setLoading(true);
             const response = await fetch(`${API_BASE_URL}${TENDERPREVIEW_API_URL}?encrypt_id=${id}`, {
                 headers: {
