@@ -52,6 +52,7 @@ const GeneralInformation: React.FC = () => {
     const vendorInformationList = useSelector((state: RootState) => state.vendordata.list);
     const status = useSelector((state: RootState) => state.vendordata.status);
     const error = useSelector((state: RootState) => state.vendordata.error);
+    
     useEffect(() => {
         dispatch(fetchCurrencyList());
         dispatch(fetchCountryList());

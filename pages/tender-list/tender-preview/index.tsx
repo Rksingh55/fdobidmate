@@ -49,6 +49,7 @@ const TenderPreview = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const fetchData = async (id: string) => {
         try {
+            alert(id)
             setLoading(true);
             const response = await fetch(`${API_BASE_URL}${TENDERPREVIEW_API_URL}?encrypt_id=${id}`, {
                 headers: {
@@ -56,9 +57,6 @@ const TenderPreview = () => {
                 },
             });
             if (response.ok) {
-                // setTimeout(() => {
-                //     sessionStorage.removeItem('sdfkheifsnccsd0223!@#94dssdcscjdshcdscsc1@$!@');
-                // }, 2000)
             }
             const result = await response?.json();
             const data = result?.data;
@@ -167,14 +165,18 @@ const TenderPreview = () => {
                                         <StartdateIcon />
                                         <div className='flex    flex-col '>
                                             <label className='font-bold'>Start Date  </label>
-                                            {new Date(data[0]?.publish_date)?.toISOString()?.split('T')[0]}
+                                            {/* {new Date(data[0]?.publish_date)?.toISOString()?.split('T')[0]} */}
+                                            {data[0]?.publish_date}
+
                                         </div>
                                     </div>
                                     <div className="py-2 flex gap-2">
                                         <StartdateIcon />
                                         <div className='flex    flex-col'>
                                             <label className='font-bold'>Close Date  </label>
-                                            {new Date(data[0]?.close_date)?.toISOString()?.split('T')[0]}
+                                            {/* {new Date(data[0]?.close_date)?.toISOString()?.split('T')[0]} */}
+                                            {data[0]?.close_date}
+
 
                                         </div>
                                     </div>
@@ -225,26 +227,31 @@ const TenderPreview = () => {
                                             <tr>
                                                 <td className='p-2'>Tender Float Date</td>
                                                 <td className='p-2'>
-                                                    {new Date(data[0]?.float_date)?.toISOString()?.split('T')[0]}
+                                                    {data[0]?.float_date}
+                                                    {/* {new Date(data[0]?.float_date)?.toISOString()?.split('T')[0]} */}
+
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td className='p-2'>Bid Submission Date</td>
                                                 <td className='p-2'>
-                                                    {new Date(data[0]?.bidsubmissiondeadline_date)?.toISOString()?.split('T')[0]}
+                                                    {data[0]?.bidsubmissiondeadline_date}
+                                                    {/* {new Date(data[0]?.bidsubmissiondeadline_date)?.toISOString()?.split('T')[0]} */}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td className='p-2'>Clarification End Date</td>
                                                 <td className='p-2'>
-
-                                                    {new Date(data[0]?.clarificationend_date)?.toISOString()?.split('T')[0]}
+                                                    {data[0]?.clarificationend_date}
+                                                    {/* {new Date(data[0]?.clarificationend_date)?.toISOString()?.split('T')[0]} */}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td className='p-2'>Tender End Date</td>
                                                 <td className='p-2'>
-                                                    {new Date(data[0]?.close_date)?.toISOString()?.split('T')[0]}
+                                                    {/* {new Date(data[0]?.close_date)?.toISOString()?.split('T')[0]} */}
+                                                    {data[0]?.close_date}
+
                                                 </td>
                                             </tr>
                                         </tbody>

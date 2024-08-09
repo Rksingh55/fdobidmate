@@ -122,14 +122,15 @@ const Tenderdetails = () => {
                 },
                 body: JSON.stringify({ tender_id: id })
             });
-            if (response.ok) {
-                setShowLoader(false)
-                // setTimeout(() => {
-                //     sessionStorage.removeItem('sdgasuidaiusgdad!#@!nx@#$1dsvs');
-                // }, 3000)
-            }
             const result = await response.json();
             setData(result?.data || [])
+            if (response.ok) {
+                setShowLoader(false)
+            } else{
+                setShowLoader(false)
+
+            }
+           
         } catch (error) {
             setShowLoader(false);
             toast.error('Failed to fetch data');

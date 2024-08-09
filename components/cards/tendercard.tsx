@@ -1,7 +1,6 @@
 import React from 'react';
 import { MdKeyboardArrowRight, } from 'react-icons/md';
 import { OMRIcon, StartdateIcon, TenderDepartmentIcon, TenderEntityIcon, TenderfeesIcon, TenderidIcon } from '../../public/icons';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 interface TenderCardProps {
     tender: {
@@ -44,7 +43,9 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, view }) => {
                                 </span>
                                 <div className='flex    flex-col '>
                                     <label className='font-bold'>Start Date  </label>
-                                    {new Date(tender?.publish_date).toISOString().split('T')[0]}
+                                    {/* {new Date(tender?.publish_date).toISOString().split('T')[0]} */}
+                                    {tender?.publish_date}
+
                                 </div>
                             </p>
                         </div>
@@ -56,7 +57,9 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, view }) => {
 
                                 <div className='flex    flex-col'>
                                     <label className='font-bold'>Close Date  </label>
-                                    {new Date(tender?.close_date).toISOString().split('T')[0]}
+                                    {/* {new Date(tender?.close_date).toISOString().split('T')[0]} */}
+                                    {tender?.close_date}
+
                                 </div>
                             </p>
 

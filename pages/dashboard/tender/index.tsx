@@ -107,7 +107,7 @@ const Quotations = () => {
                         {/* <Link href={`/dashboard/tender/tender-details/${TenderInterest?.id}`}>
                             <button className='bg-white p-2 rounded-md hover:text-blue-400  px-3 flex items-center justify-center' type="button" ><FaEye />View</button>
                         </Link> */}
-                        <button onClick={() => handleViewTenderProfilePage(TenderInterest?.id)} className='bg-white p-2 rounded-md hover:text-blue-400  px-3 flex items-center justify-center' type="button" ><FaEye />View</button>
+                        <button onClick={() => handleViewTenderProfilePage(TenderInterest?.encrypt_id)} className='bg-white p-2 rounded-md hover:text-blue-400  px-3 flex items-center justify-center' type="button" ><FaEye />View</button>
 
                     </div>
                 </Dropdown>
