@@ -166,7 +166,7 @@ const Sidebar = () => {
                                     </button>
 
                                     <AnimateHeight duration={300} height={currentMenu === 'tender' ? 'auto' : 0}>
-                                        <ul className="sub-menu text-white">
+                                        <ul className="sub-menu text-white rounded-md">
                                             <li>
                                                 <Link href="/dashboard/tender" className=''>{t('tender-list')}</Link>
                                             </li>
@@ -227,7 +227,7 @@ const Sidebar = () => {
                                     <AnimateHeight duration={300} height={currentMenu === 'grn' ? 'auto' : 0}>
                                         <ul className="sub-menu text-white">
                                             <li>
-                                                <Link href="/dashboard/grn">{t('grn')}</Link>
+                                                <Link href="/dashboard/grn/grn-view">{t('grn')}</Link>
                                                 <Link href="/dashboard/grn/grn-list">{t('grn-list')}</Link>
                                             </li>
                                         </ul>
@@ -250,7 +250,7 @@ const Sidebar = () => {
                                             <li>
                                                 <Link href="/dashboard/rfi">{t('rfi')}</Link>
                                             </li>
-                                           
+
                                         </ul>
                                     </AnimateHeight>
                                 </li>

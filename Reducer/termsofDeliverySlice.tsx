@@ -16,7 +16,7 @@ const initialState: TermsofDelivery = {
   error: null,
 };
 
-export const fetchTermsofDeliveryList = createAsyncThunk('currency/fetchTermsofDeliveryList',
+export const fetchTermsofDeliveryList = createAsyncThunk('termsofdelivery/fetchTermsofDeliveryList',
   async (_, { getState }) => {
     const state: any = getState();
     const token = getToken();

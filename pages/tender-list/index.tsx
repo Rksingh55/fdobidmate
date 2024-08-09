@@ -138,8 +138,8 @@ const TenderListPage = () => {
           <div className="flex md:flex-row flex-col">
             <div className={showFilter ? "md:w-[70%] w-full" : "md:w-[90%] w-full"}>
               <div className={`flex ${view === 'grid' ? 'grid md:grid-cols-3' : 'flex-col'} gap-2`}>
-                {filteredTenders.length > 0 ? (
-                  filteredTenders.map(tender => (
+                {filteredTenders?.length > 0 ? (
+                  filteredTenders?.map(tender => (
                     <TenderCard key={tender.code} tender={tender} view={view} />
                   ))
                 ) : (

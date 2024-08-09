@@ -11,6 +11,7 @@ import vendorType from '../Reducer/vendorTypeSlice';
 import modeofpayment from '../Reducer/modeofpaymentSlice';
 import termsofpayment from '../Reducer/termsofPaymentSlice';
 import termsofDelivery from '../Reducer/termsofDeliverySlice';
+import Modeofdelivery from '../Reducer/ModeofdeliverySlice';
 import category from '../Reducer/categorySlice';
 import question from '../Reducer/questionSlice';
 import quotation from '../Reducer/quatationSlice';
@@ -43,6 +44,7 @@ const rootReducer = combineReducers({
   modeofpayment: modeofpayment,
   termsofpayment: termsofpayment,
   termsofDelivery: termsofDelivery,
+  Modeofdelivery: Modeofdelivery,
   vendordata: vendoReducer,
   Tenderlist: tenderlist,
   Rfilist: rfilist,

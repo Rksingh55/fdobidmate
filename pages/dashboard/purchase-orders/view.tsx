@@ -1,191 +1,197 @@
-import React from 'react'
-import { useEffect, useState, Fragment } from 'react';
-import { useRouter } from 'next/router';
-import IconUser from '@/components/Icon/IconUser';
-import { GrOrganization } from 'react-icons/gr';
-import { MdPhone } from 'react-icons/md';
-import { AiTwotoneHome, AiTwotoneMail } from "react-icons/ai";
-import { useTranslation } from 'react-i18next';
-import { Tab } from '@headlessui/react';
+import { TabGroup, TabPanels, TabPanel, TabList, Tab } from '@headlessui/react';
+import { Fragment } from 'react';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import Dashboardbredcrumb from "@/components/dashboardbredcrumb"
 
-function PurchaseorderView() {
-    const { t, i18n } = useTranslation();
-    const router = useRouter();
-    const [message, setmessege] = useState("")
-    const [pagevalidate, setpagevalidate] = useState();
-    const [user, setuser] = useState({
-        vendor_requestid: "",
-        vendor_type: "",
-    });
-    const submitForm = () => {
-        console.log(user)
-    }
+const Purtable = () => {
+    const tableOverview = [
+        {
+            line_no: '001',
+            item_no: 'IT001',
+            category: 'categoryname',
+            product_name: 'Brother',
+            quantity: '20',
+            unit: 'Pcs',
+            unit_price: '2010.01',
+            tax_amount: '2010.00',
+            total_amount: '40200.01',
+        },
+    ];
+    const tableDetail = [
+        {
+            line_no: '001',
+            item_no: 'IT001',
+            category: 'categoryname',
+            sales_tax_group: 'Tax Group',
+            item_tax_group: 'Tax Group',
+            grn_quantity: '250',
+            invoice_quantity: '200',
+        },
+    ];
+
+
     return (
-        <div className="panel p-4 border-white-light dark:border-[#1b2e4b] mt-3">
-            <form className="space-y-3 dark:text-white" >
-                <div className="row">
-                    <div className="col-xl-12">
-                        <div className="card-body  pt-2">
-                            <h5 className="card-title"> PO-000002 : Request of laptop </h5>
-                            <div className="col-lg-12 col-xl-12 col-md-12">
-                                <div className="row">
-                                    <div
-                                        className="col-lg-4 col-xl-4 col-md-6 col-sm-12 d-flex flex-wrap justify-content-between border-right">
-                                        <label htmlFor=""
-                                            className="col-lg-6 mb-2 border-bottom pb-2 p-0">{t('vendor-name')}</label>
-                                        <p className="col-lg-6 mb-2 border-bottom pb-2 p-0">lalsingh </p>
-                                        <label htmlFor=""
-                                            className="col-lg-6 mb-2 border-bottom pb-2 p-0">{t('vendor-account')}</label>
-                                        <p className="col-lg-6 mb-2 border-bottom pb-2 p-0">
-                                        </p>
-                                        <label htmlFor="" className="col-lg-6 mb-2 border-bottom pb-2 p-0">
-                                            {t('expiration-date')} </label>
-                                        <p className="col-lg-6 mb-2 border-bottom pb-2 p-0">
-                                        </p>
-                                    </div>
-                                    <div
-                                        className="col-lg-4 col-xl-4 col-md-6 col-sm-12 d-flex flex-wrap justify-content-between border-right">
-                                        <p className="col-lg-6 mb-2 border-bottom pb-2 p-0">
-                                        </p>
-                                        <label htmlFor="" className="col-lg-6 mb-2 border-bottom pb-2 p-0">
-                                            {t('ModeOfDelivery')}</label>
-                                        <p className="col-lg-6 mb-2 border-bottom pb-2 p-0">
-                                        </p>
-                                        <label htmlFor=""
-                                            className="col-lg-6 mb-2 border-bottom pb-2 p-0">{t('.currency')}</label>
-                                        <p className="col-lg-6 mb-2 border-bottom pb-2 p-0">
-                                        </p>
-                                        <label htmlFor="" className="col-lg-6 mb-2 border-bottom pb-2 p-0">
-                                            {t('delivery-date')}</label>
-                                        <p className="col-lg-6 mb-2 border-bottom pb-2 p-0">
-                                        </p>
-                                    </div>
-                                    <div
-                                        className="col-lg-4 col-xl-4 col-md-6 col-sm-12 d-flex flex-wrap justify-content-between">
-                                        <label htmlFor=""
-                                            className="col-lg-6 mb-2 border-bottom pb-2 p-0">{t('TermsOfDelivery')}
-                                        </label>
-                                        <p className="col-lg-6 mb-2 border-bottom pb-2 p-0">
-                                        </p>
-                                        <label htmlFor=""
-                                            className="col-lg-6 mb-2 border-bottom pb-2 p-0">{t('.title')}</label>
-                                        <p className="col-lg-6 mb-2 border-bottom pb-2 p-0">  </p>
+        <div>
+            <Dashboardbredcrumb />
 
-                                        <label htmlFor="" className="col-lg-6 mb-2 border-bottom pb-2 p-0">
-                                            {t('.total-tax-amount')} </label>
-                                        <p className="col-lg-6 mb-2 border-bottom pb-2 p-0">
-                                        </p>
+            <div className="panel p-4 border-white-light dark:border-[#1b2e4b] mt-3 ">
+                <div className='flex justify-between'>
+                    <div className='flex flex-col gap-2'>
+                        <h1 className='font-bold'>Quotation Id*</h1>
+                        <p>Quotation Id</p>
+                    </div>
+                    <div className='flex flex-col gap-2'>
+                        <h1 className='font-bold'>Quotation case *</h1>
+                        <p>Quotation Id</p>
 
-                                        <label htmlFor="" className="col-lg-6 mb-2 border-bottom pb-2 p-0">
-                                            {t('.po-total-amount')} </label>
-                                        <p className="col-lg-6 mb-2 border-bottom pb-2 p-0">
-                                        </p>
-                                    </div>
-                                </div>
+                    </div>
+                    <div className='flex flex-col gap-2'>
+                        <h1 className='font-bold'>Delivery Date *</h1>
+                        <p>Quotation Id</p>
 
-                            </div>
+                    </div>
+                    <div className='flex flex-col gap-2'>
+                        <h1 className='font-bold'>Mode of Delivery *</h1>
+                        <p>Quotation Id</p>
+
+                    </div>
+                    <div className='flex flex-col gap-2'>
+                        <h1 className='font-bold'>Terms of Delivery *</h1>
+                        <p>Quotation Id </p>
+
+                    </div>
+                </div>
+                <div className='flex justify-between mt-5'>
+                    <div className='flex flex-col gap-2'>
+                        <h1 className='font-bold'>Expiration Date *</h1>
+                        <p>Quotation Id</p>
+
+                    </div>
+                    <div className='flex flex-col gap-2'>
+                        <h1 className='font-bold'>Title*</h1>
+                        <p>Quotation Id</p>
+
+                    </div>
+                    <div className='flex flex-col gap-2'>
+                        <h1 className='font-bold'>Purchase Order Number*</h1>
+                        <p>Quotation Id</p>
+
+                    </div>
+                    <div className='flex flex-col gap-2'>
+                        <h1 className='font-bold'>Currency*</h1>
+                        <p>Quotation Id</p>
+
+                    </div>
+                </div>
+            </div>
+            <div className=" mt-4">
+                <TabGroup>
+                    <div className='flex justify-between items-center '>
+                        <div>
+                            <h1 className="font-bold text-xl text-[#00A9E2] flex items-center gap-2">Purchase Order Line</h1>
+                        </div>
+                        <div>
+                            <TabList className="flex gap-2">
+                                <Tab as={Fragment}>
+                                    {({ selected }) => (
+                                        <button className={`${selected ? 'border-b-2 !border-[#00A9E2] text-[#00A9E2] font-bold !outline-none' : ''} -mb-[1px] flex items-center border-transparent p-5 py-3 before:inline-block hover:border-b-2 hover:border-[#00A9E2] hover:text-[#00A9E2]`}>Overview</button>
+                                    )}
+                                </Tab>
+
+                                <Tab as={Fragment}>
+                                    {({ selected }) => (
+                                        <button
+                                            className={`${selected ? 'border-b-2 !border-[#00A9E2] text-[#00A9E2] font-bold !outline-none' : ''} -mb-[1px] flex items-center border-transparent p-5 py-3 before:inline-block hover:border-b-2 hover:border-[#00A9E2] hover:text-[#00A9E2]`}
+                                        >Details</button>
+                                    )}
+                                </Tab>
+                            </TabList>
                         </div>
                     </div>
-                    <Tab.Group>
-                        <Tab.List className="mt-3 flex flex-wrap">
-                            <Tab as={Fragment}>
-                                {({ selected }) => (
-                                    <button
-                                    className={`${selected ? 'bg-primary text-white !outline-none' : ''}
-                                    -mb-[1px] block rounded p-3.5 py-2 hover:bg-primary hover:text-white ltr:mr-2 rtl:ml-2`}>
-                                     {t('overview')}
-                                     </button>
-                                )}
-                            </Tab>
-                            <Tab as={Fragment}>
-                                {({ selected }) => (
-                                    <button
-                                    className={`${selected ? 'bg-primary text-white !outline-none' : ''}
-                                    -mb-[1px] block rounded p-3.5 py-2 hover:bg-primary hover:text-white ltr:mr-2 rtl:ml-2`}>
-                                    {t('details')}
-                                </button>
-                                    
-                                )}
-                            </Tab>
-                           
-                        </Tab.List>
-                        <Tab.Panels>
-                            <Tab.Panel>
-                                <div className="active">
-                                <div className="table-responsive">
-                                        <table className="table table-hover dt-responsive align-middle mb-0 nowrap">
-                                            <thead className="bg-light">
+                    <div className='panel mt-2'>
+                        <TabPanels>
+                            <TabPanel>
+                                <div className="active pt-4">
+                                    <div>
+                                        <PerfectScrollbar className="perfect-scrollbar relative ltr:-mr-3 ltr:pr-3 rtl:-ml-3 rtl:pl-3">
+                                            <table className="table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th className="whitespace-nowrap">Line No.</th>
+                                                        <th className="whitespace-nowrap">Item Number</th>
+                                                        <th className="whitespace-nowrap">Category</th>
+                                                        <th className="whitespace-nowrap">Product Name</th>
+                                                        <th className="whitespace-nowrap">Quantity</th>
+                                                        <th className="whitespace-nowrap">Unit</th>
+                                                        <th className="whitespace-nowrap">Unit Price</th>
+                                                        <th className="whitespace-nowrap">Tax Amount</th>
+                                                        <th className="whitespace-nowrap">Total Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {tableOverview.map((data) => {
+                                                        return (
+                                                            <tr key={data.line_no}>
+                                                                <td>
+                                                                    {data.line_no}
+                                                                </td>
+                                                                <td>{data.item_no}</td>
+                                                                <td>{data.category}</td>
+                                                                <td>{data.product_name}</td>
+                                                                <td>{data.quantity}</td>
+                                                                <td>{data.unit}</td>
+                                                                <td>{data.unit_price}</td>
+                                                                <td>{data.tax_amount}</td>
+                                                                <td>{data.total_amount}</td>
+                                                            </tr>
+                                                        );
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </PerfectScrollbar>
+                                    </div>
+                                </div>
+                            </TabPanel>
+                            <TabPanel>
+                                <div className='pt-4'>
+                                    <PerfectScrollbar className="perfect-scrollbar relative ltr:-mr-3 ltr:pr-3 rtl:-ml-3 rtl:pl-3">
+                                        <table className="table-hover">
+                                            <thead>
                                                 <tr>
-                                                    <th>{t('line-no')} </th>
-                                                    <th>{t('item-no')} </th>
-                                                    <th>{t('category')}</th>
-                                                    <th>{t('product-name')}</th>
-                                                    <th>{t('quantity')}</th>
-                                                    <th>{t('unit')}</th>
-                                                    <th>{t('unit-price')}</th>
-                                                    <th>{t('tax-amount')}</th>
-                                                    <th>{t('total-amount')}</th>
+                                                    <th className="whitespace-nowrap">Line No.</th>
+                                                    <th className="whitespace-nowrap">Item Number</th>
+                                                    <th className="whitespace-nowrap">Category</th>
+                                                    <th className="whitespace-nowrap">Sales Tax Group</th>
+                                                    <th className="whitespace-nowrap">Item Sales Tax Group</th>
+                                                    <th className="whitespace-nowrap">GRN Remaining Quantity</th>
+                                                    <th className="whitespace-nowrap">Invoice Remaining Quantity</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td> 2332</td>
-                                                    <td></td>
-                                                    <td> </td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td> </td>
-                                                </tr>
-
+                                                {tableDetail.map((data) => {
+                                                    return (
+                                                        <tr key={data.line_no}>
+                                                            <td>{data.line_no}</td>
+                                                            <td>{data.item_no}</td>
+                                                            <td>{data.category}</td>
+                                                            <td>{data.sales_tax_group}</td>
+                                                            <td>{data.item_tax_group}</td>
+                                                            <td>{data.grn_quantity}</td>
+                                                            <td>{data.invoice_quantity}</td>
+                                                        </tr>
+                                                    );
+                                                })}
                                             </tbody>
                                         </table>
-                                    </div>
+                                    </PerfectScrollbar>
                                 </div>
-                            </Tab.Panel>
-                            <Tab.Panel>
-                                <div>
-                                    <div className="flex items-start">
-                                    <div className="table-responsive">
-                                        <table className="table table-hover dt-responsive align-middle mb-0 nowrap">
-                                            <thead className="bg-light">
-                                                <tr>
-                                                    <th>{t('line-no')} </th>
-                                                    <th>{t('item-no')} </th>
-                                                    <th>{t('category')}</th>
-                                                    <th>{t('SalesTaxGroup')}</th>
-                                                    <th>{t('ItemSalesTaxGroup')}</th>
-                                                    <th>{t('grn-rem-quantity')}</th>
-                                                    <th>{t('inv-rem-quantity')}</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-
-                                                <tr>
-                                                    <td>344</td>
-                                                    <td>234567</td>
-                                                    <td>dsdasd</td>
-                                                    <td> </td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    </div>
-                                </div>
-                            </Tab.Panel>
-                           
-                        </Tab.Panels>
-                    </Tab.Group>
-                </div>
-            </form>
+                            </TabPanel>
+                        </TabPanels>
+                    </div>
+                </TabGroup>
+            </div>
         </div>
-    )
-}
+    );
+};
 
-export default PurchaseorderView
+export default Purtable;

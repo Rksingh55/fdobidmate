@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import { useState, useEffect } from 'react';
 import sortBy from 'lodash/sortBy';
-//import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../../store/themeConfigSlice';
 import IconTrashLines from '@/components/Icon/IconTrashLines';
 import IconPlus from '@/components/Icon/IconPlus';
@@ -12,33 +11,52 @@ import IconFile from '@/components/Icon/IconFile';
 import IconPrinter from '@/components/Icon/IconPrinter';
 import { downloadExcel } from 'react-export-table-to-excel';
 import { GrDocumentExcel } from 'react-icons/gr';
-import { PiFilePdfDuotone } from 'react-icons/pi';
-import { BsFiletypeTxt } from 'react-icons/bs';
+import { PiDotsThreeVerticalBold, PiFilePdfDuotone } from 'react-icons/pi';
+import { BsCheckLg, BsFiletypeTxt } from 'react-icons/bs';
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import Dashboardbredcrumb from "@/components/dashboardbredcrumb"
-import { fetchPurchaseOrderList } from '../../../Reducer/purchaseorderSlice';
-
+import { fetchQuatationList } from '../../../Reducer/quatationSlice';
+import FormSkeltonloader from "../../../components/cards/FormSkeletonloader"
 import { RootState, AppDispatch } from '@/store';
 import { useSelector, useDispatch } from 'react-redux';
+import { getToken } from '@/localStorageUtil';
+import { useRouter } from 'next/router';
+import Dropdown from '@/components/Dropdown';
+import { FaEye } from 'react-icons/fa';
+import { VscError } from "react-icons/vsc";
 
-
-const PurchaseOrderList = () => {
+const Quotations = (rowData: any) => {
+    const router = useRouter();
+    useEffect(() => {
+        const token = getToken();
+        if (!token) {
+            router.replace('/');
+        }
+    }, []);
 
     const dispatch = useDispatch<AppDispatch>();
+    const quotation = useSelector((state: RootState) => state.quotation.list);
+    const Status = useSelector((state: RootState) => state.quotation.status);
+    const error = useSelector((state: RootState) => state.quotation.error);
+
     useEffect(() => {
-        dispatch(fetchPurchaseOrderList());
-    }, []);
-    const purchaseorder = useSelector((state: RootState) => state.purchaseorder.list);
-    console.log("purchaseorder ", purchaseorder);
-    
+        dispatch(fetchQuatationList());
+    }, [dispatch]);
+    const [initialRecords, setInitialRecords] = useState<any[]>(sortBy(quotation));
+
+    console.log("quotation", quotation);
+
+    useEffect(() => {
+        setInitialRecords(sortBy(quotation));
+    }, [quotation]);
+
+
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-    const [initialRecords, setInitialRecords] = useState(sortBy(purchaseorder, 'invoice'));
     const [records, setRecords] = useState(initialRecords);
     const [selectedRecords, setSelectedRecords] = useState<any>([]);
-
     const [search, setSearch] = useState('');
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
         columnAccessor: 'firstName',
@@ -55,21 +73,20 @@ const PurchaseOrderList = () => {
         setRecords([...initialRecords.slice(from, to)]);
     }, [page, pageSize, initialRecords]);
 
-    // useEffect(() => {
-    //     setInitialRecords(() => {
-    //         return purchaseorder.filter((item) => {
-    //             return (
-    //                 item.invoice.toLowerCase().includes(search.toLowerCase()) ||
-    //                 item.name.toLowerCase().includes(search.toLowerCase()) ||
-    //                 item.email.toLowerCase().includes(search.toLowerCase()) ||
-    //                 item.date.toLowerCase().includes(search.toLowerCase()) ||
-    //                 item.mobileno.toLowerCase().includes(search.toLowerCase())
-    //                 //  ||
-    //                 // item.status.tooltip.toLowerCase().includes(search.toLowerCase())
-    //             );
-    //         });
-    //     });
-    // }, [search]);
+    useEffect(() => {
+        setInitialRecords(() => {
+            return quotation.filter((item) => {
+                return (
+                    item.code.toLowerCase().includes(search.toLowerCase()) ||
+                    item.title.toLowerCase().includes(search.toLowerCase()) ||
+                    item.purchase_type.toLowerCase().includes(search.toLowerCase()) ||
+                    item.delivery_date.toLowerCase().includes(search.toLowerCase()) ||
+                    item.status.toLowerCase().includes(search.toLowerCase()) ||
+                    item.id.toLowerCase().includes(search.toLowerCase())
+                );
+            });
+        });
+    }, [search]);
 
     useEffect(() => {
         const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
@@ -77,29 +94,24 @@ const PurchaseOrderList = () => {
         setPage(1);
     }, [sortStatus]);
 
-    
-
     const exportTables = () => {
         window.print();
     };
-
-    const header = ['id', 'name', 'email', 'date', 'mobileno', 'status'];
+    const header = ['Quotation', 'Title', 'Purchase type', 'Date', 'Date', 'Status', 'Action'];
     function handleDownloadExcel() {
         downloadExcel({
             fileName: 'table',
             sheet: 'react-export-table-to-excel',
             tablePayload: {
                 header,
-                body: purchaseorder,
+                body: quotation,
             },
         });
     }
-
-
-    const col = ['id', 'name', 'email', 'date', 'mobileno', 'status'];
+    const col = ['Quotation', 'Title', 'Purchase type', 'Date', 'Date', 'Status', 'Action'];
     const exportTable = (type: any) => {
         let columns: any = col;
-        let records = purchaseorder;
+        let records = quotation;
         let filename = 'table';
 
         let newVariable: any;
@@ -212,21 +224,119 @@ const PurchaseOrderList = () => {
     const exportTableinPdf = () => {
         const doc = new jsPDF();
         autoTable(doc, {
-            head: [['ID', 'Invoice', 'Name', 'Email', 'Date', 'Mobile No', 'Status']],
-            body: purchaseorder?.map(item => [item?.id, item?.invoice, item?.name, item?.email, item?.date, item?.mobileno, item?.status])
+            head: [['Quotation', 'Title', 'Purchase type', 'Date', 'Date', 'Status', 'Action']],
+            body: quotation?.map(item => [item?.code, item?.title, item?.purchase_type, item?.delivery_date, item?.status])
         });
         doc.save('Vendor_list.pdf');
     };
 
+    const getButtons = (status: string, id: any) => {
+        switch (status) {
+            case 'Accept':
+                return (
 
+                    <button onClick={() => handleViewQutations(id)} className='bg-white p-2 rounded-md hover:text-blue-400 px-3 flex justify-center items-center gap-1' type="button">
+                        <FaEye /> View
+                    </button>
+
+                );
+            case 'Sent':
+                return (
+                    <>
+                        <button onClick={() => handleViewQutations(id)} className='bg-white p-2 rounded-md hover:text-blue-400 px-3 flex justify-center items-center gap-1' type="button">
+                            <FaEye /> View
+                        </button>
+                        <Link href={`/dashboard/quotations/accept`}>
+                            <button className='bg-white p-2 rounded-md hover:text-green-400 px-3 flex justify-center items-center gap-1' type="button">
+                                <BsCheckLg /> Accept
+                            </button>
+                        </Link>
+                        <Link href={`/dashboard/quotations/reject`}>
+                            <button className='bg-white p-2 rounded-md hover:text-red-500 px-3 flex justify-center items-center gap-1' type="button">
+                                <VscError /> Reject
+                            </button>
+                        </Link>
+                    </>
+                );
+            case 'Reject':
+                return (
+                    <button onClick={() => handleViewQutations(id)} className='bg-white p-2 rounded-md hover:text-blue-400 px-3 flex justify-center items-center gap-1' type="button">
+                        <FaEye /> View
+                    </button>
+                );
+            case 'Approved':
+                return (
+                    <button onClick={() => handleViewQutations(id)} className='bg-white p-2 rounded-md hover:text-blue-400 px-3 flex justify-center items-center gap-1' type="button">
+                        <FaEye /> View
+                    </button>
+                );
+            case 'Responded':
+                return (
+                    <button onClick={() => handleViewQutations(id)} className='bg-white p-2 rounded-md hover:text-blue-400 px-3 flex justify-center items-center gap-1' type="button">
+                        <FaEye /> View
+                    </button>
+                );
+            case 'Cancel':
+                return (
+
+                    <button onClick={() => handleViewQutations(id)} className='bg-white p-2 rounded-md hover:text-blue-400 px-3 flex justify-center items-center gap-1' type="button">
+                        <FaEye /> View
+                    </button>
+
+                );
+            default:
+                return null;
+        }
+    };
+
+    const handleViewQutations = (id: any) => {
+        if (id) {
+            sessionStorage.setItem("akdhadhadhakdhadfafa!#@#kshfdskfk!@#!@#", id)
+            setTimeout(() => {
+                router.push("/dashboard/purchase-orders/view")
+            }, 1000)
+        }
+    }
+
+    const renderActions = (rowData: any) => {
+        const { status } = rowData;
+        const { id } = rowData;
+
+        return (
+            <div className="dropdown  ">
+                <Dropdown
+                    offset={[0, 5]}
+                    placement=""
+                    button={<PiDotsThreeVerticalBold className="opacity-70 cursor-pointer" />}
+                >
+                    <div className='flex flex-col bg-white shadow-md rounded-md border-1'>
+                        {getButtons(status, id)}
+                    </div>
+                </Dropdown>
+            </div>
+        );
+    };
+
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'Approved':
+                return 'bg-green-200 text-green-800';
+            case 'Sent':
+                return 'bg-blue-100 text-blue-800';
+            case 'Reject':
+                return 'bg-red-100 text-red-800';
+            case 'Accept':
+                return 'bg-yellow-100 text-yellow-800';
+            case 'Cancel':
+                return 'bg-gray-100 text-gray-800';
+            default:
+                return 'bg-gray-100 text-gray-800';
+        }
+    };
     return (
-
         <>
-                      <Dashboardbredcrumb />
-
-
+            <Dashboardbredcrumb />
             <div className="panel border-white-light px-0 dark:border-[#1b2e4b] mt-3 ">
-
                 <div className="invoice-table">
                     <div className="mb-4.5 flex flex-col gap-5 px-2 md:flex-row md:items-center">
                         <div className="flex flex-wrap items-center">
@@ -251,87 +361,115 @@ const PurchaseOrderList = () => {
 
                         </div>
 
-                        <div className="ltr:ml-auto rtl:mr-auto">
-                            <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
-                        </div>
+
                     </div>
 
                     <div className="datatables pagination-padding pago">
-                        <DataTable
-                            className="table-hover whitespace-nowrap  "
-                            records={records}
-                            columns={[
-                                // {
-                                //     accessor: 'invoice',
-                                //     sortable: true,
-                                //     render: ({ invoice }) => (
-                                //         <Link href="/dashboard/vendor-list/preview">
-                                //             <div className="font-semibold text-primary underline hover:no-underline">{`#${invoice}`}</div>
-                                //         </Link>
-                                //     ),
-                                // },
-                                {
-                                    accessor: 'Code',
-                                    sortable: true,
-                                    render: ({ code, id }: any) => (
-                                        <div className="flex items-center font-semibold">
-                                            <div>{code}</div>
-                                        </div>
-                                    ),
-                                },
-                                {
-                                    accessor: 'Title',
-                                    sortable: true,
-                                    render: ({ title, id }) => <div className="text-left font-semibold">{`${title}`}</div>,
-                                },
-                                {
-                                    accessor: 'date',
-                                    sortable: true,
-                                    render: ({ delivery_date, id }) => <div className="text-left font-semibold">{`${delivery_date}`}</div>,
-                                },
-                                {
-                                    accessor: 'Vendor Status',
-                                    sortable: true,
-                                    titleClassName: 'text-right',
-                                    render: ({ vendor_status, id }) => <div className="text-left font-semibold">{`${vendor_status}`}</div>,
-                                },
-                                {
-                                    accessor: 'status',
-                                    sortable: true,
-                                    render: ({ status }) => <div className="text-left font-semibold">{`${status}`}</div>,
-                                    // render: ({ status  }) => <span className={`badge badge-outline-${status?.color} `}>{status?.tooltip}</span>,
-                                },
-                                {
-                                    accessor: 'action',
+                        {Status === 'loading' && (
+                            <div className="flex flex-wrap ml-4 gap-4">
+                                {Array.from({ length: 6 }).map((_, index) => (
+                                    <FormSkeltonloader />
+                                ))}
+                            </div>
+                        )}
+                        {status === 'failed' && <div className="text-red-500 text-center mt-12 font-bold">  {error}</div>}
 
-                                    title: 'Actions',
-                                    render: ({ id }) => (
-                                        <div className="mx-auto flex w-max items-center gap-4">
-                                            <Link href="/dashboard/purchase-orders/view" className="flex hover:text-info">
-                                                <IconEdit className="w-4.5 h-4.5" />
-                                            </Link>
-                                            <Link href="/dashboard/purchase-orders/view" className="flex hover:text-primary">
-                                                <IconEye />
-                                            </Link>
-                                            {/* <button type="button" className="flex hover:text-danger" onClick={(e) => deleteRow(id)}>
-                                                <IconTrashLines />
-                                            </button> */}
-                                        </div>
-                                    ),
-                                },
-                            ]}
-                            highlightOnHover
-                            totalRecords={initialRecords.length}
-                            recordsPerPage={pageSize}
-                            page={page}
-                            onPageChange={(p) => setPage(p)}
-                            recordsPerPageOptions={PAGE_SIZES}
-                            onRecordsPerPageChange={setPageSize}
-                            sortStatus={sortStatus}
-                            onSortStatusChange={setSortStatus}
-                            onSelectedRecordsChange={setSelectedRecords}
-                            paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
-                        />
+                        {Status === 'succeeded' && (
+                            <DataTable
+                                className="table-hover whitespace-nowrap   "
+                                records={records}
+                                columns={[
+
+                                    {
+                                        accessor: 'Purchase No.',
+                                        sortable: true,
+                                        render: ({ code, id }: any) => (
+                                            <div className="flex items-center font-semibold">
+                                                <div>{code || "N/A"}</div>
+                                            </div>
+                                        ),
+                                    },
+                                    {
+                                        accessor: ('title'),
+                                        sortable: true,
+                                        titleClassName: 'text-left',
+                                        render: ({ title, id }) => <div className="text-left font-semibold">{`${title || "N/A"}`}</div>,
+                                    },
+                                    {
+                                        accessor: 'Vendor Account ',
+                                        sortable: true,
+                                        render: ({ quotationcase }: any) => (
+                                            <div className="flex items-center font-semibold">
+                                                <div>{quotationcase?.case_no || "N/A"}</div>
+                                            </div>
+                                        ),
+                                    },
+                                    {
+                                        accessor: 'Vendor Name',
+                                        sortable: true,
+                                        render: ({ version }: any) => (
+                                            <div className="flex items-center font-semibold">
+                                                <div>{version || "N/A"}</div>
+                                            </div>
+                                        ),
+                                    },
+                                    {
+                                        accessor: 'Delivery Date ',
+                                        sortable: true,
+                                        render: ({ purchaseorder_id }: any) => (
+                                            <div className="flex items-center font-semibold">
+                                                <div>{purchaseorder_id || "N/A"}</div>
+                                            </div>
+                                        ),
+                                    },
+                                    {
+                                        accessor: 'status',
+                                        title: 'Status',
+                                        render: (row: any) => {
+                                            const statusColor = getStatusColor(row.status);
+                                            return (
+                                                <div className={`text-centre font-semibold px-2 py-1 rounded ${statusColor}`}>
+                                                    {row.status}
+                                                </div>
+                                            );
+                                        },
+                                    },
+
+                                    {
+                                        accessor: 'Created By',
+                                        sortable: true,
+                                        render: ({ creator }) => <div className="text-left font-semibold">{`${creator?.created_at || "N/A"}`}</div>,
+                                    },
+
+                                    {
+                                        accessor: 'Created At',
+                                        sortable: true,
+                                        render: ({ creator }) => <div className="text-left font-semibold">{`${creator?.created_at || "N/A"}`}</div>,
+                                    },
+
+                                    
+
+                                    {
+                                        accessor: 'action',
+                                        title: 'Action',
+                                        sortable: false,
+                                        render: (rowData) => renderActions(rowData),
+                                    },
+
+                                ]}
+                                highlightOnHover
+                                totalRecords={initialRecords.length}
+                                recordsPerPage={pageSize}
+                                page={page}
+                                onPageChange={(p) => setPage(p)}
+                                recordsPerPageOptions={PAGE_SIZES}
+                                onRecordsPerPageChange={setPageSize}
+                                sortStatus={sortStatus}
+                                onSortStatusChange={setSortStatus}
+                                onSelectedRecordsChange={setSelectedRecords}
+                                paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
+                            />
+                        )}
                     </div>
                 </div>
             </div>
@@ -339,4 +477,4 @@ const PurchaseOrderList = () => {
     );
 };
 
-export default PurchaseOrderList;
+export default Quotations;

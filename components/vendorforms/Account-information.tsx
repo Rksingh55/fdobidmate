@@ -48,7 +48,6 @@ function AccountInformation() {
     }, [vendorInformationList]);
 
     const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([{ bank_name: '', account_holder_name: '', account_no: '', swift_code: '', iban: '', bank_address: '' }]);
-
     const handleAddBankAccount = () => {
         setBankAccounts(prev => [...prev, { bank_name: '', account_holder_name: '', account_no: '', swift_code: '', iban: '', bank_address: '' }]);
     };
@@ -61,11 +60,9 @@ function AccountInformation() {
             return newData;
         });
     };
-
     const handleDeleteBankAccount = (index: number) => {
         setBankAccounts(prev => prev.filter((_, idx) => idx !== index));
     };
-
     const [businessReferences, setBusinessReferences] = useState<BusinessReference[]>([{ year: '', gross_income: '' }]);
     const [businessReferenceFiles, setBusinessReferenceFiles] = useState<string[]>([]);
 
@@ -190,7 +187,6 @@ function AccountInformation() {
     return (
         <div>
             <ToastContainer />
-
             <SuccessPopup
                 message={message}
                 show={showPopup}
@@ -204,7 +200,7 @@ function AccountInformation() {
                             <MdAddBox className='text-3xl text-green-600 cursor-pointer' onClick={handleAddBankAccount} />
                         </div>
                     </div>
-                    {bankAccounts.map((bankAccount, index) => (
+                    {bankAccounts?.map((bankAccount, index) => (
                         <div key={index} className='border-1 p-2 rounded-md'>
                             <div className="row">
                                 <div className="col-lg-12">
@@ -216,7 +212,7 @@ function AccountInformation() {
                                                     <input
                                                         type="text"
                                                         className="form-control"
-                                                        value={bankAccount.bank_name}
+                                                        value={bankAccount?.bank_name}
                                                         maxLength={50}
                                                         onChange={(e) => handleBankAccountInputChange(e, index, 'bank_name')}
                                                         required

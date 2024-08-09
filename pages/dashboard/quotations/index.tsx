@@ -2,17 +2,11 @@ import Link from 'next/link';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import { useState, useEffect } from 'react';
 import sortBy from 'lodash/sortBy';
-import { setPageTitle } from '../../../store/themeConfigSlice';
-import IconTrashLines from '@/components/Icon/IconTrashLines';
-import IconPlus from '@/components/Icon/IconPlus';
-import IconEdit from '@/components/Icon/IconEdit';
-import IconEye from '@/components/Icon/IconEye';
-import IconFile from '@/components/Icon/IconFile';
 import IconPrinter from '@/components/Icon/IconPrinter';
 import { downloadExcel } from 'react-export-table-to-excel';
 import { GrDocumentExcel } from 'react-icons/gr';
-import { PiFilePdfDuotone } from 'react-icons/pi';
-import { BsFiletypeTxt } from 'react-icons/bs';
+import { PiDotsThreeVerticalBold, PiFilePdfDuotone } from 'react-icons/pi';
+import { BsCheckLg, BsFiletypeTxt } from 'react-icons/bs';
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import Dashboardbredcrumb from "@/components/dashboardbredcrumb"
@@ -22,8 +16,18 @@ import { RootState, AppDispatch } from '@/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { getToken } from '@/localStorageUtil';
 import { useRouter } from 'next/router';
+import Dropdown from '@/components/Dropdown';
+import { FaEye } from 'react-icons/fa';
+import { VscError } from "react-icons/vsc";
+import Swal from 'sweetalert2';
+import { API_BASE_URL, QUATATION_UPDATE_STATUS_VIEW_API_URL } from '@/api.config';
+import Loader from '@/components/front/loader';
+interface Quotation {
+    id: string;
+    // Add other properties as needed
+}
 
-const Quotations = () => {
+const Quotations = (rowData: any) => {
     const router = useRouter();
     useEffect(() => {
         const token = getToken();
@@ -34,24 +38,26 @@ const Quotations = () => {
 
     const dispatch = useDispatch<AppDispatch>();
     const quotation = useSelector((state: RootState) => state.quotation.list);
-    const status = useSelector((state: RootState) => state.quotation.status);
+    const Status = useSelector((state: RootState) => state.quotation.status);
     const error = useSelector((state: RootState) => state.quotation.error);
 
     useEffect(() => {
         dispatch(fetchQuatationList());
     }, [dispatch]);
-    const [initialRecords, setInitialRecords] = useState<any[]>(sortBy(quotation));
+    const [initialRecords, setInitialRecords] = useState<Quotation[]>(sortBy(quotation));
+
+    console.log("quotation", quotation);
     useEffect(() => {
         setInitialRecords(sortBy(quotation));
     }, [quotation]);
 
-    console.log("quotation", quotation);
 
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
     const [records, setRecords] = useState(initialRecords);
     const [selectedRecords, setSelectedRecords] = useState<any>([]);
+    const [showLoader, setShowLoader] = useState(false);
     const [search, setSearch] = useState('');
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
         columnAccessor: 'firstName',
@@ -205,6 +211,7 @@ const Quotations = () => {
             }
         }
     };
+    const token = getToken();
 
     const capitalize = (text: any) => {
         return text
@@ -224,11 +231,198 @@ const Quotations = () => {
         });
         doc.save('Vendor_list.pdf');
     };
+
+    const handleAcceptQuotation = async (id: string) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}${QUATATION_UPDATE_STATUS_VIEW_API_URL}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    quotation_id: id,
+                    status: "Accepted"
+                })
+            });
+            const result = await response.json();
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: result?.message?.success || 'Quotation Aceepted successfully',
+                    customClass: 'sweet-alerts',
+                });
+                fetchQuatationList();
+            } else {
+                setShowLoader(false)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: result?.message?.error || 'Failed To Add Quotation  ',
+                    customClass: 'sweet-alerts',
+                });
+            }
+        } catch (error) {
+            setShowLoader(false)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Something Went Wrong, Please Try After SomeTime',
+                customClass: 'sweet-alerts',
+            });
+        }
+
+    }
+    const handleRejectQuotation = async (id: string) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}${QUATATION_UPDATE_STATUS_VIEW_API_URL}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    quotation_id: id,
+                    status: "Rejected"
+                })
+            });
+            const result = await response.json();
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: result?.message?.success || 'Quotation Rejected successfully',
+                    customClass: 'sweet-alerts',
+                });
+                fetchQuatationList();
+            } else {
+                setShowLoader(false)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: result?.message?.error || 'Failed To Rejected Quotation  ',
+                    customClass: 'sweet-alerts',
+                });
+            }
+        } catch (error) {
+            setShowLoader(false)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Something Went Wrong, Please Try After SomeTime',
+                customClass: 'sweet-alerts',
+            });
+        }
+    }
+
+    const getButtons = (status: string, id: any) => {
+        switch (status) {
+            case 'Accepted':
+                return (
+
+                    <button onClick={() => handleViewQutations(id)} className='bg-white p-2 rounded-md hover:text-blue-400 px-3 flex justify-center items-center gap-1' type="button">
+                        <FaEye /> View
+                    </button>
+
+                );
+            case 'Sent':
+                return (
+                    <>
+                        <button onClick={() => handleViewQutations(id)} className='bg-white p-2 rounded-md hover:text-blue-400 px-3 flex justify-center items-center gap-1' type="button">
+                            <FaEye /> View
+                        </button>
+
+                        <button onClick={() => handleAcceptQuotation(id)} className='bg-white p-2 rounded-md hover:text-green-400 px-3 flex justify-center items-center gap-1' type="button">
+                            <BsCheckLg /> Accept
+                        </button>
+
+
+                        <button onClick={() => handleRejectQuotation(id)} className='bg-white p-2 rounded-md hover:text-red-500 px-3 flex justify-center items-center gap-1' type="button">
+                            <VscError /> Reject
+                        </button>
+
+                    </>
+                );
+            case 'Rejected':
+                return (
+                    <button onClick={() => handleViewQutations(id)} className='bg-white p-2 rounded-md hover:text-blue-400 px-3 flex justify-center items-center gap-1' type="button">
+                        <FaEye /> View
+                    </button>
+                );
+            case 'Approved':
+                return (
+                    <button onClick={() => handleViewQutations(id)} className='bg-white p-2 rounded-md hover:text-blue-400 px-3 flex justify-center items-center gap-1' type="button">
+                        <FaEye /> View
+                    </button>
+                );
+            case 'Responded':
+                return (
+                    <button onClick={() => handleViewQutations(id)} className='bg-white p-2 rounded-md hover:text-blue-400 px-3 flex justify-center items-center gap-1' type="button">
+                        <FaEye /> View
+                    </button>
+                );
+            case 'Cancelled':
+                return (
+
+                    <button onClick={() => handleViewQutations(id)} className='bg-white p-2 rounded-md hover:text-blue-400 px-3 flex justify-center items-center gap-1' type="button">
+                        <FaEye /> View
+                    </button>
+                );
+            default:
+                return null;
+        }
+    };
+
+    const handleViewQutations = (id: any) => {
+        if (id) {
+            sessionStorage.setItem("akdhadhadhakdhadfafa!#@#kshfdskfk!@#!@#", id)
+            setTimeout(() => {
+                router.push("/dashboard/quotations/view")
+            }, 1000)
+        }
+    }
+
+    const renderActions = (rowData: any) => {
+        const { status } = rowData;
+        const { id } = rowData;
+
+        return (
+            <div className="dropdown  ">
+                <Dropdown
+                    offset={[0, 5]}
+                    placement=""
+                    button={<PiDotsThreeVerticalBold className="opacity-70 cursor-pointer" />}
+                >
+                    <div className='flex flex-col bg-white shadow-md rounded-md border-1'>
+                        {getButtons(status, id)}
+                    </div>
+                </Dropdown>
+            </div>
+        );
+    };
+
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'Accepted':
+                return 'bg-green-200 text-green-800';
+            case 'Sent':
+                return 'bg-blue-100 text-blue-800';
+            case 'Rejected':
+                return 'bg-red-100 text-red-800';
+            case 'Approved':
+                return 'bg-yellow-100 text-yellow-800';
+            case 'Cancel':
+                return 'bg-gray-100 text-gray-800';
+            default:
+                return 'bg-gray-100 text-gray-800';
+        }
+    };
     return (
         <>
+            {showLoader && <Loader />}
             <Dashboardbredcrumb />
             <div className="panel border-white-light px-0 dark:border-[#1b2e4b] mt-3 ">
-
                 <div className="invoice-table">
                     <div className="mb-4.5 flex flex-col gap-5 px-2 md:flex-row md:items-center">
                         <div className="flex flex-wrap items-center">
@@ -253,39 +447,31 @@ const Quotations = () => {
 
                         </div>
 
-                        {/* <div className="ltr:ml-auto rtl:mr-auto">
-                            <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
-                        </div> */}
+
                     </div>
 
                     <div className="datatables pagination-padding pago">
-                        {status === 'loading' && (
+                        {Status === 'loading' && (
                             <div className="flex flex-wrap ml-4 gap-4">
                                 {Array.from({ length: 6 }).map((_, index) => (
                                     <FormSkeltonloader />
                                 ))}
                             </div>
                         )}
-                        {status === 'succeeded' && (
+                        {Status === 'failed' && <div className="text-red-500 text-center mt-12 font-bold">  {error}</div>}
+
+                        {Status === 'succeeded' && (
                             <DataTable
-                                className="table-hover whitespace-nowrap  "
+                                className="table-hover whitespace-nowrap   "
                                 records={records}
                                 columns={[
-                                    // {
-                                    //     accessor: 'invoice',
-                                    //     sortable: true,
-                                    //     render: ({ invoice }) => (
-                                    //         <Link href="/dashboard/vendor-list/preview">
-                                    //             <div className="font-semibold text-primary underline hover:no-underline">{`#${invoice}`}</div>
-                                    //         </Link>
-                                    //     ),
-                                    // },
+
                                     {
-                                        accessor: 'Quotation',
+                                        accessor: 'Quotation ID ',
                                         sortable: true,
                                         render: ({ code, id }: any) => (
                                             <div className="flex items-center font-semibold">
-                                                <div>{code}</div>
+                                                <div>{code || "N/A"}</div>
                                             </div>
                                         ),
                                     },
@@ -293,37 +479,69 @@ const Quotations = () => {
                                         accessor: ('title'),
                                         sortable: true,
                                         titleClassName: 'text-left',
-                                        render: ({ title, id }) => <div className="text-left font-semibold">{`${title}`}</div>,
+                                        render: ({ title, id }) => <div className="text-left font-semibold">{`${title || "N/A"}`}</div>,
                                     },
                                     {
-                                        accessor: 'Purchase Type',
+                                        accessor: 'Quotation Case ',
                                         sortable: true,
-                                        render: ({ purchase_type, id }) => <div className="text-left font-semibold">{`${purchase_type}`}</div>,
-                                    },
-                                    {
-                                        accessor: 'date',
-                                        sortable: true,
-                                        render: ({ delivery_date, id }) => <div className="text-left font-semibold">{`${delivery_date}`}</div>,
-                                    },
-                                    {
-                                        accessor: 'status',
-                                        sortable: true,
-                                        render: ({ status }) => <div className="text-left font-semibold">{`${status}`}</div>,
-                                    },
-                                    {
-                                        accessor: 'action',
-                                        title: 'Actions',
-                                        render: ({ id }) => (
-                                            <div className="mx-auto flex w-max items-center gap-4">
-                                                <Link href="/dashboard/vendor/vendor-list/edit" className="flex hover:text-info">
-                                                    <IconEdit className="w-4.5 h-4.5" />
-                                                </Link>
-                                                <Link href="/dashboard/quotations/view" className="flex hover:text-primary">
-                                                    <IconEye />
-                                                </Link>
-
+                                        render: ({ quotationcase }: any) => (
+                                            <div className="flex items-center font-semibold">
+                                                <div>{quotationcase?.case_no || "N/A"}</div>
                                             </div>
                                         ),
+                                    },
+                                    {
+                                        accessor: 'Version',
+                                        sortable: true,
+                                        render: ({ version }: any) => (
+                                            <div className="flex items-center font-semibold">
+                                                <div>{version || "N/A"}</div>
+                                            </div>
+                                        ),
+                                    },
+                                    {
+                                        accessor: 'PO ',
+                                        sortable: true,
+                                        render: ({ purchaseorder_id }: any) => (
+                                            <div className="flex items-center font-semibold">
+                                                <div>{purchaseorder_id || "N/A"}</div>
+                                            </div>
+                                        ),
+                                    },
+                                    {
+                                        accessor: 'Created By ',
+                                        sortable: true,
+                                        render: ({ creator }: any) => (
+                                            <div className="flex items-center font-semibold">
+                                                <div>{creator?.name || "N/A"}</div>
+                                            </div>
+                                        ),
+                                    },
+
+                                    {
+                                        accessor: 'Created At',
+                                        sortable: true,
+                                        render: ({ creator }) => <div className="text-left font-semibold">{`${creator?.created_at || "N/A"}`}</div>,
+                                    },
+
+                                    {
+                                        accessor: 'status',
+                                        title: 'Status',
+                                        render: (row: any) => {
+                                            const statusColor = getStatusColor(row.status);
+                                            return (
+                                                <div className={`text-centre font-semibold px-2 py-1 rounded ${statusColor}`}>
+                                                    {row.status}
+                                                </div>
+                                            );
+                                        },
+                                    },
+
+                                    {
+                                        accessor: 'action',
+                                        title: 'Action',
+                                        sortable: false,
+                                        render: (rowData) => renderActions(rowData),
                                     },
 
                                 ]}

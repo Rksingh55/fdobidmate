@@ -8,14 +8,17 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SuccessPopup from '../front/SuccessPopup';
 import Swal from 'sweetalert2';
+
 interface Document {
     type: string;
     files: File[];
+    uploadStatus: 'not_uploaded' | 'in_progress' | 'uploaded' | 'error';
 }
+
 const HomePage: React.FC = () => {
     const [isUploadPopupVisible, setIsUploadPopupVisible] = useState(false);
     const [isViewPopupVisible, setIsViewPopupVisible] = useState(false);
-    const [documents, setDocuments] = useState<Document[]>([]);
+    // const [documents, setDocuments] = useState<Document[]>([]);
     const [viewDocument, setViewDocument] = useState<File | null>(null);
     const [selectedType, setSelectedType] = useState<string>('');
     const [showPopup, setShowPopup] = useState(false);
@@ -33,8 +36,18 @@ const HomePage: React.FC = () => {
         'Agency Certificate',
         'Bank Certificate',
         'Local Company Certificate',
+        "Quality and Safety Organization",
+        "Other Document"
     ];
-    const requiredDocumentTypes = documentTypes.filter(
+    const [documents, setDocuments] = useState<Document[]>(
+        documentTypes?.map(type => ({
+            type,
+            files: [],
+            uploadStatus: 'not_uploaded'
+        }))
+    );
+
+    const requiredDocumentTypes = documentTypes?.filter(
         (type) => type !== "Quality and Safety Organization" && type !== "Other Document"
     );
 
@@ -48,6 +61,14 @@ const HomePage: React.FC = () => {
     };
 
     const handleUploadDocuments = async (type: string, files: File[]) => {
+        setDocuments(prevDocuments =>
+            prevDocuments.map(doc =>
+                doc.type === type
+                    ? { ...doc, uploadStatus: 'in_progress' }
+                    : doc
+            )
+        );
+
         const encodeFileToBase64 = (file: File): Promise<string> => {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -56,13 +77,10 @@ const HomePage: React.FC = () => {
                 reader.onerror = error => reject(error);
             });
         };
+
         try {
             const base64FilesPromises = files.map(file => encodeFileToBase64(file));
             const base64Files = await Promise.all(base64FilesPromises);
-            // base64Files.forEach((base64File, index) => {
-            //     console.log(`vendor_files ${index}:`, files[index]);
-            //     console.log(`Base64 ${index}:`, base64File);
-            // });
             const formData = new FormData();
             formData.append('attachement_type', type);
             const vendor_profile_id = localStorage.getItem("vendorId")?.replace(/['"]/g, '');
@@ -76,23 +94,22 @@ const HomePage: React.FC = () => {
                 },
                 body: formData,
             });
+
             if (response.ok) {
                 const Data = await response.json();
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
-                    text: Data?.message?.success || 'Attachment submitted successful',
+                    text: Data?.message?.success || 'Attachment submitted successfully',
                     customClass: 'sweet-alerts',
                 });
-                setDocuments((prevDocuments) => {
-                    const existingDocument = prevDocuments.find(doc => doc.type === type);
-                    if (existingDocument) {
-                        existingDocument.files = [];
-                        return [...prevDocuments];
-                    } else {
-                        return prevDocuments;
-                    }
-                });
+                setDocuments(prevDocuments =>
+                    prevDocuments.map(doc =>
+                        doc.type === type
+                            ? { ...doc, files, uploadStatus: 'uploaded' }
+                            : doc
+                    )
+                );
             } else {
                 const errorData = await response.json();
                 Swal.fire({
@@ -102,6 +119,13 @@ const HomePage: React.FC = () => {
                     padding: '2em',
                     customClass: 'sweet-alerts',
                 });
+                setDocuments(prevDocuments =>
+                    prevDocuments.map(doc =>
+                        doc.type === type
+                            ? { ...doc, uploadStatus: 'error' }
+                            : doc
+                    )
+                );
             }
         } catch (error) {
             Swal.fire({
@@ -111,10 +135,16 @@ const HomePage: React.FC = () => {
                 padding: '2em',
                 customClass: 'sweet-alerts',
             });
-
-
+            setDocuments(prevDocuments =>
+                prevDocuments.map(doc =>
+                    doc.type === type
+                        ? { ...doc, uploadStatus: 'error' }
+                        : doc
+                )
+            );
         }
     };
+
     const handleDeleteDocument = (type: string, index: number) => {
         setDocuments((prevDocuments) => {
             const documentIndex = prevDocuments.findIndex(doc => doc.type === type);
@@ -151,27 +181,37 @@ const HomePage: React.FC = () => {
                         </tr>
                     </thead>
                     <tbody className=''>
-                        {documentTypes?.map((type, index) => (
-                            <tr key={type} className="border-b">
-                                <td>{index + 1}.</td>
-                                <td className="py-2 px-4 text-gray-800">{type}
-                                    {requiredDocumentTypes?.includes(type) && (
-                                        <span className="text-red-500 ml-2 font-extrabold">*</span>
-                                    )}</td>
-                                <td className="py-2 px-4">
-                                    <button
-                                        onClick={() => handleOpenUploadPopup(type)}
-                                        className='border-1 hover:bg-slate-200 rounded-md p-2 flex items-center gap-2'
-                                    >
-                                        <FaCloudUploadAlt className='text-xl' />
-                                        Upload
-                                    </button>
-                                </td>
-                                <td className=" text-gray-800 text-center">
-                                    --
-                                </td>
-                            </tr>
-                        ))}
+                        {documentTypes?.map((type, index) => {
+                            const doc = documents.find(d => d.type === type);
+                            const uploadStatus = doc?.uploadStatus || 'not_uploaded';
+                            const fileCount = doc?.files?.length || 0;
+                            return (
+                                <tr key={type} className="border-b">
+                                    <td>{index + 1}.</td>
+                                    <td className="py-2 px-4 text-gray-800">
+                                        {type}
+                                        {requiredDocumentTypes?.includes(type) && (
+                                            <span className="text-red-500 ml-2 font-extrabold">*</span>
+                                        )}
+                                    </td>
+                                    <td className="py-2 px-4">
+                                        <button
+                                            onClick={() => handleOpenUploadPopup(type)}
+                                            className='border-1 hover:bg-slate-200 rounded-md p-2 flex items-center gap-2'
+                                        >
+                                            <FaCloudUploadAlt className='text-xl' />
+                                            Upload
+                                        </button>
+                                    </td>
+                                    <td className="text-gray-800 text-center">
+                                        {uploadStatus === 'in_progress' && <span>Uploading...</span>}
+                                        {uploadStatus === 'uploaded' && <span className='text-green-500 '>{fileCount} Document Uploaded</span>}
+                                        {uploadStatus === 'error' && <span className="text-red-500">Error To Upload </span>}
+                                        {uploadStatus === 'not_uploaded' && <span>--</span>}
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>
@@ -189,23 +229,23 @@ const HomePage: React.FC = () => {
             />
             <div className="mt-4">
                 {documents?.map((doc) => (
-                    <div key={doc.type} className="mb-4">
-                        <h3 className="text-lg font-semibold mb-2">{doc.type}:</h3>
+                    <div key={doc?.type} className="mb-4">
+                        <h3 className="text-md font-semibold mb-2">{doc?.type}:</h3>
                         {doc?.files?.map((file, index) => (
                             <div key={index} className="flex justify-between items-center mb-2">
                                 <span>{file?.name}</span>
                                 <div>
                                     <button
                                         onClick={() => handleViewDocument(file)}
-                                        className="bg-blue-500 text-white p-1 rounded mr-2"
+                                        className="bg-blue-500 text-white p-1  mr-2 px-2"
                                     >
                                         View
                                     </button>
                                     <button
-                                        onClick={() => handleDeleteDocument(doc.type, index)}
-                                        className="bg-red-500 text-white p-1 rounded"
+                                        onClick={() => handleDeleteDocument(doc?.type, index)}
+                                        className="bg-red-500 text-white p-1 px-2 "
                                     >
-                                        Delete
+                                        Remove
                                     </button>
                                 </div>
                             </div>

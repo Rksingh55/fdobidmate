@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getToken } from '@/localStorageUtil';
 import { useRouter } from 'next/router';
 import Dropdown from '@/components/Dropdown';
+import { FaEye } from 'react-icons/fa';
 
 const Quotations = () => {
     const router = useRouter();
@@ -88,6 +89,13 @@ const Quotations = () => {
     };
 
     const renderActions = (TenderInterest: any) => {
+        const router = useRouter();
+        const handleViewTenderProfilePage = (id: string) => {
+            if (id) {
+                sessionStorage.setItem("sdgasuidaiusgdad!#@!nx@#$1dsvs", id)
+                router.push("/dashboard/tender/tender-details")
+            }
+        }
         return (
             <div className="dropdown z-[999]">
                 <Dropdown
@@ -96,9 +104,11 @@ const Quotations = () => {
                     button={<PiDotsThreeVerticalBold className="opacity-70 cursor-pointer" />}
                 >
                     <div className='flex flex-col bg-white shadow-md rounded-md border-1'>
-                        <Link href={`/dashboard/tender/tender-details/${TenderInterest?.id}`}>
-                            <button className='bg-white p-2 rounded-md hover:text-blue-400  px-3' type="button" >View</button>
-                        </Link>
+                        {/* <Link href={`/dashboard/tender/tender-details/${TenderInterest?.id}`}>
+                            <button className='bg-white p-2 rounded-md hover:text-blue-400  px-3 flex items-center justify-center' type="button" ><FaEye />View</button>
+                        </Link> */}
+                        <button onClick={() => handleViewTenderProfilePage(TenderInterest?.id)} className='bg-white p-2 rounded-md hover:text-blue-400  px-3 flex items-center justify-center' type="button" ><FaEye />View</button>
+
                     </div>
                 </Dropdown>
             </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import { MdKeyboardArrowRight, } from 'react-icons/md';
 import { OMRIcon, StartdateIcon, TenderDepartmentIcon, TenderEntityIcon, TenderfeesIcon, TenderidIcon } from '../../public/icons';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 interface TenderCardProps {
     tender: {
         encrypt_id: string;
@@ -20,6 +21,13 @@ interface TenderCardProps {
 }
 
 const TenderCard: React.FC<TenderCardProps> = ({ tender, view }) => {
+    const router = useRouter();
+    const handleViewTender = (id: string) => {
+        if (id) {
+            sessionStorage.setItem("sdfkheifsnccsd0223!@#94dssdcscjdshcdscsc1@$!@", id)
+            router.push("/tender-list/tender-preview")
+        }
+    }
 
     return (
         <>
@@ -106,11 +114,12 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, view }) => {
                         </div>
 
                     </div>
-                    <Link href={`/tender-list/tender-preview/${tender.encrypt_id}`} key={tender.encrypt_id} className='flex justify-end py-2 '>
+                    {/* <Link href={`/tender-list/tender-preview/${tender.encrypt_id}`} key={tender.encrypt_id} className='flex justify-end py-2 '>
                         <button className={`${view === 'grid' ? ' text-[#00A9E2] font-bold flex gap-2' : ' font-bold rounded-md mt-2 absolute md:top-[10%] max-sm:bottom-[5%] right-[-2%] bg-[#00A9E2] hover:bg-[#FC8404] text-white py-2 px-3 flex gap-2'} `} >More Details <MdKeyboardArrowRight className=' text-xl' />
                         </button>
-                    </Link>
-
+                    </Link> */}
+                    <button onClick={() => handleViewTender(tender.encrypt_id)} className={`${view === 'grid' ? ' text-[#00A9E2] font-bold flex gap-2' : ' font-bold rounded-md mt-2 absolute md:top-[10%] max-sm:bottom-[5%] right-[-2%] bg-[#00A9E2] hover:bg-[#FC8404] text-white py-2 px-3 flex gap-2'} `} >More Details <MdKeyboardArrowRight className=' text-xl' />
+                    </button>
                 </div>
             </div>
         </>
